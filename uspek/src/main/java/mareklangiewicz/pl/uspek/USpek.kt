@@ -1,16 +1,14 @@
-package pl.elpassion.eltc
+package mareklangiewicz.pl.uspek
 
 import org.junit.Assert
 
-infix fun <T> T.eq(actual: T) = Assert.assertEquals(this, actual)
-
-typealias CodeLocation = String
+infix fun <T> T.eq(actual: T) = Assert.assertEquals(actual, this)
 
 open class TestFinished(cause: Throwable? = null) : RuntimeException(cause)
 class TestSuccess : TestFinished()
 class TestFailure(cause: Throwable) : TestFinished(cause)
 
-val visited: MutableMap<CodeLocation, Throwable> = mutableMapOf()
+val visited: MutableMap<String, Throwable> = mutableMapOf()
 
 fun uspek(name: String, code: () -> Unit) {
     visited.clear()
@@ -21,7 +19,7 @@ fun uspek(name: String, code: () -> Unit) {
             code()
             again = false
         } catch (e: TestFinished) {
-            val location = e.stackTrace[1].toCodeLocation()
+            val location = e.stackTrace[1].location
             visited[location] = e
             val ok = e is TestSuccess
             val prefix = if (ok) "SUCCESS" else "FAILURE"
@@ -52,13 +50,15 @@ infix fun String.o(code: () -> Unit) {
 
 fun finished(): Boolean {
     val st = Thread.currentThread().stackTrace
-    return st[3].toCodeLocation() in visited
+    return st[3].location in visited
 }
 
-fun StackTraceElement.toCodeLocation(): CodeLocation = "$fileName:$lineNumber"
+val StackTraceElement.location get() = "$fileName:$lineNumber"
 
-val Throwable.causeLocation: CodeLocation get() {
-    val file = stackTrace.getOrNull(1)?.fileName
-    val frame = cause?.stackTrace?.find { it.fileName == file }
-    return frame?.toCodeLocation() ?: "UNKNOWN LOCATION"
-}
+val Throwable.causeLocation: String
+    get() {
+        val file = stackTrace.getOrNull(1)?.fileName
+        val frame = cause?.stackTrace?.find { it.fileName == file }
+        return frame?.location ?: "UNKNOWN LOCATION"
+    }
+

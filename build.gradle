@@ -1,0 +1,32 @@
+buildscript {
+
+    ext.kotlin_version = '1.1.4-3'
+    ext.androgradle_version = '3.0.0-beta6'
+    ext.andromaven_version = '1.5'
+
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:$androgradle_version"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:$andromaven_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
