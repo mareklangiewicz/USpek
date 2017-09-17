@@ -6,9 +6,11 @@ object USpek {
 
     private val visited: MutableMap<String, Throwable> = mutableMapOf()
 
+    var log: (String) -> Unit = { println(it) }
+
     fun uspek(name: String, rethrow: Boolean = false, code: () -> Unit) {
         visited.clear()
-        println("USpek $name")
+        log("USpek $name")
         var again = true
         do {
             try {
@@ -20,10 +22,10 @@ object USpek {
                 val ok = e is TestSuccess
                 val prefix = if (ok) "SUCCESS" else "FAILURE"
                 val postfix = if (ok) "" else "!#!#!#!#!#!#!#!#!#!#!"
-                println("$prefix.($location)$postfix")
+                log("$prefix.($location)$postfix")
                 if (!ok) {
-                    println("BECAUSE.(${e.causeLocation})")
-                    println(e.cause)
+                    log("BECAUSE.(${e.causeLocation})")
+                    log(e.cause.toString())
                 }
             }
         } while (again)
@@ -33,7 +35,7 @@ object USpek {
 
     infix fun String.o(code: () -> Unit) {
         if (finished()) return
-        println(this)
+        log(this)
         try {
             code()
         } catch (e: TestSuccess) {
@@ -60,11 +62,11 @@ object USpek {
 
     private val StackTraceElement.location get() = "$fileName:$lineNumber"
 
-    private val Throwable.causeLocation: String
+    private val Throwable.causeLocation: String?
         get() {
             val file = stackTrace.getOrNull(1)?.fileName
             val frame = cause?.stackTrace?.find { it.fileName == file }
-            return frame?.location ?: throw IllegalStateException("Exception cause code location not found")
+            return frame?.location
         }
 
     private val Array<StackTraceElement>.userCodeLocation: String
