@@ -1,5 +1,8 @@
 package mareklangiewicz.pl.uspek
 
+import mareklangiewicz.pl.uspek.USpek.eq
+import mareklangiewicz.pl.uspek.USpek.o
+import mareklangiewicz.pl.uspek.USpek.uspek
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -50,6 +53,15 @@ class USpekTest {
                     }
                 }
             }
+        }
+    }
+
+    @Test
+    fun uspekFailingTest() {
+        uspek("the middle part will fail but all test will be executed anyway", rethrow = true) {
+            "test 1 - passing" o { 1 eq 1 }
+            "test 2 - failing" o { 1 eq 2 }
+            "test 3 - passing" o { 1 eq 1 }
         }
     }
 }

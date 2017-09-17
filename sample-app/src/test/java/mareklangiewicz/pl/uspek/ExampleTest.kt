@@ -1,5 +1,8 @@
 package mareklangiewicz.pl.uspek
 
+import mareklangiewicz.pl.uspek.USpek.eq
+import mareklangiewicz.pl.uspek.USpek.o
+import mareklangiewicz.pl.uspek.USpek.uspek
 import org.junit.Test
 
 class ExampleTest {
