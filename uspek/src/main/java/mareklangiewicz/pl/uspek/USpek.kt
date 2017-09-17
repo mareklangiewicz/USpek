@@ -55,7 +55,7 @@ object USpek {
 
     private fun finished(): Boolean {
         val st = Thread.currentThread().stackTrace
-        return st[3].location in visited
+        return st.userCodeLocation in visited
     }
 
     private val StackTraceElement.location get() = "$fileName:$lineNumber"
@@ -64,7 +64,22 @@ object USpek {
         get() {
             val file = stackTrace.getOrNull(1)?.fileName
             val frame = cause?.stackTrace?.find { it.fileName == file }
-            return frame?.location ?: "UNKNOWN LOCATION"
+            return frame?.location ?: throw IllegalStateException("Exception cause code location not found")
+        }
+
+    private val Array<StackTraceElement>.userCodeLocation: String
+        get() {
+            var atUSpekCode = false
+            for (frame in this) {
+                if (frame.fileName == "USpek.kt") {
+                    atUSpekCode = true
+                    continue
+                }
+                if (atUSpekCode) {
+                    return frame.location
+                }
+            }
+            throw IllegalStateException("User code location not found")
         }
 }
 
