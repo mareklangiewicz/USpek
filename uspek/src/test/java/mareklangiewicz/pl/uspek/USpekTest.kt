@@ -19,13 +19,13 @@ class USpekTest {
 
                 assertEquals(3, list.size)
 
-                "check the list details" o {
+                "check list details" o {
                     assertEquals(0, list[0])
                     assertEquals(1, list[1])
                     assertEquals(2, list[2])
                 }
 
-                "add some elements to list" o {
+                "add some elements to the list" o {
                     list.add(3)
                     list.add(4)
 
@@ -34,7 +34,7 @@ class USpekTest {
                     assertEquals(5, list.size)
                 }
 
-                "remove middle element from list" o {
+                "remove middle element from the list" o {
                     list.removeAt(1)
 
                     "try to check not existing element - it should fail" o {
