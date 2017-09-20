@@ -61,7 +61,7 @@ Micro tool for testing with syntax similar to Spek, but shorter. Test different 
     }
    
     dependencies {
-        compile 'com.github.langara:USpek:master-SNAPSHOT'
+        testImplementation 'com.github.langara:USpek:master-SNAPSHOT'
     }
 ```
 
