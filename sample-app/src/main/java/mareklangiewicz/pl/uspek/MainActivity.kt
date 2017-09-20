@@ -6,15 +6,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val example = Example(20)
+    private val calc = MicroCalc(1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        helloTextView.append("\n" + example.addSome(5))
+        helloTextView.append("\n" + calc.result)
         helloTextView.setOnClickListener {
-            helloTextView.append("\n" + example.multiplySome(5))
-            example.some += 1
+            calc.multiplyBy(3)
+            helloTextView.append("\n" + calc.result)
         }
     }
 }

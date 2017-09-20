@@ -18,7 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class MicroCalcInstrumentedTest {
 
     @JvmField
     @Rule
@@ -54,26 +54,26 @@ class ExampleInstrumentedTest {
 
                 activityRule.launchActivity(null)
 
-                "check if there is some hello message" o {
+                "it should display some hello message" o {
                     onView(withId(R.id.helloTextView)).check(matches(withText(startsWith("Hello"))))
                 }
 
-                "click twice on hello text" o {
+                "on click on hello text two times" o {
 
                     onView(withId(R.id.helloTextView)).perform(click())
                     onView(withId(R.id.helloTextView)).perform(click())
 
-                    "check for number 105 at the end of hello text" o {
-                        onView(withId(R.id.helloTextView)).check(matches(withText(endsWith("105"))))
+                    "it should display 9 at the end of hello text" o {
+                        onView(withId(R.id.helloTextView)).check(matches(withText(endsWith("9"))))
                     }
                 }
 
-                "click fout times on hello text" o {
+                "on click on hello text four times" o {
 
                     repeat(4) { onView(withId(R.id.helloTextView)).perform(click()) }
 
-                    "check for number 115 at the end of hello text" o {
-                        onView(withId(R.id.helloTextView)).check(matches(withText(endsWith("115"))))
+                    "it should display 81 at the end of hello text" o {
+                        onView(withId(R.id.helloTextView)).check(matches(withText(endsWith("81"))))
                     }
                 }
             }
