@@ -8,7 +8,7 @@ object USpek {
 
     var log: (Report) -> Unit = ::defaultLogger
 
-    fun uspek(name: String, rethrow: Boolean = false, code: () -> Unit) {
+    fun uspek(name: String, code: () -> Unit) {
         finishedTests.clear()
         log(Report.Start(name))
         var again = true
@@ -26,8 +26,6 @@ object USpek {
                 }
             }
         } while (again)
-        if (rethrow)
-            finishedTests.values.find { it is TestFailure }?.let { throw it.cause ?: it }
     }
 
     infix fun String.o(code: () -> Unit) = itIsFinished || throw try {

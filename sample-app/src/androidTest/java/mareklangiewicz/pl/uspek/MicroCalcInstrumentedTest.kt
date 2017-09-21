@@ -43,7 +43,7 @@ class MicroCalcInstrumentedTest {
 
         USpek.log = { Log.w("USpek", it) }
 
-        uspek("check different user interaction scenarios with uspek", rethrow = true) {
+        uspek("check different user interaction scenarios with uspek") {
 
             "on main activity" o {
 
