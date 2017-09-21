@@ -1,0 +1,30 @@
+buildscript {
+    ext.kotlin_version = '1.1.4-3'
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+mainClassName = 'mareklangiewicz.pl.uspek.MainKt'
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'com.github.langara:USpek:master-SNAPSHOT'
+}
