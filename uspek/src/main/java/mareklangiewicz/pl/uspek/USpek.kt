@@ -10,7 +10,7 @@ object USpek {
 
     fun uspek(name: String, code: () -> Unit) {
         finishedTests.clear()
-        log(Report.Start(name))
+        log(Report.Start(name, currentUserCodeLocation))
         var again = true
         do {
             try {
@@ -28,8 +28,8 @@ object USpek {
         } while (again)
     }
 
-    infix fun String.o(code: () -> Unit) = itIsFinished || throw try {
-        log(Report.Start(this))
+    infix fun String.o(code: () -> Unit) = currentUserCodeLocation in finishedTests || throw try {
+        log(Report.Start(this, currentUserCodeLocation))
         code()
         TestSuccess()
     } catch (e: TestFinished) {
@@ -44,7 +44,7 @@ object USpek {
     private class TestSuccess : TestFinished()
     private class TestFailure(cause: Throwable) : TestFinished(cause)
 
-    private val itIsFinished get() = Thread.currentThread().stackTrace.userCodeLocation in finishedTests
+    private val currentUserCodeLocation get() = Thread.currentThread().stackTrace.userCodeLocation
 
     private val StackTraceElement.location get() = CodeLocation(fileName, lineNumber)
 
@@ -74,8 +74,10 @@ object USpek {
         override fun toString() = "($fileName:$lineNumber)"
     }
 
+    val UNKNOWN_CODE_LOCATION = CodeLocation("UNKNOWN_FILE_NAME", -1)
+
     sealed class Report {
-        abstract val testLocation: CodeLocation?
+        abstract val testLocation: CodeLocation
 
         data class Failure(override val testLocation: CodeLocation,
                            val assertionLocation: CodeLocation?,
@@ -83,7 +85,7 @@ object USpek {
 
         data class Success(override val testLocation: CodeLocation) : Report()
 
-        data class Start(val testName: String, override val testLocation: CodeLocation? = null) : Report()
+        data class Start(val testName: String, override val testLocation: CodeLocation = UNKNOWN_CODE_LOCATION) : Report()
     }
 }
 
