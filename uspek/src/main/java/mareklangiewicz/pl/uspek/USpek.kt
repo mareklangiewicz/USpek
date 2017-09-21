@@ -1,5 +1,7 @@
 package mareklangiewicz.pl.uspek
 
+import org.junit.Assert
+
 object USpek {
 
     private val finishedTests: MutableMap<CodeLocation, Throwable> = mutableMapOf()
@@ -36,7 +38,7 @@ object USpek {
         TestFailure(e)
     }
 
-//    infix fun <T> T.eq(actual: T) = Assert.assertEquals(actual, this)
+    infix fun <T> T.eq(actual: T) = Assert.assertEquals(actual, this)
 
     private open class TestFinished(cause: Throwable? = null) : RuntimeException(cause)
     private class TestSuccess : TestFinished()
@@ -74,6 +76,7 @@ object USpek {
 
     sealed class Report {
         abstract val testName: String
+
         data class Failure(override val testName: String,
                            val testLocation: CodeLocation,
                            val assertionLocation: CodeLocation?,
@@ -81,6 +84,7 @@ object USpek {
 
         data class Success(override val testName: String,
                            val testLocation: CodeLocation) : Report()
+
         data class Start(override val testName: String) : Report()
     }
 }
