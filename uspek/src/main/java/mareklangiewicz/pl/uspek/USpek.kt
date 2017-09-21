@@ -6,11 +6,11 @@ object USpek {
 
     private val finishedTests: MutableMap<CodeLocation, Throwable> = mutableMapOf()
 
-    var log: (String) -> Unit = { println(it) }
+    var log: (Report) -> Unit = ::defaultLogger
 
     fun uspek(name: String, rethrow: Boolean = false, code: () -> Unit) {
         finishedTests.clear()
-        log("USpek $name")
+        log(Report.Start(name))
         var again = true
         do {
             try {
@@ -19,13 +19,10 @@ object USpek {
             } catch (e: TestFinished) {
                 val location = e.stackTrace[1].location
                 finishedTests[location] = e
-                val ok = e is TestSuccess
-                val prefix = if (ok) "SUCCESS" else "FAILURE"
-                val postfix = if (ok) "" else "!#!#!#!#!#!#!#!#!#!#!"
-                log("$prefix.($location)$postfix")
-                if (!ok) {
-                    log("BECAUSE.(${e.causeLocation})")
-                    log(e.cause.toString())
+                if (e is TestSuccess) {
+                    log(Report.Success(location))
+                } else {
+                    log(Report.Failure(location, e.causeLocation, e.cause))
                 }
             }
         } while (again)
@@ -34,7 +31,7 @@ object USpek {
     }
 
     infix fun String.o(code: () -> Unit) = itIsFinished || throw try {
-        log(this)
+        log(Report.Start(this))
         code()
         TestSuccess()
     } catch (e: TestFinished) {
@@ -76,7 +73,16 @@ object USpek {
         }
 
     data class CodeLocation(val fileName: String, val lineNumber: Int) {
-        override fun toString() = "$fileName:$lineNumber"
+        override fun toString() = "($fileName:$lineNumber)"
+    }
+
+    sealed class Report {
+        data class Failure(val testLocation: CodeLocation,
+                           val assertionLocation: CodeLocation?,
+                           val cause: Throwable?) : Report()
+
+        data class Success(val testLocation: CodeLocation) : Report()
+        data class Start(val testName: String) : Report()
     }
 }
 
