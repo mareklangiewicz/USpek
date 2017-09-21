@@ -32,7 +32,7 @@ class USpekTest {
     fun `should create success report after finishing test with success`() {
         uspek_test_3()
         assertThat(collectingLogger.getReports())
-                .contains(USpek.Report.Success(testName = "some assertion", testLocation = USpek.CodeLocation("uspek_test_3.kt", 9)))
+                .contains(USpek.Report.Success(testLocation = USpek.CodeLocation("uspek_test_3.kt", 9)))
     }
 
     @Test
@@ -43,8 +43,7 @@ class USpekTest {
                 .contains(USpek.Report.Failure(
                         testLocation = USpek.CodeLocation("uspek_test_4.kt", 9),
                         assertionLocation = USpek.CodeLocation("uspek_test_4.kt", 10),
-                        cause = AssertionError(),
-                        testName = "some assertion"))
+                        cause = AssertionError()))
     }
 
     @Test
@@ -70,8 +69,8 @@ class USpekTest {
         uspek_test_7()
         assertThat(collectingLogger.getReports())
                 .containsAll(listOf(
-                        USpek.Report.Success(testName = "first test", testLocation = USpek.CodeLocation("uspek_test_7.kt", lineNumber = 9)),
-                        USpek.Report.Success(testName = "second test", testLocation = USpek.CodeLocation("uspek_test_7.kt", lineNumber = 13))))
+                        USpek.Report.Success(testLocation = USpek.CodeLocation("uspek_test_7.kt", lineNumber = 9)),
+                        USpek.Report.Success(testLocation = USpek.CodeLocation("uspek_test_7.kt", lineNumber = 13))))
     }
 
     @Test
@@ -83,13 +82,11 @@ class USpekTest {
                         USpek.Report.Failure(
                                 testLocation = USpek.CodeLocation("uspek_test_8.kt", lineNumber = 9),
                                 assertionLocation = USpek.CodeLocation("uspek_test_8.kt", lineNumber = 10),
-                                cause = AssertionError(),
-                                testName = "first test"),
+                                cause = AssertionError()),
                         USpek.Report.Failure(
                                 testLocation = USpek.CodeLocation("uspek_test_8.kt", lineNumber = 13),
                                 assertionLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 14),
-                                cause = AssertionError(),
-                                testName = "second test")))
+                                cause = AssertionError())))
     }
 
     @Test
@@ -103,12 +100,10 @@ class USpekTest {
                         USpek.Report.Failure(
                                 testLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 9),
                                 assertionLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 10),
-                                cause = AssertionError(),
-                                testName = "first test"),
+                                cause = AssertionError()),
                         USpek.Report.Start("second test"),
                         USpek.Report.Success(
-                                testLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 13),
-                                testName = "second test")))
+                                testLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 13))))
     }
 
     @Test
@@ -120,12 +115,10 @@ class USpekTest {
                         USpek.Report.Start("first test"),
                         USpek.Report.Start("second test"),
                         USpek.Report.Success(
-                                testLocation = USpek.CodeLocation("uspek_test_10.kt", lineNumber = 12),
-                                testName = "second test"),
+                                testLocation = USpek.CodeLocation("uspek_test_10.kt", lineNumber = 12)),
                         USpek.Report.Start("first test"),
                         USpek.Report.Success(
-                                testLocation = USpek.CodeLocation("uspek_test_10.kt", lineNumber = 9),
-                                testName = "first test")
+                                testLocation = USpek.CodeLocation("uspek_test_10.kt", lineNumber = 9))
                 ))
     }
 }

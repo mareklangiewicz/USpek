@@ -28,5 +28,5 @@ class USpekJUnitRunner(private val testClass: Class<Any>) : BlockJUnit4ClassRunn
     }
 
     private fun newTestDescription(report: USpek.Report) =
-            Description.createTestDescription(testClass.simpleName, report.testName)
+            Description.createTestDescription(testClass.simpleName, "")
 }
