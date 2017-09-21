@@ -38,7 +38,7 @@ object USpek {
         TestFailure(e)
     }
 
-    infix fun <T> T.eq(actual: T) = Assert.assertEquals(actual, this)
+    infix fun <T> T.eq(expected: T) = Assert.assertEquals(expected, this)
 
     private open class TestFinished(cause: Throwable? = null) : RuntimeException(cause)
     private class TestSuccess : TestFinished()
