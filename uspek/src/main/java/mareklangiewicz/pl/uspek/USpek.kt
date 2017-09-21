@@ -4,7 +4,7 @@ import org.junit.Assert
 
 object USpek {
 
-    private val finishedTests: MutableMap<String, Throwable> = mutableMapOf()
+    private val finishedTests: MutableMap<CodeLocation, Throwable> = mutableMapOf()
 
     var log: (String) -> Unit = { println(it) }
 
@@ -37,10 +37,13 @@ object USpek {
         log(this)
         code()
         TestSuccess()
+    } catch (e: TestSuccess) {
+        e
+    } catch (e: TestFailure) {
+        e
+    } catch (e: Throwable) {
+        TestFailure(e)
     }
-    catch (e: TestSuccess) { e }
-    catch (e: TestFailure) { e }
-    catch (e: Throwable) { TestFailure(e) }
 
     infix fun <T> T.eq(actual: T) = Assert.assertEquals(actual, this)
 
@@ -50,16 +53,16 @@ object USpek {
 
     private val itIsFinished get() = Thread.currentThread().stackTrace.userCodeLocation in finishedTests
 
-    private val StackTraceElement.location get() = "$fileName:$lineNumber"
+    private val StackTraceElement.location get() = CodeLocation(fileName, lineNumber)
 
-    private val Throwable.causeLocation: String?
+    private val Throwable.causeLocation: CodeLocation?
         get() {
             val file = stackTrace.getOrNull(1)?.fileName
             val frame = cause?.stackTrace?.find { it.fileName == file }
             return frame?.location
         }
 
-    private val Array<StackTraceElement>.userCodeLocation: String
+    private val Array<StackTraceElement>.userCodeLocation: CodeLocation
         get() {
             var atUSpekCode = false
             for (frame in this) {
@@ -73,5 +76,9 @@ object USpek {
             }
             throw IllegalStateException("User code location not found")
         }
+
+    data class CodeLocation(val fileName: String, val lineNumber: Int){
+        override fun toString() = "$fileName:$lineNumber"
+    }
 }
 
