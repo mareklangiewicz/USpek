@@ -1,7 +1,5 @@
 package mareklangiewicz.pl.uspek
 
-import org.junit.Assert
-
 object USpek {
 
     private val finishedTests: MutableMap<CodeLocation, Throwable> = mutableMapOf()
@@ -38,7 +36,7 @@ object USpek {
         TestFailure(e)
     }
 
-    infix fun <T> T.eq(actual: T) = Assert.assertEquals(actual, this)
+//    infix fun <T> T.eq(actual: T) = Assert.assertEquals(actual, this)
 
     private open class TestFinished(cause: Throwable? = null) : RuntimeException(cause)
     private class TestSuccess : TestFinished()
