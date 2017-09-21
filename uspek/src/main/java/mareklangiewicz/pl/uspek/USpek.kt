@@ -37,9 +37,7 @@ object USpek {
         log(this)
         code()
         TestSuccess()
-    } catch (e: TestSuccess) {
-        e
-    } catch (e: TestFailure) {
+    } catch (e: TestFinished) {
         e
     } catch (e: Throwable) {
         TestFailure(e)
@@ -77,7 +75,7 @@ object USpek {
             throw IllegalStateException("User code location not found")
         }
 
-    data class CodeLocation(val fileName: String, val lineNumber: Int){
+    data class CodeLocation(val fileName: String, val lineNumber: Int) {
         override fun toString() = "$fileName:$lineNumber"
     }
 }
