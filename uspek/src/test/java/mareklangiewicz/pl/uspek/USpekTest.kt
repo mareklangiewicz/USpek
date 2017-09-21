@@ -56,7 +56,7 @@ class USpekTest {
         }
     }
 
-    @Test(expected = AssertionError::class)
+    @Test
     fun uspekFailingTest() {
         uspek("the middle part should fail but all tests should be executed anyway") {
             "test 1 - passing" o { 1 eq 1 }
