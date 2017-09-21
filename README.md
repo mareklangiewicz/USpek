@@ -1,4 +1,4 @@
-# USpek
+# μSpek
 Micro tool for testing with syntax similar to Spek, but shorter. Test different nested scenarios without any boilerplate code.
 
 ### Example
