@@ -2,7 +2,6 @@ buildscript {
 
     ext.kotlin_version = '1.1.4-3'
     ext.androgradle_version = '3.0.0-beta6'
-    ext.andromaven_version = '1.5'
 
     repositories {
         google()
@@ -12,7 +11,6 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$androgradle_version"
-        classpath "com.github.dcendents:android-maven-gradle-plugin:$andromaven_version"
     }
 }
 
