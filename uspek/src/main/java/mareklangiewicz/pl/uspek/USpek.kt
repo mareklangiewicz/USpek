@@ -20,9 +20,9 @@ object USpek {
                 val location = e.stackTrace[1].location
                 finishedTests[location] = e
                 if (e is TestSuccess) {
-                    log(Report.Success(location))
+                    log(Report.Success(name, location))
                 } else {
-                    log(Report.Failure(location, e.causeLocation, e.cause))
+                    log(Report.Failure(name, location, e.causeLocation, e.cause))
                 }
             }
         } while (again)
@@ -75,12 +75,15 @@ object USpek {
     }
 
     sealed class Report {
-        data class Failure(val testLocation: CodeLocation,
+        abstract val testName: String
+        data class Failure(override val testName: String,
+                           val testLocation: CodeLocation,
                            val assertionLocation: CodeLocation?,
                            val cause: Throwable?) : Report()
 
-        data class Success(val testLocation: CodeLocation) : Report()
-        data class Start(val testName: String) : Report()
+        data class Success(override val testName: String,
+                           val testLocation: CodeLocation) : Report()
+        data class Start(override val testName: String) : Report()
     }
 }
 
