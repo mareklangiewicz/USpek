@@ -19,7 +19,6 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'junit:junit:4.12'
 }
 
