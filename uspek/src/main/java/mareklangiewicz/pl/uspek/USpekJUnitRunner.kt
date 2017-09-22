@@ -2,6 +2,7 @@ package mareklangiewicz.pl.uspek
 
 import org.junit.runner.Description
 import org.junit.runner.Runner
+import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
 import java.util.*
 
@@ -22,6 +23,21 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
 
     override fun run(notifier: RunNotifier) {
         println("USpek is running....")
+        runTree(treeCollectionLogger.testTree!!, notifier)
+    }
+
+    private fun runTree(branchTree: TestTree, notifier: RunNotifier) {
+        if (branchTree.subtests.isEmpty()) {
+            val description = branchTree.description
+            notifier.fireTestStarted(description)
+            when (branchTree.state) {
+                TestState.STARTED -> Unit
+                TestState.SUCCESS -> notifier.fireTestFinished(description)
+                TestState.FAILURE -> notifier.fireTestFailure(Failure(description, branchTree.failureCause))
+            }
+        } else {
+            branchTree.subtests.forEach { runTree(it, notifier) }
+        }
     }
 
     private fun createDescriptions(testBranch: TestTree, testSuite: String): Description {
@@ -38,6 +54,8 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
             Description.createSuiteDescription(testBranch.name, UUID.randomUUID().toString())
         } else {
             Description.createTestDescription(testSuite, testBranch.name)
+        }.apply {
+            testBranch.description = this
         }
     }
 }

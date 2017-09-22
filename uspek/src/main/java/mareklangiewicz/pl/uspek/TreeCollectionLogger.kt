@@ -1,5 +1,7 @@
 package mareklangiewicz.pl.uspek
 
+import org.junit.runner.Description
+
 class TreeCollectionLogger : (USpek.Report) -> Unit {
     var testTree: TestTree? = null
         private set
@@ -59,6 +61,7 @@ data class TestTree(
         var state: TestState = TestState.STARTED,
         var assertionLocation: USpek.CodeLocation? = null,
         var failureCause: Throwable? = null,
-        val subtests: MutableList<TestTree> = mutableListOf()
+        val subtests: MutableList<TestTree> = mutableListOf(),
+        var description: Description? = null
 )
 
