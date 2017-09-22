@@ -13,7 +13,7 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
     private val treeCollectionLogger = TreeCollectionLogger()
 
     init {
-        USpek.log = treeCollectionLogger
+        USpek.log = BroadcastLogger(listOf(treeCollectionLogger, ::defaultLogger))
         testClass.newInstance()
         treeCollectionLogger.testTree?.state = TestState.SUCCESS
         rootDescription.addChild(createDescriptions(treeCollectionLogger.testTree!!, testClass.name))
@@ -22,7 +22,6 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
     override fun getDescription(): Description = rootDescription
 
     override fun run(notifier: RunNotifier) {
-        println("USpek is running....")
         val testTree = treeCollectionLogger.testTree!!
         runTree(testTree, testTree.name, notifier)
     }
@@ -34,13 +33,9 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
             when (branchTree.state) {
                 TestState.STARTED -> throw IllegalStateException("INTERNAL ERROR!!!")
                 TestState.SUCCESS -> {
-                    println("$name\nSUCCESS.${branchTree.location}\n")
                     notifier.fireTestFinished(description)
                 }
                 TestState.FAILURE -> {
-                    println("$name\nFAILURE.${branchTree.location}")
-                    println("BECAUSE.${branchTree.assertionLocation}")
-                    println("${branchTree.failureCause}\n")
                     notifier.fireTestFailure(Failure(description, branchTree.failureCause))
                     notifier.fireTestFinished(description)
                 }
