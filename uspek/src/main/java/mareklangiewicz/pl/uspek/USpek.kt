@@ -6,12 +6,12 @@ object USpek {
 
     private val finishedTests: MutableMap<CodeLocation, Throwable> = mutableMapOf()
 
-    var log: (Report) -> Unit = ::defaultLogger
+    var log: ULogger = ::defaultLogger
 
     fun uspek(name: String, code: () -> Unit) {
         finishedTests.clear()
         log(Report.Start(name, currentUserCodeLocation))
-        while(true) {
+        while (true) {
             try {
                 code()
                 return
@@ -70,3 +70,4 @@ object USpek {
         }
 }
 
+typealias ULogger = (Report) -> Unit

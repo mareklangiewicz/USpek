@@ -1,6 +1,6 @@
 package mareklangiewicz.pl.uspek
 
-class CollectingLogger : (Report) -> Unit {
+class CollectingLogger : ULogger {
 
     private val reports = mutableListOf<Report>()
 

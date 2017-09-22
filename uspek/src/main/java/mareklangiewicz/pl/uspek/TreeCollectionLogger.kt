@@ -2,7 +2,7 @@ package mareklangiewicz.pl.uspek
 
 import org.junit.runner.Description
 
-class TreeCollectionLogger : (Report) -> Unit {
+class TreeCollectionLogger : ULogger {
     var testTree: TestTree? = null
         private set
 
