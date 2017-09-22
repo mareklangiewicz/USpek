@@ -25,7 +25,6 @@ class USpekJUnitRunner(testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass
         }
         println("USpek is running ${method.name}")
         suite.addChild(Description.createSuiteDescription(method.name))
-        methodBlock(method).evaluate()
         super.runChild(method, notifier)
     }
 
