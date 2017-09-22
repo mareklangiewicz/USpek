@@ -16,13 +16,7 @@ import org.junit.runner.RunWith
 class MicroCalcInstrumentedTest {
 
     init {
-        Check_different_activity_user_interactions_with_uspek()
-    }
-
-    fun Check_different_activity_user_interactions_with_uspek() {
-
-        val activityRule = ActivityTestRule(MainActivity::class.java, false, false)
-
+        val activityRule = ActivityTestRule<MainActivity>(MainActivity::class.java, false, false)
         uspek("check different user interaction scenarios with uspek") {
 
 
