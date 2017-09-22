@@ -25,11 +25,7 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
     }
 
     private fun createDescriptions(testBranch: TestTree, testSuite: String): Description {
-        val description = if (testBranch.subtests.isNotEmpty()) {
-            Description.createSuiteDescription(testBranch.name, UUID.randomUUID().toString())
-        } else {
-            Description.createTestDescription(testSuite, testBranch.name)
-        }
+        val description = createDescription(testBranch, testSuite)
         testBranch.subtests.forEach {
             val child = createDescriptions(it, testSuite + "." + testBranch.name)
             description.addChild(child)
@@ -37,4 +33,11 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
         return description
     }
 
+    private fun createDescription(testBranch: TestTree, testSuite: String): Description {
+        return if (testBranch.subtests.isNotEmpty()) {
+            Description.createSuiteDescription(testBranch.name, UUID.randomUUID().toString())
+        } else {
+            Description.createTestDescription(testSuite, testBranch.name)
+        }
+    }
 }
