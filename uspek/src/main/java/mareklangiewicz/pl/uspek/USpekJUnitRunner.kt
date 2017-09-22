@@ -41,6 +41,7 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
                     println("$name\nFAILURE.${branchTree.location}")
                     println("BECAUSE.${branchTree.assertionLocation}")
                     println("${branchTree.failureCause}\n")
+                    notifier.fireTestFailure(Failure(description, branchTree.failureCause))
                     notifier.fireTestFinished(description)
                 }
             }
