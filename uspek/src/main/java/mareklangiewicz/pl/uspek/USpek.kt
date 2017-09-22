@@ -74,8 +74,6 @@ object USpek {
         override fun toString() = "($fileName:$lineNumber)"
     }
 
-    val UNKNOWN_CODE_LOCATION = CodeLocation("UNKNOWN_FILE_NAME", -1)
-
     sealed class Report {
         abstract val testLocation: CodeLocation
 
@@ -85,7 +83,7 @@ object USpek {
 
         data class Success(override val testLocation: CodeLocation) : Report()
 
-        data class Start(val testName: String, override val testLocation: CodeLocation = UNKNOWN_CODE_LOCATION) : Report()
+        data class Start(val testName: String, override val testLocation: CodeLocation) : Report()
     }
 }
 
