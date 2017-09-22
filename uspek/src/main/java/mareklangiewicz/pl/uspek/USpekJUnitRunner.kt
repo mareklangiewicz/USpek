@@ -1,11 +1,13 @@
 package mareklangiewicz.pl.uspek
 
 import org.junit.runner.Description
+import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
 import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
+import java.util.*
 
-class USpekJUnitRunner(testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass) {
+class USpekJUnitRunner(private val testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass) {
 
     enum class TestState { STARTED, SUCCESS, FAILURE }
 
@@ -24,28 +26,22 @@ class USpekJUnitRunner(testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass
 
     init {
         USpek.log = { report ->
-
             when (report) {
-
                 is USpek.Report.Start -> {
                     if (testTree === null) {
                         check(currentTest === null)
                         testTree = TestTree(report.testName, report.testLocation)
                         currentTest = testTree
-                    }
-                    else {
+                    } else {
                         val test = currentTest!!
                         val subtest = test.subtests.find { it.location == report.testLocation }
                         if (subtest !== null) {
                             currentTest = subtest
-                        }
-                        else {
+                        } else {
                             val newtest = TestTree(report.testName, report.testLocation)
                             test.subtests.add(newtest)
                             currentTest = newtest
                         }
-
-
                     }
                 }
 
@@ -71,24 +67,9 @@ class USpekJUnitRunner(testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass
     }
 
 
-    private val suite = Description.createSuiteDescription(testClass.simpleName)
+    private val suite = Description.createSuiteDescription(testClass.simpleName, UUID.randomUUID().toString())
 
     override fun runChild(method: FrameworkMethod, notifier: RunNotifier) {
-//        USpek.log = { report ->
-//            println("Report: $report")
-//            when (report) {
-//                is USpek.Report.Start -> {
-//                    val testDescription = newTestDescription(method, report.testName)
-//                    suite.children.first().addChild(testDescription)
-//                    notifier.fireTestStarted(testDescription)
-//                    notifier.fireTestFinished(testDescription)
-//                }
-////                is USpek.Report.Success -> notifier.fireTestFinished(newTestDescription(method, report))
-////                is USpek.Report.Failure -> notifier.fireTestFailure(Failure(newTestDescription(method, report), report.cause))
-//            }
-//        }
-//        println("USpek is running ${method.name}")
-//        suite.addChild(Description.createSuiteDescription(method.name))
         super.runChild(method, notifier)
     }
 
@@ -96,11 +77,29 @@ class USpekJUnitRunner(testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass
         println("USpek is running....")
         super.run(notifier)
         println(testTree)
+        testTree?.state = TestState.SUCCESS
+        createDescriptions(testTree!!, suite, notifier)
     }
 
-//    private fun newTestDescription(method: FrameworkMethod, name: String) =
-//            Description.createTestDescription(method.name, name)
-
-
+    private fun createDescriptions(testBranch: TestTree, parentDescription: Description, notifier: RunNotifier): Description {
+        val description = if (testBranch.subtests.isNotEmpty()) {
+            Description.createSuiteDescription(testBranch.name, UUID.randomUUID().toString())
+        } else {
+            Description.createTestDescription(testClass.simpleName, testBranch.name)
+        }
+        testBranch.subtests.forEach {
+            val child = createDescriptions(it, description, notifier)
+            parentDescription.addChild(child)
+            if (child.isTest) {
+                println("start: ${child.displayName}")
+                notifier.fireTestStarted(description)
+                when (it.state) {
+                    USpekJUnitRunner.TestState.SUCCESS -> notifier.fireTestFinished(description)
+                    else -> notifier.fireTestFailure(Failure(description, it.failureCause))
+                }
+            }
+        }
+        return description
+    }
 
 }

@@ -1,6 +1,5 @@
 package mareklangiewicz.pl.uspek
 
-import mareklangiewicz.pl.uspek.USpek.eq
 import mareklangiewicz.pl.uspek.USpek.o
 import org.junit.Assert
 import org.junit.Test
@@ -20,9 +19,6 @@ class USpekRunnerTest {
             }
             "2nd assertion" o {
                 Assert.assertFalse(false)
-                "fjdklfjdkalfjkdasljf" o {
-                    1 eq 2
-                }
             }
         }
     }
