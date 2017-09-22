@@ -3,7 +3,7 @@ package mareklangiewicz.pl.uspek
 fun defaultLogger(report: Report) {
     when (report) {
         is Report.Failure -> {
-            println("FAILURE${report.testLocation}!#!#!#!#!#!#!#!#!#!#!")
+            println("FAILURE${report.testLocation}")
             println("BECAUSE${report.assertionLocation}")
             println("${report.cause}")
         }
