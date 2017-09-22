@@ -14,10 +14,16 @@ class USpekRunnerTest {
                 Assert.assertTrue(true)
                 "nested assertion" o {
                     Assert.assertTrue(true)
+                    "even more nested assertion" o {
+                        Assert.assertTrue(true)
+                    }
                 }
             }
             "2nd assertion" o {
                 Assert.assertFalse(false)
+            }
+            "3rd assertion" o {
+                Assert.assertFalse(true)
             }
         }
     }

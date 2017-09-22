@@ -2,13 +2,10 @@ package mareklangiewicz.pl.uspek
 
 import org.junit.runner.Description
 import org.junit.runner.Runner
-import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
-import org.junit.runners.BlockJUnit4ClassRunner
-import org.junit.runners.model.FrameworkMethod
 import java.util.*
 
-class USpekJUnitRunner(private val testClass: Class<Any>) : Runner() {
+class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
 
     enum class TestState { STARTED, SUCCESS, FAILURE }
 
@@ -70,7 +67,7 @@ class USpekJUnitRunner(private val testClass: Class<Any>) : Runner() {
         val instance = testClass.newInstance()
         testClass.declaredMethods.forEach { it.invoke(instance) }
         testTree?.state = TestState.SUCCESS
-        rootDescription.addChild(createDescriptions(testTree!!))
+        rootDescription.addChild(createDescriptions(testTree!!, testClass.name))
     }
 
     override fun getDescription(): Description {
@@ -81,23 +78,15 @@ class USpekJUnitRunner(private val testClass: Class<Any>) : Runner() {
         println("USpek is running....")
     }
 
-    private fun createDescriptions(testBranch: TestTree): Description {
+    private fun createDescriptions(testBranch: TestTree, testSuite: String): Description {
         val description = if (testBranch.subtests.isNotEmpty()) {
             Description.createSuiteDescription(testBranch.name, UUID.randomUUID().toString())
         } else {
-            Description.createTestDescription("", testBranch.name)
+            Description.createTestDescription(testSuite, testBranch.name)
         }
         testBranch.subtests.forEach {
-            val child = createDescriptions(it)
+            val child = createDescriptions(it, testSuite + "." + testBranch.name)
             description.addChild(child)
-            if (child.isTest) {
-                println("start: ${child.displayName}")
-//                notifier.fireTestStarted(description)
-//                when (it.state) {
-//                    USpekJUnitRunner.TestState.SUCCESS -> notifier.fireTestFinished(description)
-//                    else -> notifier.fireTestFailure(Failure(description, it.failureCause))
-//                }
-            }
         }
         return description
     }
