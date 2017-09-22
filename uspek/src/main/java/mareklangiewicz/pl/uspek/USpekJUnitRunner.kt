@@ -23,20 +23,27 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
 
     override fun run(notifier: RunNotifier) {
         println("USpek is running....")
-        runTree(treeCollectionLogger.testTree!!, notifier)
+        val testTree = treeCollectionLogger.testTree!!
+        runTree(testTree, testTree.name, notifier)
     }
 
-    private fun runTree(branchTree: TestTree, notifier: RunNotifier) {
+    private fun runTree(branchTree: TestTree, name: String, notifier: RunNotifier) {
         if (branchTree.subtests.isEmpty()) {
             val description = branchTree.description
             notifier.fireTestStarted(description)
             when (branchTree.state) {
-                TestState.STARTED -> Unit
-                TestState.SUCCESS -> notifier.fireTestFinished(description)
-                TestState.FAILURE -> notifier.fireTestFailure(Failure(description, branchTree.failureCause))
+                TestState.STARTED -> throw IllegalStateException("INTERNAL ERROR!!!")
+                TestState.SUCCESS -> {
+                    println("$name\nSUCCESS.${branchTree.location}\n")
+                    notifier.fireTestFinished(description)
+                }
+                TestState.FAILURE -> {
+                    println("$name\nFAILURE.${branchTree.location}\n")
+                    notifier.fireTestFailure(Failure(description, branchTree.failureCause))
+                }
             }
         } else {
-            branchTree.subtests.forEach { runTree(it, notifier) }
+            branchTree.subtests.forEach { runTree(it, name + "\n" + it.name, notifier) }
         }
     }
 
