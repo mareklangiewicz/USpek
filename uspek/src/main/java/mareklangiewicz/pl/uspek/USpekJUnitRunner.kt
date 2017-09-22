@@ -18,9 +18,7 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
         rootDescription.addChild(createDescriptions(treeCollectionLogger.testTree!!, testClass.name))
     }
 
-    override fun getDescription(): Description {
-        return rootDescription
-    }
+    override fun getDescription(): Description = rootDescription
 
     override fun run(notifier: RunNotifier) {
         println("USpek is running....")
