@@ -8,7 +8,6 @@ import org.junit.runner.RunWith
 @RunWith(USpekJUnitRunner::class)
 class USpekRunnerTest {
 
-    @Test
     fun some_junit_test() {
         USpek.uspek("some nested test") {
             "1st assertion" o {

@@ -1,13 +1,14 @@
 package mareklangiewicz.pl.uspek
 
 import org.junit.runner.Description
+import org.junit.runner.Runner
 import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
 import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
 import java.util.*
 
-class USpekJUnitRunner(private val testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass) {
+class USpekJUnitRunner(private val testClass: Class<Any>) : Runner() {
 
     enum class TestState { STARTED, SUCCESS, FAILURE }
 
@@ -23,6 +24,8 @@ class USpekJUnitRunner(private val testClass: Class<Any>) : BlockJUnit4ClassRunn
     private var testTree: TestTree? = null
 
     private var currentTest: TestTree? = null
+
+    private val rootDescription = Description.createSuiteDescription(testClass.simpleName, UUID.randomUUID().toString())
 
     init {
         USpek.log = { report ->
@@ -64,39 +67,36 @@ class USpekJUnitRunner(private val testClass: Class<Any>) : BlockJUnit4ClassRunn
                 }
             }
         }
+        val instance = testClass.newInstance()
+        testClass.declaredMethods.forEach { it.invoke(instance) }
+        testTree?.state = TestState.SUCCESS
+        rootDescription.addChild(createDescriptions(testTree!!))
     }
 
-
-    private val suite = Description.createSuiteDescription(testClass.simpleName, UUID.randomUUID().toString())
-
-    override fun runChild(method: FrameworkMethod, notifier: RunNotifier) {
-        super.runChild(method, notifier)
+    override fun getDescription(): Description {
+        return rootDescription
     }
 
     override fun run(notifier: RunNotifier) {
         println("USpek is running....")
-        super.run(notifier)
-        println(testTree)
-        testTree?.state = TestState.SUCCESS
-        createDescriptions(testTree!!, suite, notifier)
     }
 
-    private fun createDescriptions(testBranch: TestTree, parentDescription: Description, notifier: RunNotifier): Description {
+    private fun createDescriptions(testBranch: TestTree): Description {
         val description = if (testBranch.subtests.isNotEmpty()) {
             Description.createSuiteDescription(testBranch.name, UUID.randomUUID().toString())
         } else {
-            Description.createTestDescription(testClass.simpleName, testBranch.name)
+            Description.createTestDescription("", testBranch.name)
         }
         testBranch.subtests.forEach {
-            val child = createDescriptions(it, description, notifier)
-            parentDescription.addChild(child)
+            val child = createDescriptions(it)
+            description.addChild(child)
             if (child.isTest) {
                 println("start: ${child.displayName}")
-                notifier.fireTestStarted(description)
-                when (it.state) {
-                    USpekJUnitRunner.TestState.SUCCESS -> notifier.fireTestFinished(description)
-                    else -> notifier.fireTestFailure(Failure(description, it.failureCause))
-                }
+//                notifier.fireTestStarted(description)
+//                when (it.state) {
+//                    USpekJUnitRunner.TestState.SUCCESS -> notifier.fireTestFinished(description)
+//                    else -> notifier.fireTestFailure(Failure(description, it.failureCause))
+//                }
             }
         }
         return description
