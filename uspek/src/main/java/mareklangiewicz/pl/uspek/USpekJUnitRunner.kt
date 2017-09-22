@@ -1,38 +1,34 @@
 package mareklangiewicz.pl.uspek
 
 import org.junit.runner.Description
+import org.junit.runner.Runner
 import org.junit.runner.notification.RunNotifier
-import org.junit.runners.BlockJUnit4ClassRunner
-import org.junit.runners.model.FrameworkMethod
+import java.util.*
 
-class USpekJUnitRunner(testClass: Class<Any>) : BlockJUnit4ClassRunner(testClass) {
+class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
 
-    private val suite = Description.createSuiteDescription(testClass.simpleName)
+    val testDescription = Description.createSuiteDescription("kasper", UUID.randomUUID().toString())
+    val suit2 = Description.createSuiteDescription("sui2", UUID.randomUUID().toString())
+    val suit3 = Description.createSuiteDescription("sui3", UUID.randomUUID().toString())
+    val nested = Description.createTestDescription("nested", "description")
+    val nested2 = Description.createTestDescription("nested", "description2")
 
-    override fun runChild(method: FrameworkMethod, notifier: RunNotifier) {
-        USpek.log = { report ->
-            println("Report: $report")
-            when (report) {
-                is USpek.Report.Start -> {
-                    val testDescription = newTestDescription(method, report.testName)
-                    suite.children.first().addChild(testDescription)
-                    notifier.fireTestStarted(testDescription)
-                    notifier.fireTestFinished(testDescription)
-                }
-//                is USpek.Report.Success -> notifier.fireTestFinished(newTestDescription(method, report))
-//                is USpek.Report.Failure -> notifier.fireTestFailure(Failure(newTestDescription(method, report), report.cause))
-            }
-        }
-        println("USpek is running ${method.name}")
-        suite.addChild(Description.createSuiteDescription(method.name))
-        super.runChild(method, notifier)
+    init {
+        testDescription.addChild(nested)
+        testDescription.addChild(nested2)
+        suit2.addChild(testDescription)
+        suit3.addChild(suit2)
     }
 
     override fun run(notifier: RunNotifier) {
-        println("USpek is running....")
-        super.run(notifier)
+        notifier.fireTestStarted(nested)
+        notifier.fireTestFinished(nested)
+
+        notifier.fireTestStarted(nested2)
+        notifier.fireTestFinished(nested2)
     }
 
-    private fun newTestDescription(method: FrameworkMethod, name: String) =
-            Description.createTestDescription(method.name, name)
+    override fun getDescription(): Description {
+        return suit3
+    }
 }
