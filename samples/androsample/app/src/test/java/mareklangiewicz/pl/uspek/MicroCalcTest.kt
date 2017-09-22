@@ -3,13 +3,12 @@ package mareklangiewicz.pl.uspek
 import mareklangiewicz.pl.uspek.USpek.eq
 import mareklangiewicz.pl.uspek.USpek.o
 import mareklangiewicz.pl.uspek.USpek.uspek
-import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(USpekJUnitRunner::class)
 class MicroCalcTest {
 
-    @Test
-    fun MicroCalc_tests() {
-
+    init {
         uspek("MicroCalc tests") {
 
             "create SUT" o {
