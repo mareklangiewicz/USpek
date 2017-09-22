@@ -68,21 +68,5 @@ object USpek {
             }
             throw IllegalStateException("User code location not found")
         }
-
-    data class CodeLocation(val fileName: String, val lineNumber: Int) {
-        override fun toString() = "($fileName:$lineNumber)"
-    }
-
-    sealed class Report {
-        abstract val testLocation: CodeLocation
-
-        data class Failure(override val testLocation: CodeLocation,
-                           val assertionLocation: CodeLocation?,
-                           val cause: Throwable?) : Report()
-
-        data class Success(override val testLocation: CodeLocation) : Report()
-
-        data class Start(val testName: String, override val testLocation: CodeLocation) : Report()
-    }
 }
 

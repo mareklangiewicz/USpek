@@ -1,13 +1,13 @@
 package mareklangiewicz.pl.uspek
 
-fun defaultLogger(report: USpek.Report) {
+fun defaultLogger(report: Report) {
     when (report) {
-        is USpek.Report.Failure -> {
+        is Report.Failure -> {
             println("FAILURE${report.testLocation}!#!#!#!#!#!#!#!#!#!#!")
             println("BECAUSE${report.assertionLocation}")
             println("${report.cause}")
         }
-        is USpek.Report.Success -> println("SUCCESS${report.testLocation}")
-        is USpek.Report.Start -> println("START ${report.testName}")
+        is Report.Success -> println("SUCCESS${report.testLocation}")
+        is Report.Start -> println("START ${report.testName}")
     }
 }

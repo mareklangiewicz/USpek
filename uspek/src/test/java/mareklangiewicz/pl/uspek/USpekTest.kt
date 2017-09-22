@@ -18,31 +18,31 @@ class USpekTest {
     fun `should create start report at the beginning of uspek`() {
         uspek_test_1()
         assertThat(collectingLogger.getReports())
-                .isEqualTo(listOf(USpek.Report.Start("some test", USpek.CodeLocation("uspek_test_1.kt", 6))))
+                .isEqualTo(listOf(Report.Start("some test", CodeLocation("uspek_test_1.kt", 6))))
     }
 
     @Test
     fun `should create start report at the beginning of nested test`() {
         uspek_test_2()
         assertThat(collectingLogger.getReports())
-                .contains(USpek.Report.Start("some nested test", USpek.CodeLocation("uspek_test_2.kt", 8)))
+                .contains(Report.Start("some nested test", CodeLocation("uspek_test_2.kt", 8)))
     }
 
     @Test
     fun `should create success report after finishing test with success`() {
         uspek_test_3()
         assertThat(collectingLogger.getReports())
-                .contains(USpek.Report.Success(testLocation = USpek.CodeLocation("uspek_test_3.kt", 9)))
+                .contains(Report.Success(testLocation = CodeLocation("uspek_test_3.kt", 9)))
     }
 
     @Test
     fun `should create failure report after finishing test with error`() {
         uspek_test_4()
-        assertThat(collectingLogger.getReports().filterIsInstance<USpek.Report.Failure>())
+        assertThat(collectingLogger.getReports().filterIsInstance<Report.Failure>())
                 .usingElementComparator(FailureReportComparator)
-                .contains(USpek.Report.Failure(
-                        testLocation = USpek.CodeLocation("uspek_test_4.kt", 9),
-                        assertionLocation = USpek.CodeLocation("uspek_test_4.kt", 10),
+                .contains(Report.Failure(
+                        testLocation = CodeLocation("uspek_test_4.kt", 9),
+                        assertionLocation = CodeLocation("uspek_test_4.kt", 10),
                         cause = AssertionError()))
     }
 
@@ -51,8 +51,8 @@ class USpekTest {
         uspek_test_5()
         assertThat(collectingLogger.getReports())
                 .containsSequence(listOf(
-                        USpek.Report.Start("some test", USpek.CodeLocation("uspek_test_5.kt", 8)),
-                        USpek.Report.Start("some nested test", USpek.CodeLocation("uspek_test_5.kt", 9))))
+                        Report.Start("some test", CodeLocation("uspek_test_5.kt", 8)),
+                        Report.Start("some nested test", CodeLocation("uspek_test_5.kt", 9))))
     }
 
     @Test
@@ -60,8 +60,8 @@ class USpekTest {
         uspek_test_6()
         assertThat(collectingLogger.getReports())
                 .containsAll(listOf(
-                        USpek.Report.Start("first test", USpek.CodeLocation("uspek_test_6.kt", 8)),
-                        USpek.Report.Start("second test", USpek.CodeLocation("uspek_test_6.kt", 11))))
+                        Report.Start("first test", CodeLocation("uspek_test_6.kt", 8)),
+                        Report.Start("second test", CodeLocation("uspek_test_6.kt", 11))))
     }
 
     @Test
@@ -69,23 +69,23 @@ class USpekTest {
         uspek_test_7()
         assertThat(collectingLogger.getReports())
                 .containsAll(listOf(
-                        USpek.Report.Success(testLocation = USpek.CodeLocation("uspek_test_7.kt", lineNumber = 9)),
-                        USpek.Report.Success(testLocation = USpek.CodeLocation("uspek_test_7.kt", lineNumber = 13))))
+                        Report.Success(testLocation = CodeLocation("uspek_test_7.kt", lineNumber = 9)),
+                        Report.Success(testLocation = CodeLocation("uspek_test_7.kt", lineNumber = 13))))
     }
 
     @Test
     fun `should gather failures from all nested tests`() {
         uspek_test_8()
-        assertThat(collectingLogger.getReports().filterIsInstance<USpek.Report.Failure>())
+        assertThat(collectingLogger.getReports().filterIsInstance<Report.Failure>())
                 .usingElementComparator(FailureReportComparator)
                 .containsSequence(listOf(
-                        USpek.Report.Failure(
-                                testLocation = USpek.CodeLocation("uspek_test_8.kt", lineNumber = 9),
-                                assertionLocation = USpek.CodeLocation("uspek_test_8.kt", lineNumber = 10),
+                        Report.Failure(
+                                testLocation = CodeLocation("uspek_test_8.kt", lineNumber = 9),
+                                assertionLocation = CodeLocation("uspek_test_8.kt", lineNumber = 10),
                                 cause = AssertionError()),
-                        USpek.Report.Failure(
-                                testLocation = USpek.CodeLocation("uspek_test_8.kt", lineNumber = 13),
-                                assertionLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 14),
+                        Report.Failure(
+                                testLocation = CodeLocation("uspek_test_8.kt", lineNumber = 13),
+                                assertionLocation = CodeLocation("uspek_test_9.kt", lineNumber = 14),
                                 cause = AssertionError())))
     }
 
@@ -95,15 +95,15 @@ class USpekTest {
         assertThat(collectingLogger.getReports())
                 .usingElementComparator(ReportElementComparator)
                 .isEqualTo(listOf(
-                        USpek.Report.Start("some test", USpek.CodeLocation("uspek_test_9.kt", 8)),
-                        USpek.Report.Start("first test", USpek.CodeLocation("uspek_test_9.kt", 9)),
-                        USpek.Report.Failure(
-                                testLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 9),
-                                assertionLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 10),
+                        Report.Start("some test", CodeLocation("uspek_test_9.kt", 8)),
+                        Report.Start("first test", CodeLocation("uspek_test_9.kt", 9)),
+                        Report.Failure(
+                                testLocation = CodeLocation("uspek_test_9.kt", lineNumber = 9),
+                                assertionLocation = CodeLocation("uspek_test_9.kt", lineNumber = 10),
                                 cause = AssertionError()),
-                        USpek.Report.Start("second test", USpek.CodeLocation("uspek_test_9.kt", 13)),
-                        USpek.Report.Success(
-                                testLocation = USpek.CodeLocation("uspek_test_9.kt", lineNumber = 13))))
+                        Report.Start("second test", CodeLocation("uspek_test_9.kt", 13)),
+                        Report.Success(
+                                testLocation = CodeLocation("uspek_test_9.kt", lineNumber = 13))))
     }
 
     @Test
@@ -111,31 +111,31 @@ class USpekTest {
         uspek_test_10()
         assertThat(collectingLogger.getReports())
                 .usingElementComparator(ReportElementComparator)
-                .containsSequence(listOf(USpek.Report.Start("some test", USpek.CodeLocation("uspek_test_10.kt", 8)),
-                        USpek.Report.Start("first test", USpek.CodeLocation("uspek_test_10.kt", 9)),
-                        USpek.Report.Start("second test", USpek.CodeLocation("uspek_test_10.kt",12)),
-                        USpek.Report.Success(
-                                testLocation = USpek.CodeLocation("uspek_test_10.kt", lineNumber = 12)),
-                        USpek.Report.Start("first test", USpek.CodeLocation("uspek_test_10.kt", 9)),
-                        USpek.Report.Success(
-                                testLocation = USpek.CodeLocation("uspek_test_10.kt", lineNumber = 9))
+                .containsSequence(listOf(Report.Start("some test", CodeLocation("uspek_test_10.kt", 8)),
+                        Report.Start("first test", CodeLocation("uspek_test_10.kt", 9)),
+                        Report.Start("second test", CodeLocation("uspek_test_10.kt", 12)),
+                        Report.Success(
+                                testLocation = CodeLocation("uspek_test_10.kt", lineNumber = 12)),
+                        Report.Start("first test", CodeLocation("uspek_test_10.kt", 9)),
+                        Report.Success(
+                                testLocation = CodeLocation("uspek_test_10.kt", lineNumber = 9))
                 ))
     }
 }
 
-private object ReportElementComparator : Comparator<USpek.Report> {
-    override fun compare(o1: USpek.Report, o2: USpek.Report): Int {
+private object ReportElementComparator : Comparator<Report> {
+    override fun compare(o1: Report, o2: Report): Int {
         if (o1.javaClass != o2.javaClass) return -1
         return when (o1) {
-            is USpek.Report.Start -> equalityCompare(o1, o2)
-            is USpek.Report.Failure -> FailureReportComparator.compare(o1, o2 as USpek.Report.Failure)
-            is USpek.Report.Success -> equalityCompare(o1, o2)
+            is Report.Start -> equalityCompare(o1, o2)
+            is Report.Failure -> FailureReportComparator.compare(o1, o2 as Report.Failure)
+            is Report.Success -> equalityCompare(o1, o2)
         }
     }
 }
 
-private object FailureReportComparator : Comparator<USpek.Report.Failure> {
-    override fun compare(o1: USpek.Report.Failure, o2: USpek.Report.Failure): Int {
+private object FailureReportComparator : Comparator<Report.Failure> {
+    override fun compare(o1: Report.Failure, o2: Report.Failure): Int {
         return if (o1.testLocation == o2.testLocation
                 && o1.testLocation == o2.testLocation
                 && o1.cause?.javaClass?.equals(o2.cause?.javaClass) != false) 0 else -1

@@ -2,16 +2,16 @@ package mareklangiewicz.pl.uspek
 
 import org.junit.runner.Description
 
-class TreeCollectionLogger : (USpek.Report) -> Unit {
+class TreeCollectionLogger : (Report) -> Unit {
     var testTree: TestTree? = null
         private set
 
     private var currentTest: TestTree? = null
 
-    override fun invoke(report: USpek.Report) {
+    override fun invoke(report: Report) {
         when (report) {
 
-            is USpek.Report.Start -> {
+            is Report.Start -> {
                 if (testTree === null) {
                     check(currentTest === null)
                     testTree = TestTree(report.testName, report.testLocation)
@@ -31,7 +31,7 @@ class TreeCollectionLogger : (USpek.Report) -> Unit {
                 }
             }
 
-            is USpek.Report.Success -> {
+            is Report.Success -> {
                 val test = currentTest!!
                 check(testTree !== null)
                 check(report.testLocation == test.location)
@@ -39,7 +39,7 @@ class TreeCollectionLogger : (USpek.Report) -> Unit {
                 currentTest = testTree // now, we will start again from the top
             }
 
-            is USpek.Report.Failure -> {
+            is Report.Failure -> {
                 val test = currentTest!!
                 check(testTree !== null)
                 check(report.testLocation == test.location)
@@ -57,9 +57,9 @@ enum class TestState { STARTED, SUCCESS, FAILURE }
 
 data class TestTree(
         var name: String = "",
-        var location: USpek.CodeLocation? = null,
+        var location: CodeLocation? = null,
         var state: TestState = TestState.STARTED,
-        var assertionLocation: USpek.CodeLocation? = null,
+        var assertionLocation: CodeLocation? = null,
         var failureCause: Throwable? = null,
         val subtests: MutableList<TestTree> = mutableListOf(),
         var description: Description? = null

@@ -1,12 +1,12 @@
 package mareklangiewicz.pl.uspek
 
-class CollectingLogger : (USpek.Report) -> Unit {
+class CollectingLogger : (Report) -> Unit {
 
-    private val reports = mutableListOf<USpek.Report>()
+    private val reports = mutableListOf<Report>()
 
-    fun getReports(): List<USpek.Report> = reports
+    fun getReports(): List<Report> = reports
 
-    override fun invoke(report: USpek.Report) {
+    override fun invoke(report: Report) {
         reports.add(report)
     }
 }
