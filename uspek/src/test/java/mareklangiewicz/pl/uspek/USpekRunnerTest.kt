@@ -2,7 +2,6 @@ package mareklangiewicz.pl.uspek
 
 import mareklangiewicz.pl.uspek.USpek.o
 import org.junit.Assert
-import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(USpekJUnitRunner::class)
