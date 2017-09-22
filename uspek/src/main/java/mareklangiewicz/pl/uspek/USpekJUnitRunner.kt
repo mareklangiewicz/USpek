@@ -14,8 +14,8 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
 
     init {
         USpek.log = treeCollectionLogger
-        val instance = testClass.newInstance()
-        testClass.declaredMethods.forEach { it.invoke(instance) }
+        testClass.newInstance()
+        treeCollectionLogger.testTree?.state = TestState.SUCCESS
         rootDescription.addChild(createDescriptions(treeCollectionLogger.testTree!!, testClass.name))
     }
 

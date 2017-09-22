@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 @RunWith(USpekJUnitRunner::class)
 class USpekRunnerTest {
 
-    fun some_junit_test() {
+    init {
         USpek.uspek("some nested test") {
             "1st assertion" o {
                 Assert.assertTrue(true)
@@ -22,7 +22,7 @@ class USpekRunnerTest {
                 Assert.assertFalse(false)
             }
             "3rd assertion" o {
-                Assert.assertFalse(true)
+                Assert.assertFalse(false)
             }
         }
     }
