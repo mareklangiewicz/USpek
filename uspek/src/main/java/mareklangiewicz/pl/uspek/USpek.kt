@@ -11,11 +11,10 @@ object USpek {
     fun uspek(name: String, code: () -> Unit) {
         finishedTests.clear()
         log(Report.Start(name, currentUserCodeLocation))
-        var again = true
-        do {
+        while(true) {
             try {
                 code()
-                again = false
+                return
             } catch (e: TestFinished) {
                 val location = e.stackTrace[1].location
                 finishedTests[location] = e
@@ -25,7 +24,7 @@ object USpek {
                     log(Report.Failure(location, e.causeLocation, e.cause))
                 }
             }
-        } while (again)
+        }
     }
 
     infix fun String.o(code: () -> Unit) = currentUserCodeLocation in finishedTests || throw try {
