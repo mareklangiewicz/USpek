@@ -13,7 +13,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
     private val treeCollectionLogger = TreeCollectionLogger()
 
     init {
-        USpek.log = BroadcastLogger(listOf(treeCollectionLogger, ::defaultLogger))
+        USpek.log = BroadcastingLogger(listOf(treeCollectionLogger, ::defaultLogger))
         testClass.newInstance()
         treeCollectionLogger.testTree?.state = TestState.SUCCESS
         treeCollectionLogger.testTree?.let {
