@@ -3,9 +3,8 @@ package pl.mareklangiewicz.uspek
 import pl.mareklangiewicz.uspek.USpek.eq
 import pl.mareklangiewicz.uspek.USpek.o
 import pl.mareklangiewicz.uspek.USpek.uspek
-import org.junit.runner.RunWith
 
-@RunWith(USpekJUnitRunner::class)
+//@RunWith(USpekJUnitRunner::class)
 class MicroCalcTest {
 
     init {

@@ -1,13 +1,23 @@
 buildscript {
+    ext.kotlin_version = '1.1.50'
     repositories {
+        google()
+        jcenter()
         mavenCentral()
     }
     dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
     }
 }
 
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -32,17 +42,13 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':uspek')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
-    testImplementation 'com.github.langara:USpek:7defd0f'
-    androidTestImplementation 'com.github.langara:USpek:7defd0f'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
