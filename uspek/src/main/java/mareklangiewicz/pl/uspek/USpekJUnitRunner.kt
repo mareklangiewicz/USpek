@@ -10,7 +10,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
 
     private val rootDescription = Description.createSuiteDescription(testClass.simpleName, UUID.randomUUID().toString())
 
-    private val treeCollectionLogger = TreeCollectionLogger()
+    private val treeCollectionLogger = TreeCollectorLogger()
 
     init {
         USpek.log = BroadcastingLogger(listOf(treeCollectionLogger, ::defaultLogger))
