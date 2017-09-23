@@ -31,4 +31,20 @@ class TreeCollectorLoggerTest {
                         assertionLocation = assertionLocation,
                         failureCause = failureCause))
     }
+
+    @Test
+    fun `should subtree with single children`() {
+        val location = CodeLocation("test.kt", 1)
+        logger(Report.Start("suite", location))
+        logger(Report.Start("first test", location))
+        logger(Report.Success(location))
+        logger(Report.Success(location))
+        assertEquals(logger.testTree!!,
+                TestTree(name = "suite",
+                        state = TestState.SUCCESS,
+                        location = location,
+                        subtests = mutableListOf(TestTree(name = "first test",
+                                location = location,
+                                state = TestState.SUCCESS))))
+    }
 }
