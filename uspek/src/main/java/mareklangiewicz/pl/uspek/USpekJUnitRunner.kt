@@ -1,5 +1,6 @@
 package mareklangiewicz.pl.uspek
 
+import mareklangiewicz.pl.uspek.loggers.*
 import org.junit.runner.Description
 import org.junit.runner.Runner
 import org.junit.runner.notification.Failure
@@ -13,7 +14,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
     private val treeCollectionLogger = TreeCollectorLogger()
 
     init {
-        USpek.log = BroadcastingLogger(listOf(treeCollectionLogger, ::consoleOutputLogger))
+        USpek.log = mareklangiewicz.pl.uspek.loggers.BroadcastingLogger(listOf(treeCollectionLogger, ::consoleOutputLogger))
         testClass.newInstance()
         treeCollectionLogger.testTree?.state = TestState.SUCCESS
         treeCollectionLogger.testTree?.let {

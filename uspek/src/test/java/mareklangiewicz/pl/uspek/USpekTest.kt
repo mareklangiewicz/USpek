@@ -1,6 +1,7 @@
 package mareklangiewicz.pl.uspek
 
 import mareklangiewicz.pl.uspek.data.*
+import mareklangiewicz.pl.uspek.loggers.ListCollectorLogger
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

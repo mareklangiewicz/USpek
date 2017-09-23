@@ -1,5 +1,8 @@
 package mareklangiewicz.pl.uspek
 
+import mareklangiewicz.pl.uspek.loggers.TestState
+import mareklangiewicz.pl.uspek.loggers.TestTree
+import mareklangiewicz.pl.uspek.loggers.TreeCollectorLogger
 import org.junit.Assert
 import org.junit.Test
 

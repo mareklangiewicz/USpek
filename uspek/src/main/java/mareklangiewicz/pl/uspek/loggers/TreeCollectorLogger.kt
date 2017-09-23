@@ -1,5 +1,8 @@
-package mareklangiewicz.pl.uspek
+package mareklangiewicz.pl.uspek.loggers
 
+import mareklangiewicz.pl.uspek.CodeLocation
+import mareklangiewicz.pl.uspek.Report
+import mareklangiewicz.pl.uspek.ULogger
 import org.junit.runner.Description
 
 class TreeCollectorLogger : ULogger {

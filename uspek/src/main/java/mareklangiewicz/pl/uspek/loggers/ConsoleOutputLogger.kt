@@ -1,4 +1,6 @@
-package mareklangiewicz.pl.uspek
+package mareklangiewicz.pl.uspek.loggers
+
+import mareklangiewicz.pl.uspek.Report
 
 fun consoleOutputLogger(report: Report) {
     when (report) {
