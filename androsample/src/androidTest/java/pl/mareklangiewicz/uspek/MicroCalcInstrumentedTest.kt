@@ -6,26 +6,24 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
-import pl.mareklangiewicz.uspek.USpek.o
-import pl.mareklangiewicz.uspek.USpek.uspek
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.startsWith
 import org.junit.runner.RunWith
+import pl.mareklangiewicz.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek.uspek
 
 @RunWith(USpekJUnitRunner::class)
 class MicroCalcInstrumentedTest {
 
     init {
         val activityRule = ActivityTestRule<MainActivity>(MainActivity::class.java, false, false)
-        uspek("check different user interaction scenarios with uspek") {
-
+        uspek("andro tests") {
 
             "on main activity" o {
 
                 try {
                     activityRule.finishActivity()
-                } catch (e: IllegalStateException) {
-                }
+                } catch (e: IllegalStateException) { }
 
                 activityRule.launchActivity(null)
 

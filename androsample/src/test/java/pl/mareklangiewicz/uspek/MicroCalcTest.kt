@@ -24,10 +24,10 @@ class MicroCalcTest {
                 "mutate SUT" o {
                     sut.add(1)
 
-                    "incorrectly check add - this should fail" o {
-                        sut.add(5)
-                        sut.result eq 15
-                    }
+//                    "incorrectly check add - this should fail" o {
+//                        sut.add(5)
+//                        sut.result eq 15
+//                    }
                 }
 
                 "check add again" o {
