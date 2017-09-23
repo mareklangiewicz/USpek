@@ -14,7 +14,7 @@ class TreeCollectorLoggerTest {
         val location = CodeLocation("test.kt", 1)
         logger(Report.Start("first test", location))
         logger(Report.Success(location))
-        assertEquals(logger.testTree!!, TestTree(name = "first test", state = TestState.SUCCESS, location = location))
+        assertEquals(TestTree(name = "first test", state = TestState.SUCCESS, location = location), logger.testTree!!)
     }
 
     @Test
@@ -24,12 +24,13 @@ class TreeCollectorLoggerTest {
         val failureCause = RuntimeException()
         logger(Report.Start("first test", location))
         logger(Report.Failure(location, assertionLocation = assertionLocation, cause = failureCause))
-        assertEquals(logger.testTree!!,
+        assertEquals(
                 TestTree(name = "first test",
                         state = TestState.FAILURE,
                         location = location,
                         assertionLocation = assertionLocation,
-                        failureCause = failureCause))
+                        failureCause = failureCause),
+                logger.testTree!!)
     }
 
     @Test
@@ -39,13 +40,14 @@ class TreeCollectorLoggerTest {
         logger(Report.Start("first test", location))
         logger(Report.Success(location))
         logger(Report.Success(location))
-        assertEquals(logger.testTree!!,
+        assertEquals(
                 TestTree(name = "suite",
                         state = TestState.SUCCESS,
                         location = location,
                         subtests = mutableListOf(TestTree(name = "first test",
                                 location = location,
-                                state = TestState.SUCCESS))))
+                                state = TestState.SUCCESS))),
+                logger.testTree!!)
     }
 
     @Test
@@ -59,7 +61,7 @@ class TreeCollectorLoggerTest {
         logger(Report.Start("second test", secondTestLocation))
         logger(Report.Success(secondTestLocation))
         logger(Report.Success(location))
-        assertEquals(logger.testTree!!,
+        assertEquals(
                 TestTree(name = "suite",
                         state = TestState.SUCCESS,
                         location = location,
@@ -69,7 +71,8 @@ class TreeCollectorLoggerTest {
                                         state = TestState.SUCCESS),
                                 TestTree(name = "second test",
                                         location = secondTestLocation,
-                                        state = TestState.SUCCESS))))
+                                        state = TestState.SUCCESS))),
+                logger.testTree!!)
     }
 
     @Test
@@ -84,7 +87,7 @@ class TreeCollectorLoggerTest {
         logger(Report.Start("first test", firstTestLocation))
         logger(Report.Success(firstTestLocation))
         logger(Report.Success(location))
-        assertEquals(logger.testTree!!,
+        assertEquals(
                 TestTree(name = "suite",
                         state = TestState.SUCCESS,
                         location = location,
@@ -94,6 +97,7 @@ class TreeCollectorLoggerTest {
                                         state = TestState.SUCCESS,
                                         subtests = mutableListOf(TestTree(name = "second test",
                                                 location = secondTestLocation,
-                                                state = TestState.SUCCESS))))))
+                                                state = TestState.SUCCESS))))),
+                logger.testTree!!)
     }
 }
