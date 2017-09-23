@@ -58,7 +58,7 @@ class TreeCollectorLoggerTest {
         logger(Report.Success(firstTestLocation))
         logger(Report.Start("second test", secondTestLocation))
         logger(Report.Success(secondTestLocation))
-        logger(Report.Success(location.copy(lineNumber = 1)))
+        logger(Report.Success(location))
         assertEquals(logger.testTree!!,
                 TestTree(name = "suite",
                         state = TestState.SUCCESS,
@@ -70,5 +70,30 @@ class TreeCollectorLoggerTest {
                                 TestTree(name = "second test",
                                         location = secondTestLocation,
                                         state = TestState.SUCCESS))))
+    }
+
+    @Test
+    fun `should handle multiple nesting`() {
+        val location = CodeLocation("test.kt", 1)
+        val firstTestLocation = location.copy(lineNumber = 2)
+        val secondTestLocation = location.copy(lineNumber = 3)
+        logger(Report.Start("suite", location))
+        logger(Report.Start("first test", firstTestLocation))
+        logger(Report.Start("second test", secondTestLocation))
+        logger(Report.Success(secondTestLocation))
+        logger(Report.Start("first test", firstTestLocation))
+        logger(Report.Success(firstTestLocation))
+        logger(Report.Success(location))
+        assertEquals(logger.testTree!!,
+                TestTree(name = "suite",
+                        state = TestState.SUCCESS,
+                        location = location,
+                        subtests = mutableListOf(
+                                TestTree(name = "first test",
+                                        location = firstTestLocation,
+                                        state = TestState.SUCCESS,
+                                        subtests = mutableListOf(TestTree(name = "second test",
+                                                location = secondTestLocation,
+                                                state = TestState.SUCCESS))))))
     }
 }
