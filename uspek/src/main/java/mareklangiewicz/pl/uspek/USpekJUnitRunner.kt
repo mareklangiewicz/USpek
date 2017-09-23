@@ -6,7 +6,7 @@ import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
 import java.util.*
 
-class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
+class USpekJUnitRunner(testClass: Class<*>) : Runner() {
 
     private val rootDescription = Description.createSuiteDescription(testClass.simpleName, UUID.randomUUID().toString())
 
@@ -16,7 +16,9 @@ class USpekJUnitRunner(testClass: Class<Any>) : Runner() {
         USpek.log = BroadcastLogger(listOf(treeCollectionLogger, ::defaultLogger))
         testClass.newInstance()
         treeCollectionLogger.testTree?.state = TestState.SUCCESS
-        rootDescription.addChild(createDescriptions(treeCollectionLogger.testTree!!, testClass.name))
+        treeCollectionLogger.testTree?.let {
+            rootDescription.addChild(createDescriptions(it, testClass.name))
+        }
     }
 
     override fun getDescription(): Description = rootDescription
