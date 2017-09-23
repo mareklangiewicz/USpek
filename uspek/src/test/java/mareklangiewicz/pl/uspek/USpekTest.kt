@@ -7,7 +7,7 @@ import org.junit.Test
 
 class USpekTest {
 
-    private val collectingLogger = CollectingLogger()
+    private val collectingLogger = ListCollectorLogger()
 
     @Before
     fun setUp() {
