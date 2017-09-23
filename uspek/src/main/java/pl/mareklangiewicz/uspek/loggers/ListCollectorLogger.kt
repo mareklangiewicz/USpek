@@ -1,7 +1,7 @@
-package mareklangiewicz.pl.uspek.loggers
+package pl.mareklangiewicz.uspek.loggers
 
-import mareklangiewicz.pl.uspek.Report
-import mareklangiewicz.pl.uspek.ULogger
+import pl.mareklangiewicz.uspek.Report
+import pl.mareklangiewicz.uspek.ULogger
 
 class ListCollectorLogger : ULogger {
 

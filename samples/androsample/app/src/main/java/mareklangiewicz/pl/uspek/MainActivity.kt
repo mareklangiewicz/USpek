@@ -1,4 +1,4 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

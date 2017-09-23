@@ -1,8 +1,8 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
-import mareklangiewicz.pl.uspek.USpek.eq
-import mareklangiewicz.pl.uspek.USpek.o
-import mareklangiewicz.pl.uspek.USpek.uspek
+import pl.mareklangiewicz.uspek.USpek.eq
+import pl.mareklangiewicz.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek.uspek
 import org.junit.runner.RunWith
 
 @RunWith(USpekJUnitRunner::class)

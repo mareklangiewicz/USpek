@@ -1,7 +1,7 @@
-package mareklangiewicz.pl.uspek.data
+package pl.mareklangiewicz.uspek.data
 
-import mareklangiewicz.pl.uspek.USpek
-import mareklangiewicz.pl.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek
+import pl.mareklangiewicz.uspek.USpek.o
 
 fun uspek_test_6() {
     USpek.uspek("some test") {

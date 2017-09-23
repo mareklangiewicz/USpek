@@ -21,7 +21,7 @@ repositories {
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
-mainClassName = 'mareklangiewicz.pl.uspek.MainKt'
+mainClassName = 'pl.mareklangiewicz.uspek.MainKt'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"

@@ -1,4 +1,4 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
@@ -6,8 +6,8 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
-import mareklangiewicz.pl.uspek.USpek.o
-import mareklangiewicz.pl.uspek.USpek.uspek
+import pl.mareklangiewicz.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek.uspek
 import org.hamcrest.Matchers.endsWith
 import org.hamcrest.Matchers.startsWith
 import org.junit.runner.RunWith

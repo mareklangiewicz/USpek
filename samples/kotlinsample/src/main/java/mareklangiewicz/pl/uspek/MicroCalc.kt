@@ -1,4 +1,4 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
 
 class MicroCalc(var result: Int) {

@@ -1,6 +1,6 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
-import mareklangiewicz.pl.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek.o
 import org.junit.Assert
 import org.junit.runner.RunWith
 

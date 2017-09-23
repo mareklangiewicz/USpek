@@ -1,7 +1,7 @@
-package mareklangiewicz.pl.uspek.data
+package pl.mareklangiewicz.uspek.data
 
-import mareklangiewicz.pl.uspek.USpek
-import mareklangiewicz.pl.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek
+import pl.mareklangiewicz.uspek.USpek.o
 import org.junit.Assert
 
 fun uspek_test_9() {

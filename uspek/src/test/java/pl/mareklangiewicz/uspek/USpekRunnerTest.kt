@@ -1,6 +1,6 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
-import mareklangiewicz.pl.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek.o
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -28,7 +28,7 @@ class USpekRunnerTest {
         }
         val runner = USpekJUnitRunner(TestClass::class.java)
         val testCase = runner.description.children.first()
-        assertEquals("some test(mareklangiewicz.pl.uspek.TestClass)", testCase.displayName)
+        assertEquals("some test(pl.mareklangiewicz.uspek.TestClass)", testCase.displayName)
     }
 
     @Test
@@ -40,7 +40,7 @@ class USpekRunnerTest {
         }
         val runner = USpekJUnitRunner(TestClass::class.java)
         val testCase = runner.description.children.first().children.first()
-        assertEquals("some assertion(mareklangiewicz.pl.uspek.TestClass.some nested test)", testCase.displayName)
+        assertEquals("some assertion(pl.mareklangiewicz.uspek.TestClass.some nested test)", testCase.displayName)
         assertTrue(testCase.isTest)
         assertEquals(1, runner.testCount())
     }
@@ -57,9 +57,9 @@ class USpekRunnerTest {
         val testSuite = runner.description.children.first().children
         val first = testSuite.first()
         val second = testSuite[1]
-        assertEquals("first test(mareklangiewicz.pl.uspek.TestClass.some test)", first.displayName)
+        assertEquals("first test(pl.mareklangiewicz.uspek.TestClass.some test)", first.displayName)
         assertTrue(first.isTest)
-        assertEquals("second test(mareklangiewicz.pl.uspek.TestClass.some test)", second.displayName)
+        assertEquals("second test(pl.mareklangiewicz.uspek.TestClass.some test)", second.displayName)
         assertTrue(second.isTest)
         assertEquals(2, runner.testCount())
     }
@@ -79,7 +79,7 @@ class USpekRunnerTest {
         val second = first.children.first()
         assertEquals("first test", first.displayName)
         assertTrue(first.isSuite)
-        assertEquals("second test(mareklangiewicz.pl.uspek.TestClass.some test.first test)", second.displayName)
+        assertEquals("second test(pl.mareklangiewicz.uspek.TestClass.some test.first test)", second.displayName)
         assertTrue(second.isTest)
         assertEquals(1, runner.testCount())
     }
@@ -101,9 +101,9 @@ class USpekRunnerTest {
         val third = testSuite[1]
         assertEquals("first test", first.displayName)
         assertTrue(first.isSuite)
-        assertEquals("second test(mareklangiewicz.pl.uspek.TestClass.some test.first test)", second.displayName)
+        assertEquals("second test(pl.mareklangiewicz.uspek.TestClass.some test.first test)", second.displayName)
         assertTrue(second.isTest)
-        assertEquals("third test(mareklangiewicz.pl.uspek.TestClass.some test)", third.displayName)
+        assertEquals("third test(pl.mareklangiewicz.uspek.TestClass.some test)", third.displayName)
         assertTrue(third.isTest)
         assertEquals(2, runner.testCount())
     }

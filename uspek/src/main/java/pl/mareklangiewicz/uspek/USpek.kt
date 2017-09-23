@@ -1,6 +1,6 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
-import mareklangiewicz.pl.uspek.loggers.consoleOutputLogger
+import pl.mareklangiewicz.uspek.loggers.consoleOutputLogger
 import org.junit.Assert
 
 object USpek {

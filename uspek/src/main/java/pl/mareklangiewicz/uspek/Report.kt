@@ -1,4 +1,4 @@
-package mareklangiewicz.pl.uspek
+package pl.mareklangiewicz.uspek
 
 sealed class Report {
     abstract val testLocation: CodeLocation
