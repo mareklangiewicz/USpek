@@ -6,7 +6,7 @@ object USpek {
 
     private val finishedTests: MutableMap<CodeLocation, Throwable> = mutableMapOf()
 
-    var log: ULogger = ::defaultLogger
+    var log: ULogger = ::consoleOutputLogger
 
     fun uspek(name: String, code: () -> Unit) {
         finishedTests.clear()

@@ -1,6 +1,6 @@
 package mareklangiewicz.pl.uspek
 
-fun defaultLogger(report: Report) {
+fun consoleOutputLogger(report: Report) {
     when (report) {
         is Report.Failure -> {
             println("FAILURE${report.testLocation}")
