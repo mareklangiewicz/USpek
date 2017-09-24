@@ -1,18 +1,19 @@
 package pl.mareklangiewicz.uspek
 
+import org.junit.runner.RunWith
 import pl.mareklangiewicz.uspek.USpek.eq
 import pl.mareklangiewicz.uspek.USpek.o
 import pl.mareklangiewicz.uspek.USpek.uspek
 
-//@RunWith(USpekJUnitRunner::class)
-class MicroCalcTest {
+@RunWith(USpekJUnitRunner::class)
+class AndroCalcTest {
 
     init {
-        uspek("MicroCalc tests") {
+        uspek("AndroCalc tests") {
 
             "create SUT" o {
 
-                val sut = MicroCalc(10)
+                val sut = AndroCalc(10)
 
                 "check add" o {
                     sut.add(5)

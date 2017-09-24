@@ -13,7 +13,7 @@ import pl.mareklangiewicz.uspek.USpek.o
 import pl.mareklangiewicz.uspek.USpek.uspek
 
 @RunWith(USpekJUnitRunner::class)
-class MicroCalcInstrumentedTest {
+class AndroCalcInstrumentedTest {
 
     init {
         val activityRule = ActivityTestRule<MainActivity>(MainActivity::class.java, false, false)
