@@ -33,7 +33,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
             val description = branchTree.description
             notifier.fireTestStarted(description)
             when (branchTree.state) {
-                TestState.STARTED -> throw IllegalStateException("INTERNAL ERROR!!!")
+                TestState.STARTED -> throw IllegalStateException("Tree branch not finished")
                 TestState.SUCCESS -> {
                     notifier.fireTestFinished(description)
                 }

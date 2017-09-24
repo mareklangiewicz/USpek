@@ -49,8 +49,9 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
 //    testImplementation project(':uspek')
-    testImplementation 'com.github.langara:USpek:9c850d3e36'
-    androidTestImplementation 'com.github.langara:USpek:9c850d3e36'
+//    androidTestImplementation project(':uspek')
+    testImplementation 'com.github.langara:USpek:ef4ac69f5c'
+    androidTestImplementation 'com.github.langara:USpek:ef4ac69f5c'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
