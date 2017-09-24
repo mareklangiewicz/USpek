@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.1.4-3'
+    ext.kotlin_version = '1.1.50'
 
     repositories {
         jcenter()
@@ -26,5 +26,5 @@ mainClassName = 'pl.mareklangiewicz.uspek.MainKt'
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     testImplementation 'junit:junit:4.12'
-    testImplementation 'com.github.langara:USpek:master-SNAPSHOT'
+    testImplementation 'com.github.langara:USpek:9c850d3e36'
 }
