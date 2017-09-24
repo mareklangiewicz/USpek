@@ -10,23 +10,19 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
 
     private val rootDescription = Description.createSuiteDescription(testClass.simpleName, UUID.randomUUID().toString())
 
-    private val treeCollectionLogger = TreeCollectorLogger()
+    private val tree = TestTree()
 
     init {
-        treeCollectionLogger.reset()
-        USpek.log = logToAll(treeCollectionLogger, ::logToConsole)
+        tree.reset()
+        USpek.log = logToAll(logToTree(tree), ::logToConsole)
         testClass.newInstance()
-        val tree = treeCollectionLogger.tree
         tree.info.state = TestState.SUCCESS
         rootDescription.addChild(createDescriptions(tree, testClass.name))
     }
 
     override fun getDescription(): Description = rootDescription
 
-    override fun run(notifier: RunNotifier) {
-        val tree = treeCollectionLogger.tree
-        runTree(tree, tree.info.name!!, notifier)
-    }
+    override fun run(notifier: RunNotifier) = runTree(tree, tree.info.name!!, notifier)
 
     private fun runTree(branchTree: TestTree, name: String, notifier: RunNotifier) {
         if (branchTree.subtrees.isEmpty()) {

@@ -22,4 +22,13 @@ data class TestTree(
         val subtrees: MutableList<TestTree> = mutableListOf()
 )
 
+fun TestTree.reset(i: TestInfo = TestInfo()) {
+    info.name = i.name
+    info.location = i.location
+    info.state = i.state
+    info.failureLocation = i.failureLocation
+    info.failureCause = i.failureCause
+    info.description = i.description
+}
+
 class TestEnd(cause: Throwable? = null) : RuntimeException(cause)

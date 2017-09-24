@@ -22,4 +22,46 @@ internal fun logToConsole(info: TestInfo) = info.run {
 }
 
 
+internal class logToTree(private val tree: TestTree) : ULog {
 
+    private var currentSubTree = tree
+
+    override fun invoke(info: TestInfo) {
+
+        val current = currentSubTree
+
+        if (current === tree && tree.info.state === null) {
+            check(info.state == STARTED)
+            tree.reset(info)
+        }
+        else when (info.state) {
+
+            STARTED -> {
+                val subTree = current.subtrees.find { it.info.location == info.location }
+                if (subTree !== null) {
+                    currentSubTree = subTree
+                } else {
+                    val newSubTree = TestTree(info.copy())
+                    current.subtrees.add(newSubTree)
+                    currentSubTree = newSubTree
+                }
+            }
+
+            SUCCESS -> {
+                check(info.location == current.info.location)
+                current.info.state = SUCCESS
+                currentSubTree = tree // start again from the top
+            }
+
+            FAILURE -> {
+                check(info.location == current.info.location)
+                current.info.state = FAILURE
+                current.info.failureLocation = info.failureLocation
+                current.info.failureCause = info.failureCause
+                currentSubTree = tree // start again from the top
+            }
+
+            null -> throw IllegalStateException("Unknown test state")
+        }
+    }
+}
