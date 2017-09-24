@@ -1,7 +1,6 @@
 package pl.mareklangiewicz.uspek
 
 import org.junit.runner.RunWith
-import pl.mareklangiewicz.uspek.USpek.eq
 import pl.mareklangiewicz.uspek.USpek.o
 import pl.mareklangiewicz.uspek.USpek.uspek
 

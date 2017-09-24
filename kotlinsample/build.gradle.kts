@@ -19,6 +19,6 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib", "1.1.50"))
     implementation("junit:junit:4.12")
-    testImplementation("com.github.langara:USpek:eda813d200")
+    testImplementation("com.github.langara:USpek:b89f82be9b")
 }
 
