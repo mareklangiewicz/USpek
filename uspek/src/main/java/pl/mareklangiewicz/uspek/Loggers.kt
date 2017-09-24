@@ -4,6 +4,15 @@ import pl.mareklangiewicz.uspek.TestState.*
 
 typealias ULog = (TestInfo) -> Unit
 
+fun ULog.start(name: String, location: CodeLocation) = this(TestInfo(name, location, STARTED))
+
+fun ULog.end(location: CodeLocation, exception: TestEnd) = this(TestInfo(
+        location = location,
+        state = if (exception.cause === null) SUCCESS else FAILURE,
+        failureLocation = exception.causeLocation,
+        failureCause = exception.cause
+))
+
 internal fun logToAll(vararg log: ULog) = fun(info: TestInfo) = log.forEach { it(info) }
 
 internal fun logToList(list: MutableList<TestInfo>) = fun(info: TestInfo) { list.add(info) }
@@ -38,26 +47,17 @@ internal class logToTree(private val tree: TestTree) : ULog {
 
             STARTED -> {
                 val subTree = current.subtrees.find { it.info.location == info.location }
-                if (subTree !== null) {
+                if (subTree !== null)
                     currentSubTree = subTree
-                } else {
-                    val newSubTree = TestTree(info.copy())
-                    current.subtrees.add(newSubTree)
-                    currentSubTree = newSubTree
+                else {
+                    currentSubTree = TestTree(info.copy())
+                    current.subtrees.add(currentSubTree)
                 }
             }
 
-            SUCCESS -> {
+            SUCCESS, FAILURE -> {
                 check(info.location == current.info.location)
-                current.info.state = SUCCESS
-                currentSubTree = tree // start again from the top
-            }
-
-            FAILURE -> {
-                check(info.location == current.info.location)
-                current.info.state = FAILURE
-                current.info.failureLocation = info.failureLocation
-                current.info.failureCause = info.failureCause
+                current.info.applyExistentFrom(info)
                 currentSubTree = tree // start again from the top
             }
 

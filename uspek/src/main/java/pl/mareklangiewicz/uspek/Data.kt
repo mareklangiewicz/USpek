@@ -17,18 +17,32 @@ data class TestInfo(
         var description: Description? = null
 )
 
+fun TestInfo.applyAllFrom(info: TestInfo) {
+    name = info.name
+    location = info.location
+    state = info.state
+    failureLocation = info.failureLocation
+    failureCause = info.failureCause
+    description = info.description
+}
+
+fun TestInfo.applyExistentFrom(info: TestInfo) {
+    name = info.name ?: name
+    location = info.location ?: location
+    state = info.state ?: state
+    failureLocation = info.failureLocation ?: failureLocation
+    failureCause = info.failureCause ?: failureCause
+    description = info.description ?: description
+}
+
 data class TestTree(
         val info: TestInfo = TestInfo(),
         val subtrees: MutableList<TestTree> = mutableListOf()
 )
 
 fun TestTree.reset(i: TestInfo = TestInfo()) {
-    info.name = i.name
-    info.location = i.location
-    info.state = i.state
-    info.failureLocation = i.failureLocation
-    info.failureCause = i.failureCause
-    info.description = i.description
+    info.applyAllFrom(i)
+    subtrees.clear()
 }
 
 class TestEnd(cause: Throwable? = null) : RuntimeException(cause)
