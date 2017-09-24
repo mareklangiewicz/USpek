@@ -5,19 +5,14 @@ import org.junit.Test
 import pl.mareklangiewicz.uspek.TestState.*
 
 class TreeCollectorLoggerTest {
-    object Report { // temporary wrapper for tests
-        fun Start(name: String, location: CodeLocation) = TestInfo(name, location, state = STARTED)
-        fun Success(testLocation: CodeLocation) = TestInfo(location = testLocation, state = SUCCESS)
-        fun Failure(testLocation: CodeLocation, assertionLocation: CodeLocation, cause: Throwable)
-                = TestInfo(location = testLocation, state = FAILURE, failureLocation = assertionLocation, failureCause = cause)
-    }
+
     private val logger = TreeCollectorLogger()
 
     @Test
     fun `should create single success node test tree`() {
         val location = CodeLocation("test.kt", 1)
-        logger(Report.Start("first test", location))
-        logger(Report.Success(location))
+        logger(TestInfo("first test", location, state = STARTED))
+        logger(TestInfo(location = location, state = SUCCESS))
         assertEquals(TestTree(TestInfo(name = "first test", state = SUCCESS, location = location)), logger.testTree!!)
     }
 
@@ -26,8 +21,8 @@ class TreeCollectorLoggerTest {
         val location = CodeLocation("test.kt", 1)
         val assertionLocation = CodeLocation("test.kt", 2)
         val failureCause = RuntimeException()
-        logger(Report.Start("first test", location))
-        logger(Report.Failure(location, assertionLocation = assertionLocation, cause = failureCause))
+        logger(TestInfo("first test", location, state = STARTED))
+        logger(TestInfo(location = location, state = FAILURE, failureLocation = assertionLocation, failureCause = failureCause))
         assertEquals(
                 TestTree(TestInfo(name = "first test",
                         state = FAILURE,
@@ -40,10 +35,10 @@ class TreeCollectorLoggerTest {
     @Test
     fun `should subtree with single children`() {
         val location = CodeLocation("test.kt", 1)
-        logger(Report.Start("suite", location))
-        logger(Report.Start("first test", location))
-        logger(Report.Success(location))
-        logger(Report.Success(location))
+        logger(TestInfo("suite", location, state = STARTED))
+        logger(TestInfo("first test", location, state = STARTED))
+        logger(TestInfo(location = location, state = SUCCESS))
+        logger(TestInfo(location = location, state = SUCCESS))
         assertEquals(
                 TestTree(TestInfo(name = "suite",
                         state = SUCCESS,
@@ -59,12 +54,12 @@ class TreeCollectorLoggerTest {
         val location = CodeLocation("test.kt", 1)
         val firstTestLocation = location.copy(lineNumber = 2)
         val secondTestLocation = location.copy(lineNumber = 3)
-        logger(Report.Start("suite", location))
-        logger(Report.Start("first test", firstTestLocation))
-        logger(Report.Success(firstTestLocation))
-        logger(Report.Start("second test", secondTestLocation))
-        logger(Report.Success(secondTestLocation))
-        logger(Report.Success(location))
+        logger(TestInfo("suite", location, state = STARTED))
+        logger(TestInfo("first test", firstTestLocation, state = STARTED))
+        logger(TestInfo(location = firstTestLocation, state = SUCCESS))
+        logger(TestInfo("second test", secondTestLocation, state = STARTED))
+        logger(TestInfo(location = secondTestLocation, state = SUCCESS))
+        logger(TestInfo(location = location, state = SUCCESS))
         assertEquals(
                 TestTree(TestInfo(name = "suite",
                         state = SUCCESS,
@@ -84,13 +79,13 @@ class TreeCollectorLoggerTest {
         val location = CodeLocation("test.kt", 1)
         val firstTestLocation = location.copy(lineNumber = 2)
         val secondTestLocation = location.copy(lineNumber = 3)
-        logger(Report.Start("suite", location))
-        logger(Report.Start("first test", firstTestLocation))
-        logger(Report.Start("second test", secondTestLocation))
-        logger(Report.Success(secondTestLocation))
-        logger(Report.Start("first test", firstTestLocation))
-        logger(Report.Success(firstTestLocation))
-        logger(Report.Success(location))
+        logger(TestInfo("suite", location, state = STARTED))
+        logger(TestInfo("first test", firstTestLocation, state = STARTED))
+        logger(TestInfo("second test", secondTestLocation, state = STARTED))
+        logger(TestInfo(location = secondTestLocation, state = SUCCESS))
+        logger(TestInfo("first test", firstTestLocation, state = STARTED))
+        logger(TestInfo(location = firstTestLocation, state = SUCCESS))
+        logger(TestInfo(location = location, state = SUCCESS))
         assertEquals(
                 TestTree(TestInfo(name = "suite",
                         state = SUCCESS,
