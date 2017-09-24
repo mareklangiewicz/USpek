@@ -3,53 +3,58 @@ package pl.mareklangiewicz.uspek
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import pl.mareklangiewicz.uspek.TestState.*
 import pl.mareklangiewicz.uspek.data.*
 
 class USpekTest {
 
-    private val reports = mutableListOf<Report>()
+    private val infos = mutableListOf<TestInfo>()
+
+    object Report { // temporary wrapper for tests
+        fun Start(name: String, location: CodeLocation) = TestInfo(name, location, state = STARTED)
+        fun Success(testLocation: CodeLocation) = TestInfo(location = testLocation, state = SUCCESS)
+        fun Failure(testLocation: CodeLocation, assertionLocation: CodeLocation, cause: Throwable)
+                = TestInfo(location = testLocation, state = FAILURE, failureLocation = assertionLocation, failureCause = cause)
+    }
 
     @Before
     fun setUp() {
-        USpek.log = logToList(reports)
+        USpek.log = logToList(infos)
     }
 
     @Test
     fun `should create start report at the beginning of uspek`() {
         uspek_test_1()
-        assertThat(reports)
-                .isEqualTo(listOf(Report.Start("some test", CodeLocation("uspek_test_1.kt", 6))))
+        assertThat(infos).isEqualTo(listOf(Report.Start("some test", CodeLocation("uspek_test_1.kt", 6))))
     }
 
     @Test
     fun `should create start report at the beginning of nested test`() {
         uspek_test_2()
-        assertThat(reports)
-                .contains(Report.Start("some nested test", CodeLocation("uspek_test_2.kt", 8)))
+        assertThat(infos).contains(Report.Start("some nested test", CodeLocation("uspek_test_2.kt", 8)))
     }
 
     @Test
     fun `should create success report after finishing test with success`() {
         uspek_test_3()
-        assertThat(reports)
-                .contains(Report.Success(testLocation = CodeLocation("uspek_test_3.kt", 9)))
+        assertThat(infos).contains(Report.Success(testLocation = CodeLocation("uspek_test_3.kt", 9)))
     }
 
     @Test
     fun `should create failure report after finishing test with error`() {
         uspek_test_4()
-        assertThat(reports.filterIsInstance<Report.Failure>())
-                .usingElementComparator(FailureReportComparator)
-                .contains(Report.Failure(
-                        testLocation = CodeLocation("uspek_test_4.kt", 9),
-                        assertionLocation = CodeLocation("uspek_test_4.kt", 10),
-                        cause = AssertionError()))
+        val actual = infos.filter { it.state == FAILURE }
+        val expected = Report.Failure(
+                testLocation = CodeLocation("uspek_test_4.kt", 9),
+                assertionLocation = CodeLocation("uspek_test_4.kt", 10),
+                cause = actual[0].failureCause!!)
+        assertThat(actual).contains(expected)
     }
 
     @Test
     fun `should start all outer clauses in proper order`() {
         uspek_test_5()
-        assertThat(reports)
+        assertThat(infos)
                 .containsSequence(listOf(
                         Report.Start("some test", CodeLocation("uspek_test_5.kt", 8)),
                         Report.Start("some nested test", CodeLocation("uspek_test_5.kt", 9))))
@@ -58,7 +63,7 @@ class USpekTest {
     @Test
     fun `should start all nested tests`() {
         uspek_test_6()
-        assertThat(reports)
+        assertThat(infos)
                 .containsAll(listOf(
                         Report.Start("first test", CodeLocation("uspek_test_6.kt", 8)),
                         Report.Start("second test", CodeLocation("uspek_test_6.kt", 11))))
@@ -67,7 +72,7 @@ class USpekTest {
     @Test
     fun `should gather success from all nested tests`() {
         uspek_test_7()
-        assertThat(reports)
+        assertThat(infos)
                 .containsAll(listOf(
                         Report.Success(testLocation = CodeLocation("uspek_test_7.kt", lineNumber = 9)),
                         Report.Success(testLocation = CodeLocation("uspek_test_7.kt", lineNumber = 13))))
@@ -76,41 +81,39 @@ class USpekTest {
     @Test
     fun `should gather failures from all nested tests`() {
         uspek_test_8()
-        assertThat(reports.filterIsInstance<Report.Failure>())
-                .usingElementComparator(FailureReportComparator)
-                .containsSequence(listOf(
-                        Report.Failure(
-                                testLocation = CodeLocation("uspek_test_8.kt", lineNumber = 9),
-                                assertionLocation = CodeLocation("uspek_test_8.kt", lineNumber = 10),
-                                cause = AssertionError()),
-                        Report.Failure(
-                                testLocation = CodeLocation("uspek_test_8.kt", lineNumber = 13),
-                                assertionLocation = CodeLocation("uspek_test_9.kt", lineNumber = 14),
-                                cause = AssertionError())))
+        val actual = infos.filter { it.state == FAILURE }
+        val expected = listOf(
+                Report.Failure(
+                        testLocation = CodeLocation("uspek_test_8.kt", lineNumber = 9),
+                        assertionLocation = CodeLocation("uspek_test_8.kt", lineNumber = 10),
+                        cause = actual[0].failureCause!!),
+                Report.Failure(
+                        testLocation = CodeLocation("uspek_test_8.kt", lineNumber = 13),
+                        assertionLocation = CodeLocation("uspek_test_8.kt", lineNumber = 14),
+                        cause = actual[1].failureCause!!))
+        assertThat(actual).containsSequence(expected)
     }
 
     @Test
     fun `should gather all failures along with successes`() {
         uspek_test_9()
-        assertThat(reports)
-                .usingElementComparator(ReportElementComparator)
-                .isEqualTo(listOf(
-                        Report.Start("some test", CodeLocation("uspek_test_9.kt", 8)),
-                        Report.Start("first test", CodeLocation("uspek_test_9.kt", 9)),
-                        Report.Failure(
-                                testLocation = CodeLocation("uspek_test_9.kt", lineNumber = 9),
-                                assertionLocation = CodeLocation("uspek_test_9.kt", lineNumber = 10),
-                                cause = AssertionError()),
-                        Report.Start("second test", CodeLocation("uspek_test_9.kt", 13)),
-                        Report.Success(
-                                testLocation = CodeLocation("uspek_test_9.kt", lineNumber = 13))))
+        val expected = listOf(
+                Report.Start("some test", CodeLocation("uspek_test_9.kt", 8)),
+                Report.Start("first test", CodeLocation("uspek_test_9.kt", 9)),
+                Report.Failure(
+                        testLocation = CodeLocation("uspek_test_9.kt", lineNumber = 9),
+                        assertionLocation = CodeLocation("uspek_test_9.kt", lineNumber = 10),
+                        cause = infos[2].failureCause!!),
+                Report.Start("second test", CodeLocation("uspek_test_9.kt", 13)),
+                Report.Success(
+                        testLocation = CodeLocation("uspek_test_9.kt", lineNumber = 13)))
+        assertThat(infos).isEqualTo(expected)
     }
 
     @Test
     fun `should execute tests which are nested multiple times`() {
         uspek_test_10()
-        assertThat(reports)
-                .usingElementComparator(ReportElementComparator)
+        assertThat(infos)
                 .containsSequence(listOf(Report.Start("some test", CodeLocation("uspek_test_10.kt", 8)),
                         Report.Start("first test", CodeLocation("uspek_test_10.kt", 9)),
                         Report.Start("second test", CodeLocation("uspek_test_10.kt", 12)),
@@ -123,23 +126,3 @@ class USpekTest {
     }
 }
 
-private object ReportElementComparator : Comparator<Report> {
-    override fun compare(o1: Report, o2: Report): Int {
-        if (o1.javaClass != o2.javaClass) return -1
-        return when (o1) {
-            is Report.Start -> equalityCompare(o1, o2)
-            is Report.Failure -> FailureReportComparator.compare(o1, o2 as Report.Failure)
-            is Report.Success -> equalityCompare(o1, o2)
-        }
-    }
-}
-
-private object FailureReportComparator : Comparator<Report.Failure> {
-    override fun compare(o1: Report.Failure, o2: Report.Failure): Int {
-        return if (o1.testLocation == o2.testLocation
-                && o1.testLocation == o2.testLocation
-                && o1.cause?.javaClass?.equals(o2.cause?.javaClass) != false) 0 else -1
-    }
-}
-
-private fun <T> equalityCompare(t1: T, t2: T) = Comparator<T> { o1, o2 -> if (o1 == o2) 0 else -1 }.compare(t1, t2)

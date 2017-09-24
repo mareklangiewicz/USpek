@@ -15,7 +15,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
     init {
         USpek.log = logToAll(treeCollectionLogger, ::logToConsole)
         testClass.newInstance()
-        treeCollectionLogger.testTree?.state = TestState.SUCCESS
+        treeCollectionLogger.testTree?.info?.state = TestState.SUCCESS
         treeCollectionLogger.testTree?.let {
             rootDescription.addChild(createDescriptions(it, testClass.name))
         }
@@ -25,44 +25,44 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
 
     override fun run(notifier: RunNotifier) {
         val testTree = treeCollectionLogger.testTree!!
-        runTree(testTree, testTree.name, notifier)
+        runTree(testTree, testTree.info.name!!, notifier)
     }
 
     private fun runTree(branchTree: TestTree, name: String, notifier: RunNotifier) {
-        if (branchTree.subtests.isEmpty()) {
-            val description = branchTree.description
+        if (branchTree.subtrees.isEmpty()) {
+            val description = branchTree.info.description
             notifier.fireTestStarted(description)
-            when (branchTree.state) {
+            when (branchTree.info.state) {
                 TestState.STARTED -> throw IllegalStateException("Tree branch not finished")
                 TestState.SUCCESS -> {
                     notifier.fireTestFinished(description)
                 }
                 TestState.FAILURE -> {
-                    notifier.fireTestFailure(Failure(description, branchTree.failureCause))
+                    notifier.fireTestFailure(Failure(description, branchTree.info.failureCause))
                     notifier.fireTestFinished(description)
                 }
             }
         } else {
-            branchTree.subtests.forEach { runTree(it, name + "\n" + it.name, notifier) }
+            branchTree.subtrees.forEach { runTree(it, name + "\n" + it.info.name, notifier) }
         }
     }
 
     private fun createDescriptions(testBranch: TestTree, testSuite: String): Description {
         val description = createDescription(testBranch, testSuite)
-        testBranch.subtests.forEach {
-            val child = createDescriptions(it, testSuite + "." + testBranch.name)
+        testBranch.subtrees.forEach {
+            val child = createDescriptions(it, testSuite + "." + testBranch.info.name)
             description.addChild(child)
         }
         return description
     }
 
     private fun createDescription(testBranch: TestTree, testSuite: String): Description {
-        return if (testBranch.subtests.isNotEmpty()) {
-            Description.createSuiteDescription(testBranch.name, UUID.randomUUID().toString())
+        return if (testBranch.subtrees.isNotEmpty()) {
+            Description.createSuiteDescription(testBranch.info.name, UUID.randomUUID().toString())
         } else {
-            Description.createTestDescription(testSuite, testBranch.name)
+            Description.createTestDescription(testSuite, testBranch.info.name)
         }.apply {
-            testBranch.description = this
+            testBranch.info.description = this
         }
     }
 }

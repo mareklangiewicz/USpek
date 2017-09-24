@@ -1,6 +1,7 @@
 package pl.mareklangiewicz.uspek
 
 import org.junit.Assert
+import pl.mareklangiewicz.uspek.TestState.*
 
 object USpek {
 
@@ -10,38 +11,34 @@ object USpek {
 
     fun uspek(name: String, code: () -> Unit) {
         finishedTests.clear()
-        log(Report.Start(name, currentUserCodeLocation))
+        log(TestInfo(name = name, location = currentUserCodeLocation, state = STARTED))
         while (true) {
             try {
                 code()
                 return
-            } catch (e: TestFinished) {
+            } catch (e: TestEnd) {
                 val location = e.stackTrace[1].location
                 finishedTests[location] = e
-                if (e is TestSuccess) {
-                    log(Report.Success(location))
-                } else {
-                    log(Report.Failure(location, e.causeLocation, e.cause))
-                }
+                log(TestInfo(
+                        location = location,
+                        state = if (e.cause === null) SUCCESS else FAILURE,
+                        failureLocation = e.causeLocation,
+                        failureCause = e.cause
+                ))
             }
         }
     }
 
     infix fun String.o(code: () -> Unit) = currentUserCodeLocation in finishedTests || throw try {
-        log(Report.Start(this, currentUserCodeLocation))
+        log(TestInfo(name = this, location = currentUserCodeLocation, state = STARTED))
         code()
-        TestSuccess()
-    } catch (e: TestFinished) {
-        e
-    } catch (e: Throwable) {
-        TestFailure(e)
+        TestEnd()
     }
+    catch (e: TestEnd) { e }
+    catch (e: Throwable) { TestEnd(e) }
+
 
     infix fun <T> T.eq(expected: T) = Assert.assertEquals(expected, this)
-
-    private open class TestFinished(cause: Throwable? = null) : RuntimeException(cause)
-    private class TestSuccess : TestFinished()
-    private class TestFailure(cause: Throwable) : TestFinished(cause)
 
     private val currentUserCodeLocation get() = Thread.currentThread().stackTrace.userCodeLocation
 
@@ -69,5 +66,3 @@ object USpek {
             throw IllegalStateException("User code location not found")
         }
 }
-
-typealias ULog = (Report) -> Unit

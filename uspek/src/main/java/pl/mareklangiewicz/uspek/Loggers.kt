@@ -1,20 +1,25 @@
 package pl.mareklangiewicz.uspek
 
+import pl.mareklangiewicz.uspek.TestState.*
 
-internal fun logToAll(vararg log: ULog) = fun(report: Report) = log.forEach { it(report) }
+typealias ULog = (TestInfo) -> Unit
 
-internal fun logToConsole(report: Report) = report.run {
-    when (this) {
-        is Report.Failure -> {
-            println("FAILURE.($testLocation)")
-            println("BECAUSE.($assertionLocation)")
-            println(cause)
+internal fun logToAll(vararg log: ULog) = fun(info: TestInfo) = log.forEach { it(info) }
+
+internal fun logToList(list: MutableList<TestInfo>) = fun(info: TestInfo) { list.add(info) }
+
+internal fun logToConsole(info: TestInfo) = info.run {
+    when (state) {
+        STARTED -> println(name)
+        SUCCESS -> println("SUCCESS.($location)")
+        FAILURE -> {
+            println("FAILURE.($location)")
+            println("BECAUSE.($failureLocation)")
+            println(failureCause)
         }
-        is Report.Success -> println("SUCCESS.($testLocation)")
-        is Report.Start -> println(testName)
+        null -> println(info.toString()) // unknown state; just print everything we know
     }
 }
 
-internal fun logToList(reports: MutableList<Report>) = fun(report: Report) { reports.add(report) }
 
 

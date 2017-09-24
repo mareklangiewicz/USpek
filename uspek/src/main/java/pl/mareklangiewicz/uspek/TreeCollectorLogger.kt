@@ -1,67 +1,57 @@
 package pl.mareklangiewicz.uspek
 
-import org.junit.runner.Description
+import pl.mareklangiewicz.uspek.TestState.*
 
 class TreeCollectorLogger : ULog {
+
     var testTree: TestTree? = null
         private set
 
-    private var currentTest: TestTree? = null
+    private var currentSubTree: TestTree? = null
 
-    override fun invoke(report: Report) {
-        when (report) {
+    override fun invoke(info: TestInfo) {
 
-            is Report.Start -> {
+        when (info.state) {
+
+            STARTED -> {
                 if (testTree === null) {
-                    check(currentTest === null)
-                    testTree = TestTree(report.testName, report.testLocation)
-                    currentTest = testTree
+                    check(currentSubTree === null)
+                    testTree = TestTree(info.copy())
+                    currentSubTree = testTree
                 } else {
-                    val test = currentTest!!
-                    val subtest = test.subtests.find { it.location == report.testLocation }
-                    if (subtest !== null) {
-                        currentTest = subtest
+                    val current = currentSubTree!!
+                    val subTree = current.subtrees.find { it.info.location == info.location }
+                    if (subTree !== null) {
+                        currentSubTree = subTree
                     } else {
-                        val newtest = TestTree(report.testName, report.testLocation)
-                        test.subtests.add(newtest)
-                        currentTest = newtest
+                        val newSubTree = TestTree(info.copy())
+                        current.subtrees.add(newSubTree)
+                        currentSubTree = newSubTree
                     }
-
-
                 }
             }
 
-            is Report.Success -> {
-                val test = currentTest!!
+            SUCCESS -> {
+                val current = currentSubTree!!
                 check(testTree !== null)
-                check(report.testLocation == test.location)
-                test.state = TestState.SUCCESS
-                currentTest = testTree // now, we will start again from the top
+                check(info.location == current.info.location)
+                current.info.state = TestState.SUCCESS
+                currentSubTree = testTree // now, we will start again from the top
             }
 
-            is Report.Failure -> {
-                val test = currentTest!!
+            FAILURE -> {
+                val current = currentSubTree!!
                 check(testTree !== null)
-                check(report.testLocation == test.location)
-                test.state = TestState.FAILURE
-                test.assertionLocation = report.assertionLocation
-                test.failureCause = report.cause
-                currentTest = testTree // now, we will start again from the top
+                check(info.location == current.info.location)
+                current.info.state = FAILURE
+                current.info.failureLocation = info.failureLocation
+                current.info.failureCause = info.failureCause
+                currentSubTree = testTree // now, we will start again from the top
             }
+
+            null -> throw IllegalStateException("Unknown test state")
         }
     }
 }
 
-
-enum class TestState { STARTED, SUCCESS, FAILURE }
-
-data class TestTree(
-        var name: String = "",
-        var location: CodeLocation? = null,
-        var state: TestState = TestState.STARTED,
-        var assertionLocation: CodeLocation? = null,
-        var failureCause: Throwable? = null,
-        val subtests: MutableList<TestTree> = mutableListOf(),
-        var description: Description? = null
-)
 
