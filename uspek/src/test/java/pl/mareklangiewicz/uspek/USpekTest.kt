@@ -1,45 +1,44 @@
 package pl.mareklangiewicz.uspek
 
-import pl.mareklangiewicz.uspek.data.*
-import pl.mareklangiewicz.uspek.loggers.ListCollectorLogger
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import pl.mareklangiewicz.uspek.data.*
 
 class USpekTest {
 
-    private val collectingLogger = ListCollectorLogger()
+    private val reports = mutableListOf<Report>()
 
     @Before
     fun setUp() {
-        USpek.log = collectingLogger
+        USpek.log = logToList(reports)
     }
 
     @Test
     fun `should create start report at the beginning of uspek`() {
         uspek_test_1()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .isEqualTo(listOf(Report.Start("some test", CodeLocation("uspek_test_1.kt", 6))))
     }
 
     @Test
     fun `should create start report at the beginning of nested test`() {
         uspek_test_2()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .contains(Report.Start("some nested test", CodeLocation("uspek_test_2.kt", 8)))
     }
 
     @Test
     fun `should create success report after finishing test with success`() {
         uspek_test_3()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .contains(Report.Success(testLocation = CodeLocation("uspek_test_3.kt", 9)))
     }
 
     @Test
     fun `should create failure report after finishing test with error`() {
         uspek_test_4()
-        assertThat(collectingLogger.getReports().filterIsInstance<Report.Failure>())
+        assertThat(reports.filterIsInstance<Report.Failure>())
                 .usingElementComparator(FailureReportComparator)
                 .contains(Report.Failure(
                         testLocation = CodeLocation("uspek_test_4.kt", 9),
@@ -50,7 +49,7 @@ class USpekTest {
     @Test
     fun `should start all outer clauses in proper order`() {
         uspek_test_5()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .containsSequence(listOf(
                         Report.Start("some test", CodeLocation("uspek_test_5.kt", 8)),
                         Report.Start("some nested test", CodeLocation("uspek_test_5.kt", 9))))
@@ -59,7 +58,7 @@ class USpekTest {
     @Test
     fun `should start all nested tests`() {
         uspek_test_6()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .containsAll(listOf(
                         Report.Start("first test", CodeLocation("uspek_test_6.kt", 8)),
                         Report.Start("second test", CodeLocation("uspek_test_6.kt", 11))))
@@ -68,7 +67,7 @@ class USpekTest {
     @Test
     fun `should gather success from all nested tests`() {
         uspek_test_7()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .containsAll(listOf(
                         Report.Success(testLocation = CodeLocation("uspek_test_7.kt", lineNumber = 9)),
                         Report.Success(testLocation = CodeLocation("uspek_test_7.kt", lineNumber = 13))))
@@ -77,7 +76,7 @@ class USpekTest {
     @Test
     fun `should gather failures from all nested tests`() {
         uspek_test_8()
-        assertThat(collectingLogger.getReports().filterIsInstance<Report.Failure>())
+        assertThat(reports.filterIsInstance<Report.Failure>())
                 .usingElementComparator(FailureReportComparator)
                 .containsSequence(listOf(
                         Report.Failure(
@@ -93,7 +92,7 @@ class USpekTest {
     @Test
     fun `should gather all failures along with successes`() {
         uspek_test_9()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .usingElementComparator(ReportElementComparator)
                 .isEqualTo(listOf(
                         Report.Start("some test", CodeLocation("uspek_test_9.kt", 8)),
@@ -110,7 +109,7 @@ class USpekTest {
     @Test
     fun `should execute tests which are nested multiple times`() {
         uspek_test_10()
-        assertThat(collectingLogger.getReports())
+        assertThat(reports)
                 .usingElementComparator(ReportElementComparator)
                 .containsSequence(listOf(Report.Start("some test", CodeLocation("uspek_test_10.kt", 8)),
                         Report.Start("first test", CodeLocation("uspek_test_10.kt", 9)),

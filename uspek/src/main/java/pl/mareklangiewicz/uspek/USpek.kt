@@ -1,13 +1,12 @@
 package pl.mareklangiewicz.uspek
 
-import pl.mareklangiewicz.uspek.loggers.consoleOutputLogger
 import org.junit.Assert
 
 object USpek {
 
     private val finishedTests: MutableMap<CodeLocation, Throwable> = mutableMapOf()
 
-    var log: ULogger = ::consoleOutputLogger
+    var log: ULog = ::logToConsole
 
     fun uspek(name: String, code: () -> Unit) {
         finishedTests.clear()
@@ -71,4 +70,4 @@ object USpek {
         }
 }
 
-typealias ULogger = (Report) -> Unit
+typealias ULog = (Report) -> Unit

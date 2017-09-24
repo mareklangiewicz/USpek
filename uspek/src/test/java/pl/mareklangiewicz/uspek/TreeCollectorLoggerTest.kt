@@ -1,8 +1,5 @@
 package pl.mareklangiewicz.uspek
 
-import pl.mareklangiewicz.uspek.loggers.TestState
-import pl.mareklangiewicz.uspek.loggers.TestTree
-import pl.mareklangiewicz.uspek.loggers.TreeCollectorLogger
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -1,11 +1,8 @@
-package pl.mareklangiewicz.uspek.loggers
+package pl.mareklangiewicz.uspek
 
-import pl.mareklangiewicz.uspek.CodeLocation
-import pl.mareklangiewicz.uspek.Report
-import pl.mareklangiewicz.uspek.ULogger
 import org.junit.runner.Description
 
-class TreeCollectorLogger : ULogger {
+class TreeCollectorLogger : ULog {
     var testTree: TestTree? = null
         private set
 
