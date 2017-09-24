@@ -28,6 +28,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
         if (branchTree.subtrees.isEmpty()) {
             val description = branchTree.info.description
             notifier.fireTestStarted(description)
+            logToConsole(branchTree.info)
             when (branchTree.info.state) {
                 TestState.STARTED -> throw IllegalStateException("Tree branch not finished")
                 TestState.SUCCESS -> {
