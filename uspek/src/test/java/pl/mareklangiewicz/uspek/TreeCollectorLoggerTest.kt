@@ -13,7 +13,7 @@ class TreeCollectorLoggerTest {
         val location = CodeLocation("test.kt", 1)
         logger(TestInfo("first test", location, state = STARTED))
         logger(TestInfo(location = location, state = SUCCESS))
-        assertEquals(TestTree(TestInfo(name = "first test", state = SUCCESS, location = location)), logger.testTree!!)
+        assertEquals(TestTree(TestInfo(name = "first test", state = SUCCESS, location = location)), logger.tree!!)
     }
 
     @Test
@@ -29,7 +29,7 @@ class TreeCollectorLoggerTest {
                         location = location,
                         failureLocation = assertionLocation,
                         failureCause = failureCause)),
-                logger.testTree!!)
+                logger.tree!!)
     }
 
     @Test
@@ -46,7 +46,7 @@ class TreeCollectorLoggerTest {
                         subtrees = mutableListOf(TestTree(TestInfo(name = "first test",
                                 location = location,
                                 state = SUCCESS)))),
-                logger.testTree!!)
+                logger.tree!!)
     }
 
     @Test
@@ -71,7 +71,7 @@ class TreeCollectorLoggerTest {
                                 TestTree(TestInfo(name = "second test",
                                         location = secondTestLocation,
                                         state = SUCCESS)))),
-                logger.testTree!!)
+                logger.tree!!)
     }
 
     @Test
@@ -97,6 +97,6 @@ class TreeCollectorLoggerTest {
                                         subtrees = mutableListOf(TestTree(TestInfo(name = "second test",
                                                 location = secondTestLocation,
                                                 state = SUCCESS)))))),
-                logger.testTree!!)
+                logger.tree!!)
     }
 }
