@@ -1,13 +1,15 @@
 package pl.mareklangiewicz.uspek
 
-import pl.mareklangiewicz.uspek.USpek.o
 import org.junit.Assert
+import org.junit.Test
 import org.junit.runner.RunWith
+import pl.mareklangiewicz.uspek.USpek.o
 
 @RunWith(USpekJUnitRunner::class)
 class USpekRunnerExample {
 
-    init {
+    @Test
+    fun someTest() {
         USpek.uspek("some nested test") {
             "1st assertion" o {
                 Assert.assertTrue(true)

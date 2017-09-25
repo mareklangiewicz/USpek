@@ -1,5 +1,6 @@
 package pl.mareklangiewicz.uspek
 
+import org.junit.Test
 import org.junit.runner.Description
 import org.junit.runner.Runner
 import org.junit.runner.notification.Failure
@@ -15,14 +16,18 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
     init {
         tree.reset()
         USpek.log = logToAll(logToTree(tree), ::logToConsole)
-        testClass.newInstance()
+        val instance = testClass.newInstance()
+        testClass.declaredMethods
+                .filter { it.getAnnotation(Test::class.java) !== null }
+                .forEach { it.invoke(instance) }
+        println(tree)
         tree.info.state = TestState.SUCCESS
         rootDescription.addChild(createDescriptions(tree, testClass.name))
     }
 
     override fun getDescription(): Description = rootDescription
 
-    override fun run(notifier: RunNotifier) = runTree(tree, tree.info.name!!, notifier)
+    override fun run(notifier: RunNotifier) = runTree(tree, tree.info.name ?: "UNKNOWN NAME", notifier)
 
     private fun runTree(branchTree: TestTree, name: String, notifier: RunNotifier) {
         if (branchTree.subtrees.isEmpty()) {
