@@ -20,7 +20,6 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
         testClass.declaredMethods
                 .filter { it.getAnnotation(Test::class.java) !== null }
                 .forEach { it.invoke(instance) }
-        println(tree)
         tree.info.state = TestState.SUCCESS
         rootDescription.addChild(createDescriptions(tree, testClass.name))
     }
