@@ -3,9 +3,8 @@ import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.kotlin
 
 plugins {
-//    `build-scan`
     `maven-publish`
-    kotlin("jvm", "1.1.50")
+    kotlin("jvm", "1.1.51")
 }
 
 group = "com.github.langara.uspek"
@@ -17,17 +16,10 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib", "1.1.50"))
+    implementation(kotlin("stdlib", "1.1.51"))
     implementation("junit:junit:4.12")
     testImplementation("org.assertj:assertj-core:3.8.0")
 }
-
-//buildScan {
-//    setLicenseAgreementUrl("https://gradle.com/terms-of-service")
-//    setLicenseAgree("yes")
-//
-//    publishAlways()
-//}
 
 // Create sources Jar from main kotlin sources
 val sourcesJar by tasks.creating(Jar::class) {
