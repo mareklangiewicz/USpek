@@ -30,7 +30,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
 
     private fun runTree(branchTree: TestTree, name: String, notifier: RunNotifier) {
         if (branchTree.subtrees.isEmpty()) {
-            val description = branchTree.info.description
+            val description = branchTree.info.data as? Description
             notifier.fireTestStarted(description)
             logToConsole(branchTree.info)
             when (branchTree.info.state) {
@@ -63,7 +63,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
         } else {
             Description.createTestDescription(testSuite, testBranch.info.name)
         }.apply {
-            testBranch.info.description = this
+            testBranch.info.data = this
         }
     }
 }

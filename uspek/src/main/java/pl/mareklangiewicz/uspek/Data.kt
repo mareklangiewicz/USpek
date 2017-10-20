@@ -1,7 +1,5 @@
 package pl.mareklangiewicz.uspek
 
-import org.junit.runner.Description
-
 data class CodeLocation(val fileName: String, val lineNumber: Int) {
     override fun toString() = "$fileName:$lineNumber"
 }
@@ -14,7 +12,7 @@ data class TestInfo(
         var state: TestState? = null,
         var failureLocation: CodeLocation? = null,
         var failureCause: Throwable? = null,
-        var description: Description? = null
+        var data: Any? = null
 )
 
 fun TestInfo.applyAllFrom(info: TestInfo) {
@@ -23,7 +21,7 @@ fun TestInfo.applyAllFrom(info: TestInfo) {
     state = info.state
     failureLocation = info.failureLocation
     failureCause = info.failureCause
-    description = info.description
+    data = info.data
 }
 
 fun TestInfo.applyExistentFrom(info: TestInfo) {
@@ -32,7 +30,7 @@ fun TestInfo.applyExistentFrom(info: TestInfo) {
     state = info.state ?: state
     failureLocation = info.failureLocation ?: failureLocation
     failureCause = info.failureCause ?: failureCause
-    description = info.description ?: description
+    data = info.data ?: data
 }
 
 data class TestTree(
