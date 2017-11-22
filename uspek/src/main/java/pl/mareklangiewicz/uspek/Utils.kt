@@ -3,6 +3,7 @@ package pl.mareklangiewicz.uspek
 import org.junit.Assert
 
 infix fun <T> T.eq(expected: T) = Assert.assertEquals(expected, this)
+infix fun <T> T.notEq(expected: T) = Assert.assertNotEquals(expected, this)
 
 val currentUserCodeLocation get() = Thread.currentThread().stackTrace.userCodeLocation
 
