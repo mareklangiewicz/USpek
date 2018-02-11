@@ -1,38 +1,19 @@
-buildscript {
-    ext.kotlin_version = '1.1.51'
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-rc2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
-    }
-}
-
-repositories {
-    google()
-    jcenter()
-    mavenCentral()
-    maven { url "https://jitpack.io" }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion vers.androidCompileSdk
+    buildToolsVersion vers.androidBuildTools
+
     defaultConfig {
         applicationId "pl.mareklangiewicz.uspek"
-        minSdkVersion 21
-        targetSdkVersion 26
+        minSdkVersion 27
+        targetSdkVersion vers.androidTargetSdk
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner vers.androidTestRunnerClass
     }
     buildTypes {
         release {
@@ -44,14 +25,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-//    testImplementation project(':uspek')
-//    androidTestImplementation project(':uspek')
-    testImplementation 'com.github.langara:USpek:b89f82be9b'
-    androidTestImplementation 'com.github.langara:USpek:b89f82be9b'
+    implementation deps.kotlinStdlib
+    implementation deps.androidSupportAppcompat
+    implementation deps.androidSupportConstraint
+    testImplementation deps.junit
+    testImplementation project(':uspek')
+    androidTestImplementation project(':uspek')
+//    testImplementation 'com.github.langara:USpek:b89f82be9b'
+//    androidTestImplementation 'com.github.langara:USpek:b89f82be9b'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

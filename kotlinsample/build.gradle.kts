@@ -1,24 +1,22 @@
-import org.gradle.kotlin.dsl.kotlin
 import java.net.URI
 
+@Suppress("UNCHECKED_CAST")
+val deps = rootProject.ext.properties["deps"] as Map<String, Map<String, String>>
+// TODO: find in kotlin-dsl repo proper syntax to use ext properties in build.gradle.kts
+
 plugins {
-    kotlin("jvm", "1.1.51")
     application
+    kotlin("jvm")
 }
 
 application {
     mainClassName = "pl.mareklangiewicz.uspek.MainKt"
 }
 
-repositories {
-    jcenter()
-    mavenCentral()
-    maven { url = URI("https://jitpack.io") }
-}
-
 dependencies {
-    implementation(kotlin("stdlib", "1.1.51"))
-    implementation("junit:junit:4.12")
-    testImplementation("com.github.langara:USpek:b89f82be9b")
+    implementation(deps["kotlinStdlib"]!!)
+    implementation(deps["junit"]!!)
+//    testImplementation("com.github.langara:USpek:b89f82be9b")
+    testImplementation(project(":uspek"))
 }
 

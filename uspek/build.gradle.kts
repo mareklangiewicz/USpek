@@ -1,24 +1,19 @@
-import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.creating
-import org.gradle.kotlin.dsl.kotlin
+@Suppress("UNCHECKED_CAST")
+val deps = rootProject.ext.properties["deps"] as Map<String, Map<String, String>>
+// TODO: find in kotlin-dsl repo proper syntax to use ext properties in build.gradle.kts
 
 plugins {
     `maven-publish`
-    kotlin("jvm", "1.1.51")
+    kotlin("jvm")
 }
 
 group = "com.github.langara.uspek"
 version = "0.0.1"
 
-repositories {
-    jcenter()
-    mavenCentral()
-}
-
 dependencies {
-    implementation(kotlin("stdlib", "1.1.51"))
-    implementation("junit:junit:4.12")
-    testImplementation("org.assertj:assertj-core:3.8.0")
+    implementation(deps["kotlinStdlib"]!!)
+    implementation(deps["junit"]!!)
+    implementation("org.assertj:assertj-core:3.8.0")
 }
 
 // Create sources Jar from main kotlin sources
