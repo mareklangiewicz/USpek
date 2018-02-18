@@ -8,16 +8,18 @@ enum class TestState { STARTED, SUCCESS, FAILURE }
 
 data class TestInfo(
         var name: String? = null,
-        var location: CodeLocation? = null,
+        var trace: TestTrace? = null,
         var state: TestState? = null,
         var failureLocation: CodeLocation? = null,
         var failureCause: Throwable? = null,
         var data: Any? = null
 )
 
+val TestInfo.location get () = trace?.get(0)?.location
+
 fun TestInfo.applyAllFrom(info: TestInfo) {
     name = info.name
-    location = info.location
+    trace = info.trace
     state = info.state
     failureLocation = info.failureLocation
     failureCause = info.failureCause
@@ -26,7 +28,7 @@ fun TestInfo.applyAllFrom(info: TestInfo) {
 
 fun TestInfo.applyExistentFrom(info: TestInfo) {
     name = info.name ?: name
-    location = info.location ?: location
+    trace = info.trace ?: trace
     state = info.state ?: state
     failureLocation = info.failureLocation ?: failureLocation
     failureCause = info.failureCause ?: failureCause

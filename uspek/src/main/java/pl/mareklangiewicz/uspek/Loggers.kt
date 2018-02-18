@@ -1,13 +1,15 @@
 package pl.mareklangiewicz.uspek
 
-import pl.mareklangiewicz.uspek.TestState.*
+import pl.mareklangiewicz.uspek.TestState.FAILURE
+import pl.mareklangiewicz.uspek.TestState.STARTED
+import pl.mareklangiewicz.uspek.TestState.SUCCESS
 
 typealias ULog = (TestInfo) -> Unit
 
-fun ULog.start(name: String, location: CodeLocation) = this(TestInfo(name, location, STARTED))
+fun ULog.start(name: String, trace: TestTrace) = this(TestInfo(name, trace, STARTED))
 
-fun ULog.end(location: CodeLocation, exception: TestEnd) = this(TestInfo(
-        location = location,
+fun ULog.end(trace: TestTrace, exception: TestEnd) = this(TestInfo(
+        trace = trace,
         state = if (exception.cause === null) SUCCESS else FAILURE,
         failureLocation = exception.causeLocation,
         failureCause = exception.cause
