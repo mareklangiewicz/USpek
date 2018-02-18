@@ -54,6 +54,8 @@ Micro tool for testing with syntax similar to Spek, but shorter. Test different 
 
 ```
 
+[![](https://jitpack.io/v/langara/USpek.svg)](https://jitpack.io/#langara/USpek)
+
 ### Building with JitPack
 ```gradle
     repositories {
