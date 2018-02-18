@@ -29,10 +29,10 @@ dependencies {
     implementation deps.androidSupportAppcompat
     implementation deps.androidSupportConstraint
     testImplementation deps.junit
-    testImplementation project(':uspek')
-    androidTestImplementation project(':uspek')
-//    testImplementation "com.github.langara:USpek:bda96515f9"
-//    androidTestImplementation "com.github.langara:USpek:bda96515f9"
+//    testImplementation project(':uspek')
+//    androidTestImplementation project(':uspek')
+    testImplementation "com.github.langara:USpek:25459c8b62"
+    androidTestImplementation "com.github.langara:USpek:25459c8b62"
     androidTestImplementation(deps.androidEspresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

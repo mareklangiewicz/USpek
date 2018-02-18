@@ -16,7 +16,7 @@ application {
 dependencies {
     implementation(deps["kotlinStdlib"]!!)
     implementation(deps["junit"]!!)
-    testImplementation(project(":uspek"))
-//    testImplementation("com.github.langara:USpek:bda96515f9")
+//    testImplementation(project(":uspek"))
+    testImplementation("com.github.langara:USpek:25459c8b62")
 }
 
