@@ -1,7 +1,5 @@
 buildscript {
 
-    apply from: 'deps.gradle'
-
     repositories {
         google()
         jcenter()
@@ -9,8 +7,8 @@ buildscript {
     }
 
     dependencies {
-        classpath deps.kotlinGradlePlugin
-        classpath deps.androidGradlePlugin
+        classpath Deps.kotlinGradlePlugin
+        classpath Deps.androidGradlePlugin
     }
 }
 

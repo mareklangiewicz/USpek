@@ -1,7 +1,3 @@
-@Suppress("UNCHECKED_CAST")
-val deps = rootProject.ext.properties["deps"] as Map<String, Map<String, String>>
-// TODO: find in kotlin-dsl repo proper syntax to use ext properties in build.gradle.kts
-
 plugins {
     `maven-publish`
     kotlin("jvm")
@@ -11,8 +7,8 @@ group = "com.github.langara.uspek"
 version = "0.0.1"
 
 dependencies {
-    implementation(deps["kotlinStdlib"]!!)
-    implementation(deps["junit"]!!)
+    implementation(Deps.kotlinStdlib)
+    implementation(Deps.junit)
     implementation("org.assertj:assertj-core:3.8.0")
 }
 
