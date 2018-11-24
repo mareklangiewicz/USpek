@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion Vers.androidCompileSdk
-    buildToolsVersion Vers.androidBuildTools
 
     defaultConfig {
         applicationId "pl.mareklangiewicz.uspek"
@@ -26,14 +25,15 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation Deps.kotlinStdlib
-    implementation Deps.androidSupportAppcompat
-    implementation Deps.androidSupportConstraint
+    implementation Deps.androidxAppcompat
+    implementation Deps.androidxConstraint
     testImplementation Deps.junit
 //    testImplementation project(':uspek')
 //    androidTestImplementation project(':uspek')
     testImplementation "com.github.langara:USpek:25459c8b62"
     androidTestImplementation "com.github.langara:USpek:25459c8b62"
-    androidTestImplementation(Deps.androidEspresso, {
+    androidTestImplementation(Deps.androidTestRules)
+    androidTestImplementation(Deps.androidxEspresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

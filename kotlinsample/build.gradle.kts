@@ -10,7 +10,7 @@ application {
 }
 
 dependencies {
-    implementation(Deps.kotlinStdlib)
+    implementation(Deps.kotlinStdlib8)
     implementation(Deps.junit)
 //    testImplementation(project(":uspek"))
     testImplementation("com.github.langara:USpek:25459c8b62")
