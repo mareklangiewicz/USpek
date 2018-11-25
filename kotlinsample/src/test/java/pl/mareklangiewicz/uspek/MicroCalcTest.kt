@@ -2,6 +2,7 @@ package pl.mareklangiewicz.uspek
 
 import org.junit.runner.RunWith
 import pl.mareklangiewicz.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek.ox
 import pl.mareklangiewicz.uspek.USpek.uspek
 
 @RunWith(USpekJUnitRunner::class)
@@ -24,10 +25,10 @@ class MicroCalcTest {
                 "mutate SUT" o {
                     sut.add(1)
 
-//                    "incorrectly check add - this should fail" o {
-//                        sut.add(5)
-//                        sut.result eq 15
-//                    }
+                    "incorrectly check add - this should fail" ox {
+                        sut.add(5)
+                        sut.result eq 15
+                    }
                 }
 
                 "check add again" o {
@@ -71,7 +72,7 @@ class MicroCalcTest {
             }
         }
 
-        "substract 3" o {
+        "subtract 3" o {
             calc.add(-3)
             val afterSub3 = start - 3
             "result should be $afterSub3" o { calc.result eq afterSub3 }

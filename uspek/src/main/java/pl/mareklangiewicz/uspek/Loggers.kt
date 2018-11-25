@@ -58,7 +58,7 @@ internal class logToTree(private val tree: TestTree) : ULog {
             }
 
             SUCCESS, FAILURE -> {
-                check(info.location == current.info.location)
+                check(info.trace == current.info.trace)
                 current.info.applyExistentFrom(info)
                 currentSubTree = tree // start again from the top
             }

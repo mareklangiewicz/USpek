@@ -30,4 +30,6 @@ object USpek {
         catch (e: TestEnd) { e }
         catch (e: Throwable) { TestEnd(e) }
     }
+
+    infix fun String.ox(code: () -> Unit) = true
 }
