@@ -20,7 +20,7 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
         testClass.declaredMethods
                 .filter { it.getAnnotation(Test::class.java) !== null }
                 .forEach { it.invoke(instance) }
-        tree.info.state = TestState.SUCCESS
+        tree.info.finished = true
         rootDescription.addChild(createDescriptions(tree, testClass.name))
     }
 
@@ -33,16 +33,16 @@ class USpekJUnitRunner(testClass: Class<*>) : Runner() {
             val description = branchTree.info.data as? Description
             notifier.fireTestStarted(description)
             logToConsole(branchTree.info)
-            when (branchTree.info.state) {
-                TestState.STARTED -> throw IllegalStateException("Tree branch not finished")
-                TestState.SUCCESS -> {
-                    notifier.fireTestFinished(description)
-                }
-                TestState.FAILURE -> {
+            branchTree.info.run { when {
+                failed -> {
                     notifier.fireTestFailure(Failure(description, branchTree.info.failureCause))
                     notifier.fireTestFinished(description)
                 }
-            }
+                finished -> {
+                    notifier.fireTestFinished(description)
+                }
+                else -> throw IllegalStateException("Tree branch not finished")
+            } }
         } else {
             branchTree.subtrees.forEach { runTree(it, name + "\n" + it.info.name, notifier) }
         }

@@ -3,9 +3,6 @@ package pl.mareklangiewicz.uspek
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import pl.mareklangiewicz.uspek.TestState.FAILURE
-import pl.mareklangiewicz.uspek.TestState.STARTED
-import pl.mareklangiewicz.uspek.TestState.SUCCESS
 import pl.mareklangiewicz.uspek.data.uspek_test_1
 import pl.mareklangiewicz.uspek.data.uspek_test_2
 import pl.mareklangiewicz.uspek.data.uspek_test_3
@@ -25,7 +22,7 @@ class USpekTest {
         uspek_test_1()
         infos.size eq 1
         infos[0].name eq "some test"
-        infos[0].state eq STARTED
+        infos[0].finished eq false
         infos[0].location eq CodeLocation("uspek_test_1.kt", 6)
     }
 
@@ -33,7 +30,7 @@ class USpekTest {
     fun `should create start report at the beginning of nested test`() {
         uspek_test_2()
         assertThat(infos).anySatisfy {
-            it.name == "some nested test" && it.state == STARTED
+            it.name == "some nested test" && !it.finished
                     && it.location == CodeLocation("uspek_test_2.kt", 8)
         }
     }
@@ -41,16 +38,16 @@ class USpekTest {
     @Test
     fun `should create success report after finishing test with success`() {
         uspek_test_3()
-        assertThat(infos).anySatisfy { it.location == CodeLocation("uspek_test_3.kt", 9) && it.state == SUCCESS }
+        assertThat(infos).anySatisfy { it.location == CodeLocation("uspek_test_3.kt", 9) && it.finished && !it.failed }
     }
 
     @Test
     fun `should create failure report after finishing test with error`() {
         uspek_test_4()
-        val actual = infos.filter { it.state == FAILURE }
+        val actual = infos.filter { it.failed }
         assertThat(actual).anySatisfy {
             it.location == CodeLocation("uspek_test_4.kt", 9)
-                    && it.state == FAILURE
+                    && it.failed
                     && it.failureLocation == CodeLocation("uspek_test_4.kt", 10)
                     && it.failureCause == actual[0].failureCause!!
         }
