@@ -1,3 +1,2 @@
 include ':uspek'
 include ':kotlinsample'
-include ':androsample'
