@@ -9,7 +9,6 @@ version = "0.0.1"
 dependencies {
     implementation(Deps.kotlinStdlib8)
     implementation(Deps.junit)
-    implementation("org.assertj:assertj-core:3.8.0")
 }
 
 // Create sources Jar from main kotlin sources

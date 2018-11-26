@@ -45,3 +45,56 @@ object USpek {
     }
 }
 
+object UUSpek {
+
+    val context = Context()
+
+    data class Context(
+        val root: Tree = Tree("uspek"),
+        var branch: Tree = root
+    )
+
+    data class Tree(
+        val name: String,
+        val branches: MutableMap<String, Tree> = mutableMapOf(),
+        var end: End? = null
+    )
+
+    class End(cause: Throwable? = null) : RuntimeException(cause)
+
+    fun uspek(code: () -> Unit) {
+        while(true) try {
+            context.branch = context.root
+            code()
+            return
+        }
+        catch (e: End) {
+            context.branch.end = e
+            log(context.branch)
+        }
+    }
+
+    infix fun String.o(code: () -> Unit) {
+        val branch = context.branch.branches[this] ?: Tree(this)
+        branch.end === null || return
+        context.branch.branches[this] = branch
+        context.branch = branch
+        log(branch)
+        throw try { code(); End() }
+        catch (e: End) { e }
+        catch (e: Throwable) { End(e) }
+    }
+
+    infix fun String.ox(code: () -> Unit) = Unit
+
+    // TODO: remove it; use nice recursive toString on Tree
+    var log: (Tree) -> Unit = {
+        val state = when {
+            it.end === null -> "started"
+            it.end?.cause == null -> "success."
+            else -> "failed: ${it.end}"
+        }
+        println("${it.name} $state")
+    }
+}
+
