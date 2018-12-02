@@ -90,11 +90,13 @@ object UUSpek {
     // TODO: remove it; use nice recursive toString on Tree
     var log: (Tree) -> Unit = {
         val state = when {
-            it.end === null -> "started"
-            it.end?.cause == null -> "success."
-            else -> "failed: ${it.end}"
+            it.end === null -> ""
+            it.end?.cause == null -> "SUCCESS.(${it.end?.location})\n\n"
+            else -> "FAILURE.(${it.end?.location})\nBECAUSE.(${it.end?.causeLocation})\n\n"
         }
-        println("${it.name} $state")
+        print("${it.name}\n$state")
     }
+
+    val End?.location get() = this?.stackTrace?.testTrace?.get(0)?.location
 }
 

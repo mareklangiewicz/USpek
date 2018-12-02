@@ -1,14 +1,13 @@
 package pl.mareklangiewicz.uspek
 
-import org.junit.runner.RunWith
+import org.junit.Test
 import pl.mareklangiewicz.uspek.UUSpek.o
 import pl.mareklangiewicz.uspek.UUSpek.ox
 import pl.mareklangiewicz.uspek.UUSpek.uspek
 
-@RunWith(USpekJUnitRunner::class)
 class MicroCalcTest {
 
-    init {
+    @Test fun tests_1() {
         uspek {
 
             "create SUT" o {
