@@ -11,7 +11,7 @@ import pl.mareklangiewicz.uspek.USpek.Tree
 import pl.mareklangiewicz.uspek.USpek.context
 import pl.mareklangiewicz.uspek.USpek.failed
 import pl.mareklangiewicz.uspek.USpek.finished
-import pl.mareklangiewicz.uspek.USpek.logToConsole
+import pl.mareklangiewicz.uspek.USpek.status
 import java.util.UUID.randomUUID
 
 class USpekRunner(testClass: Class<*>) : Runner() {
@@ -42,7 +42,7 @@ private fun Tree.run(name: String, notifier: RunNotifier) {
     if (branches.isEmpty()) {
         val description = data as? Description
         notifier.fireTestStarted(description)
-        logToConsole(this)
+        println(status)
         when {
             failed -> {
                 notifier.fireTestFailure(Failure(description, end?.cause))

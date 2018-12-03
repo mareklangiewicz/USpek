@@ -1,5 +1,7 @@
 package pl.mareklangiewicz.uspek
 
+import org.junit.Assert
+
 object USpek {
 
     val context = Context()
@@ -43,13 +45,13 @@ object USpek {
 
     infix fun String.ox(code: () -> Unit) = Unit
 
-    var log: (Tree) -> Unit = this::logToConsole
+    var log: (Tree) -> Unit = { println(it.status) }
 
-    fun logToConsole(tree: Tree) = println(tree.run { when {
+    val Tree.status get() = when {
         failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n"
         finished -> "SUCCESS.($location)\n"
         else -> name
-    }})
+    }
 
     val Tree.finished get() = end !== null
 
@@ -60,3 +62,30 @@ object USpek {
     val Tree?.causeLocation get() = this?.end?.causeLocation
 }
 
+typealias StackTrace = Array<StackTraceElement>
+
+infix fun <T> T.eq(expected: T) = Assert.assertEquals(expected, this)
+
+
+data class CodeLocation(val fileName: String, val lineNumber: Int) {
+    override fun toString() = "$fileName:$lineNumber"
+}
+
+val StackTraceElement.location get() = CodeLocation(fileName, lineNumber)
+
+val Throwable.causeLocation: CodeLocation?
+    get() {
+        val file = stackTrace.getOrNull(1)?.fileName
+        val frame = cause?.stackTrace?.find { it.fileName == file }
+        return frame?.location
+    }
+
+typealias TestTrace = List<StackTraceElement>
+
+val StackTrace.testTrace: TestTrace get() = slice(findUserCall()!!..findUserCall("uspek")!!)
+
+private fun StackTrace.findUserCall(uSpekFun: String? = null) = (1 until size).find {
+    uSpekFun in listOf(null, this[it - 1].methodName)
+        && this[it - 1].fileName == "USpek.kt"
+        && this[it].fileName != "USpek.kt"
+}
