@@ -6,7 +6,10 @@ typealias StackTrace = Array<StackTraceElement>
 
 infix fun <T> T.eq(expected: T) = Assert.assertEquals(expected, this)
 
-val currentStackTrace: StackTrace get() = Thread.currentThread().stackTrace
+
+data class CodeLocation(val fileName: String, val lineNumber: Int) {
+    override fun toString() = "$fileName:$lineNumber"
+}
 
 val StackTraceElement.location get() = CodeLocation(fileName, lineNumber)
 

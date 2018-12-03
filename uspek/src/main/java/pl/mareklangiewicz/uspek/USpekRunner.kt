@@ -7,14 +7,14 @@ import org.junit.runner.Description.createTestDescription
 import org.junit.runner.Runner
 import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
-import pl.mareklangiewicz.uspek.UUSpek.Tree
-import pl.mareklangiewicz.uspek.UUSpek.context
-import pl.mareklangiewicz.uspek.UUSpek.failed
-import pl.mareklangiewicz.uspek.UUSpek.finished
-import pl.mareklangiewicz.uspek.UUSpek.logToConsole
+import pl.mareklangiewicz.uspek.USpek.Tree
+import pl.mareklangiewicz.uspek.USpek.context
+import pl.mareklangiewicz.uspek.USpek.failed
+import pl.mareklangiewicz.uspek.USpek.finished
+import pl.mareklangiewicz.uspek.USpek.logToConsole
 import java.util.UUID.randomUUID
 
-class UUSpekRunner(testClass: Class<*>) : Runner() {
+class USpekRunner(testClass: Class<*>) : Runner() {
 
     private val description = createSuiteDescription(testClass.simpleName, randomUUID()).apply {
         context.root.branches.clear()

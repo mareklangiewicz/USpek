@@ -2,11 +2,11 @@ package pl.mareklangiewicz.uspek
 
 import org.junit.Test
 import org.junit.runner.RunWith
-import pl.mareklangiewicz.uspek.UUSpek.o
-import pl.mareklangiewicz.uspek.UUSpek.ox
-import pl.mareklangiewicz.uspek.UUSpek.uspek
+import pl.mareklangiewicz.uspek.USpek.o
+import pl.mareklangiewicz.uspek.USpek.ox
+import pl.mareklangiewicz.uspek.USpek.uspek
 
-@RunWith(UUSpekRunner::class)
+@RunWith(USpekRunner::class)
 class MicroCalcTest {
 
     @Test fun tests_1() {
