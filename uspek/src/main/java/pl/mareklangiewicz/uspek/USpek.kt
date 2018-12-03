@@ -57,7 +57,8 @@ object UUSpek {
     data class Tree(
         val name: String,
         val branches: MutableMap<String, Tree> = mutableMapOf(),
-        var end: End? = null
+        var end: End? = null,
+        var data: Any? = null
     )
 
     class End(cause: Throwable? = null) : RuntimeException(cause)
@@ -87,16 +88,20 @@ object UUSpek {
 
     infix fun String.ox(code: () -> Unit) = Unit
 
-    // TODO: remove it; use nice recursive toString on Tree
-    var log: (Tree) -> Unit = {
-        val state = when {
-            it.end === null -> ""
-            it.end?.cause == null -> "SUCCESS.(${it.end?.location})\n\n"
-            else -> "FAILURE.(${it.end?.location})\nBECAUSE.(${it.end?.causeLocation})\n\n"
-        }
-        print("${it.name}\n$state")
-    }
+    var log: (Tree) -> Unit = this::logToConsole
 
-    val End?.location get() = this?.stackTrace?.testTrace?.get(0)?.location
+    fun logToConsole(tree: Tree) = println(tree.run { when {
+        failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n"
+        finished -> "SUCCESS.($location)\n"
+        else -> name
+    }})
+
+    val Tree.finished get() = end !== null
+
+    val Tree.failed get() = end?.cause !== null
+
+    val Tree?.location get() = this?.end?.stackTrace?.testTrace?.get(0)?.location
+
+    val Tree?.causeLocation get() = this?.end?.causeLocation
 }
 
