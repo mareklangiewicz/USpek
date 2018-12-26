@@ -7,11 +7,6 @@ import org.junit.runner.Description.createTestDescription
 import org.junit.runner.Runner
 import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
-import pl.mareklangiewicz.uspek.USpek.Tree
-import pl.mareklangiewicz.uspek.USpek.context
-import pl.mareklangiewicz.uspek.USpek.failed
-import pl.mareklangiewicz.uspek.USpek.finished
-import pl.mareklangiewicz.uspek.USpek.status
 import java.util.UUID.randomUUID
 
 class USpekRunner(testClass: Class<*>) : Runner() {
