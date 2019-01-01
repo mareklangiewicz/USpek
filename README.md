@@ -7,7 +7,7 @@ Micro tool for testing with syntax similar to Spek, but shorter. Test different 
     @Test
     fun uspekTest() {
     
-        uspek("basic uspek tests") {
+        uspek {
 
             "create some mutable list" o {
 
@@ -63,7 +63,7 @@ Micro tool for testing with syntax similar to Spek, but shorter. Test different 
     }
    
     dependencies {
-        testImplementation 'com.github.langara:USpek:master-SNAPSHOT'
+        testImplementation 'com.github.langara:USpek:0.0.2'
     }
 ```
 
