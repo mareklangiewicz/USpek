@@ -1,1 +1,1 @@
-include(":uspek", "kotlinsample")
+include(":uspek", ":uspek-junit", "kotlinsample")

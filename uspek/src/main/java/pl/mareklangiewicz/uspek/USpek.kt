@@ -1,7 +1,5 @@
 package pl.mareklangiewicz.uspek
 
-import org.junit.Assert
-
 fun uspek(code: () -> Unit) {
     while (true) try {
         context.branch = context.root
@@ -24,6 +22,7 @@ infix fun String.o(code: () -> Unit) {
     catch (e: Throwable) { End(e) }
 }
 
+@Suppress("UNUSED_PARAMETER")
 infix fun String.ox(code: () -> Unit) = Unit
 
 val context = Context()
@@ -60,7 +59,7 @@ val Tree?.causeLocation get() = this?.end?.causeLocation
 
 typealias StackTrace = Array<StackTraceElement>
 
-infix fun <T> T.eq(expected: T) = Assert.assertEquals(expected, this)
+infix fun <T> T.eq(expected: T) = assert(this == expected)
 
 
 data class CodeLocation(val fileName: String, val lineNumber: Int) {
