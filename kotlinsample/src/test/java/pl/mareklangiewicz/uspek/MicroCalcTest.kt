@@ -6,52 +6,50 @@ import org.junit.runner.RunWith
 @RunWith(USpekRunner::class)
 class MicroCalcTest {
 
-    @Test fun tests_1() {
-        uspek {
+    @Test fun tests_1() = uspek {
 
-            "create SUT" o {
+        "create SUT" o {
 
-                val sut = MicroCalc(10)
+            val sut = MicroCalc(10)
 
-                "check add" o {
+            "check add" o {
+                sut.add(5)
+                sut.result eq 15
+                sut.add(100)
+                sut.result eq 115
+            }
+
+            "mutate SUT" o {
+                sut.add(1)
+
+                "incorrectly check add - this should fail" ox {
                     sut.add(5)
                     sut.result eq 15
-                    sut.add(100)
-                    sut.result eq 115
                 }
+            }
 
-                "mutate SUT" o {
-                    sut.add(1)
+            "check add again" o {
+                sut.add(5)
+                sut.result eq 15
+                sut.add(100)
+                sut.result eq 115
+            }
 
-                    "incorrectly check add - this should fail" ox {
-                        sut.add(5)
-                        sut.result eq 15
-                    }
-                }
+            testSomeAdding(sut)
 
-                "check add again" o {
-                    sut.add(5)
-                    sut.result eq 15
-                    sut.add(100)
-                    sut.result eq 115
-                }
+            "mutate SUT and check multiplyBy" o {
+                sut.result = 3
+
+                sut.multiplyBy(3)
+                sut.result eq 9
+                sut.multiplyBy(4)
+                sut.result eq 36
 
                 testSomeAdding(sut)
+            }
 
-                "mutate SUT and check multiplyBy" o {
-                    sut.result = 3
-
-                    sut.multiplyBy(3)
-                    sut.result eq 9
-                    sut.multiplyBy(4)
-                    sut.result eq 36
-
-                    testSomeAdding(sut)
-                }
-
-                "assure that SUT is intact by any of sub tests above" o {
-                    sut.result eq 10
-                }
+            "assure that SUT is intact by any of sub tests above" o {
+                sut.result eq 10
             }
         }
     }

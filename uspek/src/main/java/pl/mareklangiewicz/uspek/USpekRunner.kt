@@ -9,6 +9,9 @@ import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
 import java.util.UUID.randomUUID
 
+/**
+ * This runner always runs all tests methods from given testClass
+ */
 class USpekRunner(testClass: Class<*>) : Runner() {
 
     private val description = createSuiteDescription(testClass.simpleName, randomUUID()).apply {
