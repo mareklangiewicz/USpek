@@ -2,60 +2,60 @@ package pl.mareklangiewicz.uspek
 
 fun uspek(code: () -> Unit) {
     while (true) try {
-        context.branch = context.root
+        uspekContext.branch = uspekContext.root
         code()
         return
-    } catch (e: End) {
-        context.branch.end = e
-        log(context.branch)
+    } catch (e: USpekException) {
+        uspekContext.branch.end = e
+        uspekLogger(uspekContext.branch)
     }
 }
 
 infix fun String.o(code: () -> Unit) {
-    val branch = context.branch.branches[this] ?: Tree(this)
+    val branch = uspekContext.branch.branches[this] ?: USpekTree(this)
     branch.end === null || return
-    context.branch.branches[this] = branch
-    context.branch = branch
-    log(branch)
-    throw try { code(); End() }
-    catch (e: End) { e }
-    catch (e: Throwable) { End(e) }
+    uspekContext.branch.branches[this] = branch
+    uspekContext.branch = branch
+    uspekLogger(branch)
+    throw try { code(); USpekException() }
+    catch (e: USpekException) { e }
+    catch (e: Throwable) { USpekException(e) }
 }
 
 @Suppress("UNUSED_PARAMETER")
 infix fun String.ox(code: () -> Unit) = Unit
 
-val context = Context()
+val uspekContext = USpekContext()
 
-data class Context(
-    val root: Tree = Tree("uspek"),
-    var branch: Tree = root
+data class USpekContext(
+    val root: USpekTree = USpekTree("uspek"),
+    var branch: USpekTree = root
 )
 
-data class Tree(
+data class USpekTree(
     val name: String,
-    val branches: MutableMap<String, Tree> = mutableMapOf(),
-    var end: End? = null,
+    val branches: MutableMap<String, USpekTree> = mutableMapOf(),
+    var end: USpekException? = null,
     var data: Any? = null
 )
 
-class End(cause: Throwable? = null) : RuntimeException(cause)
+class USpekException(cause: Throwable? = null) : RuntimeException(cause)
 
-var log: (Tree) -> Unit = { println(it.status) }
+var uspekLogger: (USpekTree) -> Unit = { println(it.status) }
 
-val Tree.status get() = when {
+val USpekTree.status get() = when {
         failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n"
         finished -> "SUCCESS.($location)\n"
         else -> name
     }
 
-val Tree.finished get() = end !== null
+val USpekTree.finished get() = end !== null
 
-val Tree.failed get() = end?.cause !== null
+val USpekTree.failed get() = end?.cause !== null
 
-val Tree?.location get() = this?.end?.stackTrace?.testTrace?.get(0)?.location
+val USpekTree?.location get() = this?.end?.stackTrace?.uspekTrace?.get(0)?.location
 
-val Tree?.causeLocation get() = this?.end?.causeLocation
+val USpekTree?.causeLocation get() = this?.end?.causeLocation
 
 typealias StackTrace = Array<StackTraceElement>
 
@@ -75,9 +75,9 @@ val Throwable.causeLocation: CodeLocation?
         return frame?.location
     }
 
-typealias TestTrace = List<StackTraceElement>
+typealias USpekTrace = List<StackTraceElement>
 
-val StackTrace.testTrace: TestTrace get() = slice(findUserCall()!!..findUserCall("uspek")!!)
+val StackTrace.uspekTrace: USpekTrace get() = slice(findUserCall()!!..findUserCall("uspek")!!)
 
 private fun StackTrace.findUserCall(uSpekFun: String? = null) = (1 until size).find {
     uSpekFun in listOf(null, this[it - 1].methodName)

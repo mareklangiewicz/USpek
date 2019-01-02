@@ -15,19 +15,19 @@ import java.util.UUID.randomUUID
 class USpekRunner(testClass: Class<*>) : Runner() {
 
     private val description = createSuiteDescription(testClass.simpleName, randomUUID()).apply {
-        context.root.branches.clear()
+        uspekContext.root.branches.clear()
         val instance = testClass.newInstance()
         testClass.declaredMethods
                 .filter { it.getAnnotation(Test::class.java) !== null }
                 .forEach { it.invoke(instance) }
-        addChild(context.root.description(testClass.name))
+        addChild(uspekContext.root.description(testClass.name))
     }
 
     override fun getDescription(): Description = description
-    override fun run(notifier: RunNotifier) = context.root.run(context.root.name, notifier)
+    override fun run(notifier: RunNotifier) = uspekContext.root.run(uspekContext.root.name, notifier)
 }
 
-private fun Tree.description(suite: String): Description {
+private fun USpekTree.description(suite: String): Description {
     val description =
         if (branches.isEmpty()) createTestDescription(suite, name)
         else createSuiteDescription(name, randomUUID())
@@ -36,7 +36,7 @@ private fun Tree.description(suite: String): Description {
     return description
 }
 
-private fun Tree.run(name: String, notifier: RunNotifier) {
+private fun USpekTree.run(name: String, notifier: RunNotifier) {
     if (branches.isEmpty()) {
         val description = data as? Description
         notifier.fireTestStarted(description)
@@ -47,7 +47,7 @@ private fun Tree.run(name: String, notifier: RunNotifier) {
                 notifier.fireTestFinished(description)
             }
             finished -> notifier.fireTestFinished(description)
-            else -> throw IllegalStateException("Tree branch not finished")
+            else -> throw IllegalStateException("USpekTree branch not finished")
         }
     }
     else branches.values.forEach { it.run(name + "." + it.name, notifier) }
