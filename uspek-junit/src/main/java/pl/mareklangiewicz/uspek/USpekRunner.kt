@@ -1,5 +1,8 @@
 package pl.mareklangiewicz.uspek
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.Description
 import org.junit.runner.Description.createSuiteDescription
@@ -53,3 +56,5 @@ private fun USpekTree.run(name: String, notifier: RunNotifier) {
     else branches.values.forEach { it.run(name + "." + it.name, notifier) }
 }
 
+fun uspekBlocking(code: suspend () -> Unit) = runBlocking(USpekContext()) { uspek(code); uspekContext.root }
+fun CoroutineScope.uspekAsync(code: suspend () -> Unit) = async(USpekContext()) { uspek(code); uspekContext.root }

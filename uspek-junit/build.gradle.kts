@@ -8,6 +8,7 @@ version = "0.0.2"
 
 dependencies {
     implementation(Deps.kotlinStdlib8)
+    implementation(Deps.kotlinxCoroutinesCore)
     implementation(Deps.junit)
     api(project(":uspek"))
 }

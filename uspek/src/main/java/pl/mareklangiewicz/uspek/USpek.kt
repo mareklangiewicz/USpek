@@ -1,6 +1,6 @@
 package pl.mareklangiewicz.uspek
 
-fun uspek(code: () -> Unit) {
+suspend fun uspek(code: suspend () -> Unit) {
     while (true) try {
         uspekContext.branch = uspekContext.root
         code()
@@ -11,7 +11,7 @@ fun uspek(code: () -> Unit) {
     }
 }
 
-infix fun String.o(code: () -> Unit) {
+suspend infix fun String.o(code: suspend () -> Unit) {
     val branch = uspekContext.branch.branches[this] ?: USpekTree(this)
     branch.end === null || return
     uspekContext.branch.branches[this] = branch
@@ -22,9 +22,10 @@ infix fun String.o(code: () -> Unit) {
     catch (e: Throwable) { USpekException(e) }
 }
 
-@Suppress("UNUSED_PARAMETER")
-infix fun String.ox(code: () -> Unit) = Unit
+@Suppress("UNUSED_PARAMETER", "RedundantSuspendModifier")
+suspend infix fun String.ox(code: suspend () -> Unit) = Unit
 
+// TODO: use coroutineContext to keep current USpekContext
 val uspekContext = USpekContext()
 
 data class USpekContext(
@@ -77,7 +78,22 @@ val Throwable.causeLocation: CodeLocation?
 
 typealias USpekTrace = List<StackTraceElement>
 
-val StackTrace.uspekTrace: USpekTrace get() = slice(findUserCall()!!..findUserCall("uspek")!!)
+val StackTrace.uspekTrace: USpekTrace? get() {
+    logTrace()
+    val from = findUserCall() ?: return null
+    val to = findUserCall("uspek") ?: return null
+    val ut = slice(from..to)
+    ut.logTrace()
+    return ut
+}
+
+fun StackTrace.logTrace() = toList().logTrace()
+
+fun USpekTrace.logTrace() {
+    for (elem in this) {
+        println(elem)
+    }
+}
 
 private fun StackTrace.findUserCall(uSpekFun: String? = null) = (1 until size).find {
     uSpekFun in listOf(null, this[it - 1].methodName)
