@@ -31,7 +31,7 @@ class USpekRunner(testClass: Class<*>) : Runner() {
     override fun run(notifier: RunNotifier) = context.root.run(context.root.name, notifier)
 
     companion object {
-        internal val context = USpekContext()
+        val context = USpekContext()
         fun uspek(code: suspend() -> Unit) { uspekBlocking(context, code) }
     }
 }

@@ -84,11 +84,11 @@ val Throwable.causeLocation: CodeLocation?
 typealias USpekTrace = List<StackTraceElement>
 
 val StackTrace.uspekTrace: USpekTrace? get() {
-    logTrace()
+//    logTrace()
     val from = findUserCall() ?: return null
     val to = findUserCall("uspek") ?: return null
     val ut = slice(from..to)
-    ut.logTrace()
+//    ut.logTrace()
     return ut
 }
 
