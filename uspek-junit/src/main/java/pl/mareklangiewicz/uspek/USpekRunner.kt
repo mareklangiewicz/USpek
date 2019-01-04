@@ -10,6 +10,7 @@ import org.junit.runner.Description.createTestDescription
 import org.junit.runner.Runner
 import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
+import java.util.Locale
 import java.util.UUID.randomUUID
 
 /**
@@ -67,3 +68,7 @@ fun uspekBlocking(uspekContext: USpekContext = USpekContext(), code: suspend () 
 
 fun CoroutineScope.uspekAsync(uspekContext: USpekContext = USpekContext(), code: suspend () -> Unit) =
     async(uspekContext) { uspek(code); coroutineContext.uspek.root }
+
+val Any.p get() = println("p [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
+
+private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }
