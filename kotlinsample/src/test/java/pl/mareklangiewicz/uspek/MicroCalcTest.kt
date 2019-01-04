@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 @RunWith(USpekRunner::class)
 class MicroCalcTest {
 
-    @Test fun tests_1() = uspekBlocking {
+    @Test fun tests_1() = USpekRunner.uspek {
 
         "create SUT" o {
 

@@ -14,20 +14,26 @@ import java.util.UUID.randomUUID
 
 /**
  * This runner always runs all tests methods from given testClass
+ * All tests should use USpekRunner.context (usually by calling USpekRunner.uspek function)
  */
 class USpekRunner(testClass: Class<*>) : Runner() {
 
     private val description = createSuiteDescription(testClass.simpleName, randomUUID()).apply {
-        uspekContext.root.branches.clear()
+        context.root.branches.clear()
         val instance = testClass.newInstance()
         testClass.declaredMethods
                 .filter { it.getAnnotation(Test::class.java) !== null }
                 .forEach { it.invoke(instance) }
-        addChild(uspekContext.root.description(testClass.name))
+        addChild(context.root.description(testClass.name))
     }
 
     override fun getDescription(): Description = description
-    override fun run(notifier: RunNotifier) = uspekContext.root.run(uspekContext.root.name, notifier)
+    override fun run(notifier: RunNotifier) = context.root.run(context.root.name, notifier)
+
+    companion object {
+        internal val context = USpekContext()
+        fun uspek(code: suspend() -> Unit) { uspekBlocking(context, code) }
+    }
 }
 
 private fun USpekTree.description(suite: String): Description {
@@ -56,5 +62,8 @@ private fun USpekTree.run(name: String, notifier: RunNotifier) {
     else branches.values.forEach { it.run(name + "." + it.name, notifier) }
 }
 
-fun uspekBlocking(code: suspend () -> Unit) = runBlocking(USpekContext()) { uspek(code); uspekContext.root }
-fun CoroutineScope.uspekAsync(code: suspend () -> Unit) = async(USpekContext()) { uspek(code); uspekContext.root }
+fun uspekBlocking(uspekContext: USpekContext = USpekContext(), code: suspend () -> Unit) =
+    runBlocking(uspekContext) { uspek(code); uspekContext.root }
+
+fun CoroutineScope.uspekAsync(uspekContext: USpekContext = USpekContext(), code: suspend () -> Unit) =
+    async(uspekContext) { uspek(code); coroutineContext.uspek.root }

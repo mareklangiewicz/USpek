@@ -1,21 +1,24 @@
 package pl.mareklangiewicz.uspek
 
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
+
 suspend fun uspek(code: suspend () -> Unit) {
     while (true) try {
-        uspekContext.branch = uspekContext.root
+        coroutineContext.uspek.branch = coroutineContext.uspek.root
         code()
         return
     } catch (e: USpekException) {
-        uspekContext.branch.end = e
-        uspekLogger(uspekContext.branch)
+        coroutineContext.uspek.branch.end = e
+        uspekLogger(coroutineContext.uspek.branch)
     }
 }
 
 suspend infix fun String.o(code: suspend () -> Unit) {
-    val branch = uspekContext.branch.branches[this] ?: USpekTree(this)
+    val branch = coroutineContext.uspek.branch.branches[this] ?: USpekTree(this)
     branch.end === null || return
-    uspekContext.branch.branches[this] = branch
-    uspekContext.branch = branch
+    coroutineContext.uspek.branch.branches[this] = branch
+    coroutineContext.uspek.branch = branch
     uspekLogger(branch)
     throw try { code(); USpekException() }
     catch (e: USpekException) { e }
@@ -25,13 +28,15 @@ suspend infix fun String.o(code: suspend () -> Unit) {
 @Suppress("UNUSED_PARAMETER", "RedundantSuspendModifier")
 suspend infix fun String.ox(code: suspend () -> Unit) = Unit
 
-// TODO: use coroutineContext to keep current USpekContext
-val uspekContext = USpekContext()
-
 data class USpekContext(
     val root: USpekTree = USpekTree("uspek"),
     var branch: USpekTree = root
-)
+) : CoroutineContext.Element {
+    override val key: CoroutineContext.Key<USpekContext> = Key
+    companion object Key : CoroutineContext.Key<USpekContext>
+}
+
+val CoroutineContext.uspek get() = this[USpekContext] ?: throw IllegalStateException("No USpekContext available")
 
 data class USpekTree(
     val name: String,
@@ -87,6 +92,7 @@ val StackTrace.uspekTrace: USpekTrace? get() {
     return ut
 }
 
+// TODO: remove after checking how stack traces are changing after suspensions (like delay etc)
 fun StackTrace.logTrace() = toList().logTrace()
 
 fun USpekTrace.logTrace() {
