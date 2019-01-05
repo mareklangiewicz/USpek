@@ -7,20 +7,20 @@ import org.junit.runner.RunWith
 @RunWith(USpekRunner::class)
 class MicroCalcTest {
 
-    @Test fun tests_1() = USpekRunner.uspek {
+    @Test fun tests_1() = uspekBlocking {
 
-        "create SUT" o {
+        "create SUT" so {
 
             val sut = MicroCalc(10)
 
-            "check add" o {
+            "check add" so {
                 sut.add(5)
                 sut.result eq 15
                 sut.add(100)
                 sut.result eq 115
             }
 
-            "mutate SUT" o {
+            "mutate SUT" so {
                 sut.add(1)
 
                 "incorrectly check add - this should fail" ox {
@@ -29,7 +29,7 @@ class MicroCalcTest {
                 }
             }
 
-            "check add again" o {
+            "check add again" so {
                 sut.add(5)
                 sut.result eq 15
                 sut.add(100)
@@ -39,7 +39,7 @@ class MicroCalcTest {
 
             testSomeAdding(sut)
 
-            "mutate SUT and check multiplyBy" o {
+            "mutate SUT and check multiplyBy" so {
                 sut.result = 3
 
                 sut.multiplyBy(3)
@@ -50,7 +50,7 @@ class MicroCalcTest {
                 testSomeAdding(sut)
             }
 
-            "assure that SUT is intact by any of sub tests above" o {
+            "assure that SUT is intact by any of sub tests above" o { // Important: no suspending so we can just use "o"
                 sut.result eq 10
             }
         }
@@ -58,22 +58,22 @@ class MicroCalcTest {
 
     private suspend fun testSomeAdding(calc: MicroCalc) {
         val start = calc.result
-        "add 5 to $start" o {
+        "add 5 to $start" so {
             calc.add(5)
             val afterAdd5 = start + 5
-            "result should be $afterAdd5" o { calc.result eq afterAdd5 }
+            "result should be $afterAdd5" so { calc.result eq afterAdd5 }
 
-            "add 7 more" o {
+            "add 7 more" so {
                 calc.add(7)
                 val afterAdd5Add7 = afterAdd5 + 7
-                "result should be $afterAdd5Add7" o { calc.result eq afterAdd5Add7 }
+                "result should be $afterAdd5Add7" so { calc.result eq afterAdd5Add7 }
             }
         }
 
-        "subtract 3" o {
+        "subtract 3" so {
             calc.add(-3)
             val afterSub3 = start - 3
-            "result should be $afterSub3" o { calc.result eq afterSub3 }
+            "result should be $afterSub3" so { calc.result eq afterSub3 }
         }
 
     }

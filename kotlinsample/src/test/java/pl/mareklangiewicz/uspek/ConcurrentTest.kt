@@ -11,10 +11,8 @@ class ConcurrentTest {
     }
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
-        val deferred1 = uspekAsync { checkAddSlowly(1, 1, 5_000) }
-        deferred1.await()
-        val deferred2 = uspekAsync { checkAddSlowly(2, 1, 5_000) }
-        deferred2.await()
+        val deferred1 = uspekAsync { checkAddSlowly(1, 1, 5_000) }; deferred1.await()
+        val deferred2 = uspekAsync { checkAddSlowly(2, 1, 5_000) }; deferred2.await()
         Unit
     }
 
@@ -28,38 +26,38 @@ class ConcurrentTest {
 
     @Test fun tests_simple_massively() {
         uspekBlocking {
-            checkAddFaster(100, 199, 1, 2_000_000_000); ".".p
-            checkAddFaster(200, 299, 1, 2_000_000_000); ".".p
-            checkAddFaster(300, 399, 1, 2_000_000_000); ".".p
-            checkAddFaster(400, 499, 1, 2_000_000_000); ".".p
-            checkAddFaster(500, 599, 1, 2_000_000_000); ".".p
-            checkAddFaster(600, 699, 1, 2_000_000_000); ".".p
-            checkAddFaster(700, 799, 1, 2_000_000_000); ".".p
-            checkAddFaster(800, 899, 1, 2_000_000_000); ".".p
+            checkAddFaster(100, 199, 1, 2_000_000_000); udebug
+            checkAddFaster(200, 299, 1, 2_000_000_000); udebug
+            checkAddFaster(300, 399, 1, 2_000_000_000); udebug
+            checkAddFaster(400, 499, 1, 2_000_000_000); udebug
+            checkAddFaster(500, 599, 1, 2_000_000_000); udebug
+            checkAddFaster(600, 699, 1, 2_000_000_000); udebug
+            checkAddFaster(700, 799, 1, 2_000_000_000); udebug
+            checkAddFaster(800, 899, 1, 2_000_000_000); udebug
         }
     }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
-        val deferred1 = uspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); ".".p }; deferred1.await()
-        val deferred2 = uspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); ".".p }; deferred2.await()
-        val deferred3 = uspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); ".".p }; deferred3.await()
-        val deferred4 = uspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); ".".p }; deferred4.await()
-        val deferred5 = uspekAsync { checkAddFaster(500, 599, 1, 2_000_000_000); ".".p }; deferred5.await()
-        val deferred6 = uspekAsync { checkAddFaster(600, 699, 1, 2_000_000_000); ".".p }; deferred6.await()
-        val deferred7 = uspekAsync { checkAddFaster(700, 799, 1, 2_000_000_000); ".".p }; deferred7.await()
-        val deferred8 = uspekAsync { checkAddFaster(800, 899, 1, 2_000_000_000); ".".p }; deferred8.await()
+        val deferred1 = uspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); udebug }; deferred1.await()
+        val deferred2 = uspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); udebug }; deferred2.await()
+        val deferred3 = uspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); udebug }; deferred3.await()
+        val deferred4 = uspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); udebug }; deferred4.await()
+        val deferred5 = uspekAsync { checkAddFaster(500, 599, 1, 2_000_000_000); udebug }; deferred5.await()
+        val deferred6 = uspekAsync { checkAddFaster(600, 699, 1, 2_000_000_000); udebug }; deferred6.await()
+        val deferred7 = uspekAsync { checkAddFaster(700, 799, 1, 2_000_000_000); udebug }; deferred7.await()
+        val deferred8 = uspekAsync { checkAddFaster(800, 899, 1, 2_000_000_000); udebug }; deferred8.await()
         Unit
     }
 
     @Test fun tests_concurrent_massively() = runBlocking(Dispatchers.Default) {
-        val deferred1 = uspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); ".".p }
-        val deferred2 = uspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); ".".p }
-        val deferred3 = uspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); ".".p }
-        val deferred4 = uspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); ".".p }
-        val deferred5 = uspekAsync { checkAddFaster(500, 599, 1, 2_000_000_000); ".".p }
-        val deferred6 = uspekAsync { checkAddFaster(600, 699, 1, 2_000_000_000); ".".p }
-        val deferred7 = uspekAsync { checkAddFaster(700, 799, 1, 2_000_000_000); ".".p }
-        val deferred8 = uspekAsync { checkAddFaster(800, 899, 1, 2_000_000_000); ".".p }
+        val deferred1 = uspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); udebug }
+        val deferred2 = uspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); udebug }
+        val deferred3 = uspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); udebug }
+        val deferred4 = uspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); udebug }
+        val deferred5 = uspekAsync { checkAddFaster(500, 599, 1, 2_000_000_000); udebug }
+        val deferred6 = uspekAsync { checkAddFaster(600, 699, 1, 2_000_000_000); udebug }
+        val deferred7 = uspekAsync { checkAddFaster(700, 799, 1, 2_000_000_000); udebug }
+        val deferred8 = uspekAsync { checkAddFaster(800, 899, 1, 2_000_000_000); udebug }
         deferred1.await()
         deferred2.await()
         deferred3.await()
@@ -72,14 +70,14 @@ class ConcurrentTest {
     }
 
     suspend fun checkAddSlowly(addArg: Int, resultFrom: Int, resultTo: Int) {
-        "create SUT" o {
+        "create SUT" so {
             val sut = MicroCalc(666)
 
-            "check add $addArg" o {
+            "check add $addArg" so {
                 for (i in resultFrom..resultTo) {
                     // generating tests in a loop is slow because it starts the loop
                     // again and again just to find and run first not-finished test
-                    "check add $addArg to $i" o {
+                    "check add $addArg to $i" so {
                         sut.result = i
                         sut.add(addArg)
                         sut.result eq i + addArg
@@ -91,7 +89,7 @@ class ConcurrentTest {
     }
 
     suspend fun checkAddFaster(addArgFrom: Int, addArgTo: Int, resultFrom: Int, resultTo: Int) {
-        "create SUT and check add $addArgFrom .. $addArgTo" o {
+        "create SUT and check add $addArgFrom .. $addArgTo" so {
             val sut = MicroCalc(666)
 
             for (addArg in addArgFrom..addArgTo)

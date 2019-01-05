@@ -15,9 +15,10 @@ import java.util.UUID.randomUUID
 
 /**
  * This runner always runs all tests methods from given testClass
- * All tests should use USpekRunner.context (usually by calling USpekRunner.uspek function)
  */
 class USpekRunner(testClass: Class<*>) : Runner() {
+
+    private val context = GlobalUSpekContext
 
     private val description = createSuiteDescription(testClass.simpleName, randomUUID()).apply {
         context.root.branches.clear()
@@ -30,11 +31,6 @@ class USpekRunner(testClass: Class<*>) : Runner() {
 
     override fun getDescription(): Description = description
     override fun run(notifier: RunNotifier) = context.root.run(context.root.name, notifier)
-
-    companion object {
-        val context = USpekContext()
-        fun uspek(code: suspend() -> Unit) { uspekBlocking(context, code) }
-    }
 }
 
 private fun USpekTree.description(suite: String): Description {
@@ -63,12 +59,14 @@ private fun USpekTree.run(name: String, notifier: RunNotifier) {
     else branches.values.forEach { it.run(name + "." + it.name, notifier) }
 }
 
-fun uspekBlocking(uspekContext: USpekContext = USpekContext(), code: suspend () -> Unit) =
-    runBlocking(uspekContext) { uspek(code); uspekContext.root }
+fun uspekBlocking(code: suspend () -> Unit) = runBlocking { suspek(code); coroutineContext.ucontext.root }
 
-fun CoroutineScope.uspekAsync(uspekContext: USpekContext = USpekContext(), code: suspend () -> Unit) =
-    async(uspekContext) { uspek(code); coroutineContext.uspek.root }
+fun CoroutineScope.uspekAsync(code: suspend () -> Unit) =
+    async(USpekContext()) { suspek(code); coroutineContext.ucontext.root }
 
-val Any.p get() = println("p [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
+val String.udebug get() =
+    println("udebug [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
+
+val udebug get() = "".udebug
 
 private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }

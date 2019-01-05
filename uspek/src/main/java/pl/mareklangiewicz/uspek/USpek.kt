@@ -3,30 +3,43 @@ package pl.mareklangiewicz.uspek
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
-suspend fun uspek(code: suspend () -> Unit) {
+suspend fun suspek(code: suspend () -> Unit) = coroutineContext.ucontext.uspek { code() }
+
+fun uspek(code: () -> Unit) = GlobalUSpekContext.uspek(code)
+
+private inline fun USpekContext.uspek(code: () -> Unit) {
     while (true) try {
-        coroutineContext.uspek.branch = coroutineContext.uspek.root
+        branch = root
         code()
         return
     } catch (e: USpekException) {
-        coroutineContext.uspek.branch.end = e
-        uspekLogger(coroutineContext.uspek.branch)
+        branch.end = e
+        uspekLogger(branch)
     }
 }
 
-suspend infix fun String.o(code: suspend () -> Unit) {
-    val branch = coroutineContext.uspek.branch.branches[this] ?: USpekTree(this)
-    branch.end === null || return
-    coroutineContext.uspek.branch.branches[this] = branch
-    coroutineContext.uspek.branch = branch
-    uspekLogger(branch)
+suspend infix fun String.so(code: suspend () -> Unit): Unit = coroutineContext.ucontext.o(this) { code() }
+
+infix fun String.o(code: () -> Unit) = GlobalUSpekContext.o(this, code)
+
+private inline fun USpekContext.o(name: String, code: () -> Unit) {
+    val newBranch = branch.branches[name] ?: USpekTree(name)
+    newBranch.end === null || return
+    branch.branches[name] = newBranch
+    branch = newBranch
+    uspekLogger(newBranch)
     throw try { code(); USpekException() }
     catch (e: USpekException) { e }
     catch (e: Throwable) { USpekException(e) }
 }
 
-@Suppress("UNUSED_PARAMETER", "RedundantSuspendModifier")
-suspend infix fun String.ox(code: suspend () -> Unit) = Unit
+@Suppress("UNUSED_PARAMETER")
+@Deprecated("Enable this test code", ReplaceWith("o(code)"))
+infix fun String.ox(code: () -> Unit) = Unit
+
+@Suppress("UNUSED_PARAMETER")
+@Deprecated("Enable this test code", ReplaceWith("so(code)"))
+infix fun String.sox(code: suspend () -> Unit) = Unit
 
 data class USpekContext(
     val root: USpekTree = USpekTree("uspek"),
@@ -36,7 +49,9 @@ data class USpekContext(
     companion object Key : CoroutineContext.Key<USpekContext>
 }
 
-val CoroutineContext.uspek get() = this[USpekContext] ?: throw IllegalStateException("No USpekContext available")
+val GlobalUSpekContext = USpekContext()
+
+val CoroutineContext.ucontext get() = this[USpekContext] ?: GlobalUSpekContext
 
 data class USpekTree(
     val name: String,
