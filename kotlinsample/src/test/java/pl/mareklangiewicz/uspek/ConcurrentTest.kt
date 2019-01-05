@@ -6,67 +6,53 @@ import org.junit.Test
 
 class ConcurrentTest {
 
-    init {
-        uspekLogger = { if (it.failed) println(it.status) }
-    }
-
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
-        val deferred1 = uspekAsync { checkAddSlowly(1, 1, 5_000) }; deferred1.await()
-        val deferred2 = uspekAsync { checkAddSlowly(2, 1, 5_000) }; deferred2.await()
-        Unit
+        uspekLogger = { }
+        "start".ud
+        val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); "in1".ud }; "out1".ud; d1.await(); "after1".ud
+        val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); "in2".ud }; "out2".ud; d2.await(); "after2".ud
+        "end".ud
     }
 
     @Test fun tests_concurrent_slowly() = runBlocking(Dispatchers.Default) {
-        val deferred1 = uspekAsync { checkAddSlowly(1, 1, 5_000) }
-        val deferred2 = uspekAsync { checkAddSlowly(2, 1, 5_000) }
-        deferred1.await()
-        deferred2.await()
-        Unit
+        uspekLogger = { }
+        "start".ud
+        val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); "in1".ud }; "out1".ud
+        val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); "in2".ud }; "out2".ud
+        d1.await(); "after1".ud
+        d2.await(); "after2".ud
+        "end".ud
     }
 
-    @Test fun tests_simple_massively() {
-        uspekBlocking {
-            checkAddFaster(100, 199, 1, 2_000_000_000); udebug
-            checkAddFaster(200, 299, 1, 2_000_000_000); udebug
-            checkAddFaster(300, 399, 1, 2_000_000_000); udebug
-            checkAddFaster(400, 499, 1, 2_000_000_000); udebug
-            checkAddFaster(500, 599, 1, 2_000_000_000); udebug
-            checkAddFaster(600, 699, 1, 2_000_000_000); udebug
-            checkAddFaster(700, 799, 1, 2_000_000_000); udebug
-            checkAddFaster(800, 899, 1, 2_000_000_000); udebug
-        }
+    @Test fun tests_simple_massively() = suspekBlocking {
+        "start".ud
+        checkAddFaster(100, 199, 1, 2_000_000_000); "1".ud
+        checkAddFaster(200, 299, 1, 2_000_000_000); "2".ud
+        checkAddFaster(300, 399, 1, 2_000_000_000); "3".ud
+        checkAddFaster(400, 499, 1, 2_000_000_000); "4".ud
+        "end".ud
     }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
-        val deferred1 = uspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); udebug }; deferred1.await()
-        val deferred2 = uspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); udebug }; deferred2.await()
-        val deferred3 = uspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); udebug }; deferred3.await()
-        val deferred4 = uspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); udebug }; deferred4.await()
-        val deferred5 = uspekAsync { checkAddFaster(500, 599, 1, 2_000_000_000); udebug }; deferred5.await()
-        val deferred6 = uspekAsync { checkAddFaster(600, 699, 1, 2_000_000_000); udebug }; deferred6.await()
-        val deferred7 = uspekAsync { checkAddFaster(700, 799, 1, 2_000_000_000); udebug }; deferred7.await()
-        val deferred8 = uspekAsync { checkAddFaster(800, 899, 1, 2_000_000_000); udebug }; deferred8.await()
-        Unit
+        "start".ud
+        val d1 = suspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); "in1".ud }; "out1".ud; d1.await(); "after1".ud
+        val d2 = suspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); "in2".ud }; "out2".ud; d2.await(); "after2".ud
+        val d3 = suspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); "in3".ud }; "out3".ud; d3.await(); "after3".ud
+        val d4 = suspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); "in4".ud }; "out4".ud; d4.await(); "after4".ud
+        "end".ud
     }
 
     @Test fun tests_concurrent_massively() = runBlocking(Dispatchers.Default) {
-        val deferred1 = uspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); udebug }
-        val deferred2 = uspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); udebug }
-        val deferred3 = uspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); udebug }
-        val deferred4 = uspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); udebug }
-        val deferred5 = uspekAsync { checkAddFaster(500, 599, 1, 2_000_000_000); udebug }
-        val deferred6 = uspekAsync { checkAddFaster(600, 699, 1, 2_000_000_000); udebug }
-        val deferred7 = uspekAsync { checkAddFaster(700, 799, 1, 2_000_000_000); udebug }
-        val deferred8 = uspekAsync { checkAddFaster(800, 899, 1, 2_000_000_000); udebug }
-        deferred1.await()
-        deferred2.await()
-        deferred3.await()
-        deferred4.await()
-        deferred5.await()
-        deferred6.await()
-        deferred7.await()
-        deferred8.await()
-        Unit
+        "start".ud
+        val d1 = suspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); "in1".ud }; "out1".ud
+        val d2 = suspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); "in2".ud }; "out2".ud
+        val d3 = suspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); "in3".ud }; "out3".ud
+        val d4 = suspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); "in4".ud }; "out4".ud
+        d1.await(); "after1".ud
+        d2.await(); "after2".ud
+        d3.await(); "after3".ud
+        d4.await(); "after4".ud
+        "end".ud
     }
 
     suspend fun checkAddSlowly(addArg: Int, resultFrom: Int, resultTo: Int) {
@@ -81,7 +67,7 @@ class ConcurrentTest {
                         sut.result = i
                         sut.add(addArg)
                         sut.result eq i + addArg
-                        require(i < resultTo - 3) // this should fail three times
+//                        require(i < resultTo - 3) // this should fail three times
                     }
                 }
             }

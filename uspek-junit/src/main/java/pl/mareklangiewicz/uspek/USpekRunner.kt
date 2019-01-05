@@ -59,14 +59,15 @@ private fun USpekTree.run(name: String, notifier: RunNotifier) {
     else branches.values.forEach { it.run(name + "." + it.name, notifier) }
 }
 
-fun uspekBlocking(code: suspend () -> Unit) = runBlocking { suspek(code); coroutineContext.ucontext.root }
+fun suspekBlocking(code: suspend () -> Unit) = runBlocking { suspek(code) }
 
-fun CoroutineScope.uspekAsync(code: suspend () -> Unit) =
+fun CoroutineScope.suspekAsync(code: suspend () -> Unit) =
     async(USpekContext()) { suspek(code); coroutineContext.ucontext.root }
 
-val String.udebug get() =
-    println("udebug [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
+/** micro debugging ;-) */
+val String.ud get() =
+    println("ud [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
 
-val udebug get() = "".udebug
+val ud get() = "".ud
 
 private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }

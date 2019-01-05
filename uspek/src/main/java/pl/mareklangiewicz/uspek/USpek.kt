@@ -23,11 +23,11 @@ suspend infix fun String.so(code: suspend () -> Unit): Unit = coroutineContext.u
 infix fun String.o(code: () -> Unit) = GlobalUSpekContext.o(this, code)
 
 private inline fun USpekContext.o(name: String, code: () -> Unit) {
-    val newBranch = branch.branches[name] ?: USpekTree(name)
-    newBranch.end === null || return
-    branch.branches[name] = newBranch
-    branch = newBranch
-    uspekLogger(newBranch)
+    val subbranch = branch.branches[name] ?: USpekTree(name)
+    subbranch.end === null || return // already tested so skip this whole subbranch
+    branch.branches[name] = subbranch // add new subbranch if not already there
+    branch = subbranch // step through the tree into the subbranch
+    uspekLogger(subbranch)
     throw try { code(); USpekException() }
     catch (e: USpekException) { e }
     catch (e: Throwable) { USpekException(e) }
