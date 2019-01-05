@@ -6,7 +6,7 @@ import org.junit.runner.RunWith
 @RunWith(USpekRunner::class)
 class MicroCalcTest {
 
-    @Test fun tests_1() = uspek {
+    @Test fun microCalcTest() = uspek {
 
         "create SUT" o {
 
@@ -54,7 +54,7 @@ class MicroCalcTest {
         }
     }
 
-    fun testSomeAdding(calc: MicroCalc) {
+    private fun testSomeAdding(calc: MicroCalc) {
         val start = calc.result
         "add 5 to $start" o {
             calc.add(5)

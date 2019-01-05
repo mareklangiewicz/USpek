@@ -12,25 +12,26 @@ fun uspek(code: () -> Unit) {
 }
 
 infix fun String.o(code: () -> Unit) {
-    val branch = uspekContext.branch.branches[this] ?: USpekTree(this)
-    branch.end === null || return
-    uspekContext.branch.branches[this] = branch
-    uspekContext.branch = branch
-    uspekLogger(branch)
+    val subbranch = uspekContext.branch.branches[this] ?: USpekTree(this)
+    subbranch.end === null || return // already tested so skip this whole subbranch
+    uspekContext.branch.branches[this] = subbranch // add new subbranch if not already there
+    uspekContext.branch = subbranch // step through the tree into the subbranch
+    uspekLogger(subbranch)
     throw try { code(); USpekException() }
     catch (e: USpekException) { e }
     catch (e: Throwable) { USpekException(e) }
 }
 
 @Suppress("UNUSED_PARAMETER")
+@Deprecated("Enable this test code", ReplaceWith("o(code)"))
 infix fun String.ox(code: () -> Unit) = Unit
-
-val uspekContext = USpekContext()
 
 data class USpekContext(
     val root: USpekTree = USpekTree("uspek"),
     var branch: USpekTree = root
 )
+
+val uspekContext = USpekContext()
 
 data class USpekTree(
     val name: String,
