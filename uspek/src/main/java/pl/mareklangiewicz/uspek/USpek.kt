@@ -74,6 +74,7 @@ val USpekTree.finished get() = end !== null
 val USpekTree.failed get() = end?.cause !== null
 
 val USpekTree?.location get() = this?.end?.stackTrace?.uspekTrace?.get(0)?.location
+//val USpekTree?.location get() = this?.end?.stackTrace?.userCall?.location
 
 val USpekTree?.causeLocation get() = this?.end?.causeLocation
 
@@ -98,13 +99,15 @@ val Throwable.causeLocation: CodeLocation?
 typealias USpekTrace = List<StackTraceElement>
 
 val StackTrace.uspekTrace: USpekTrace? get() {
-//    logTrace()
+    logTrace()
     val from = findUserCall() ?: return null
     val to = findUserCall("uspek") ?: return null
     val ut = slice(from..to)
-//    ut.logTrace()
+    ut.logTrace()
     return ut
 }
+
+val StackTrace.userCall get() = findUserCall()?.let(::getOrNull)
 
 // TODO: remove after checking how stack traces are changing after suspensions (like delay etc)
 fun StackTrace.logTrace() = toList().logTrace()
