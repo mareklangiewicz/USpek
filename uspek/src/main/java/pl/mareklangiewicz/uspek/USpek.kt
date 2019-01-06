@@ -73,8 +73,7 @@ val USpekTree.finished get() = end !== null
 
 val USpekTree.failed get() = end?.cause !== null
 
-val USpekTree?.location get() = this?.end?.stackTrace?.uspekTrace?.get(0)?.location
-//val USpekTree?.location get() = this?.end?.stackTrace?.userCall?.location
+val USpekTree?.location get() = this?.end?.stackTrace?.userCall?.location
 
 val USpekTree?.causeLocation get() = this?.end?.causeLocation
 
@@ -96,34 +95,8 @@ val Throwable.causeLocation: CodeLocation?
         return frame?.location
     }
 
-typealias USpekTrace = List<StackTraceElement>
-
-val StackTrace.uspekTrace: USpekTrace? get() {
-    println("full:")
-    logTrace()
-    println()
-    val from = findUserCall() ?: return null
-    val to = findUserCall("uspek", "suspek") ?: from
-    val ut = slice(from..to)
-    println("sliced:")
-    ut.logTrace()
-    println()
-    return ut
-}
-
 val StackTrace.userCall get() = findUserCall()?.let(::getOrNull)
 
-// TODO: remove after checking how stack traces are changing after suspensions (like delay etc)
-fun StackTrace.logTrace() = toList().logTrace()
-
-fun USpekTrace.logTrace() {
-    for (elem in this) {
-        println(elem)
-    }
-}
-
-private fun StackTrace.findUserCall(vararg uspekFunctions: String) = (1 until size).find {
-    uspekFunctions.isEmpty() || this[it - 1].methodName in uspekFunctions
-        && this[it - 1].fileName == "USpek.kt"
-        && this[it].fileName != "USpek.kt"
+private fun StackTrace.findUserCall() = (1 until size).find {
+    this[it - 1].fileName == "USpek.kt" && this[it].fileName != "USpek.kt"
 }

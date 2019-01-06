@@ -2,61 +2,60 @@ package pl.mareklangiewicz.uspek
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.yield
 import org.junit.Test
 import org.junit.runner.RunWith
 
-//@RunWith(USpekRunner::class)
+@RunWith(USpekRunner::class)
 class MicroCalcTest {
 
-//    @Test fun microCalcTest() = suspekBlocking {
-//
-//        "create SUT" so {
-//
-//            val sut = MicroCalc(10)
-//
-//            "check add" so {
-//                sut.add(5)
-//                sut.result eq 15
-//                sut.add(100)
-//                sut.result eq 115
-//            }
-//
-//            "mutate SUT" so {
-//                sut.add(1)
-//
-//                "incorrectly check add - this should fail" ox {
-//                    sut.add(5)
-//                    sut.result eq 15
-//                }
-//            }
-//
-//            "check add again" so {
-//                sut.add(5)
-//                sut.result eq 15
-//                sut.add(100)
-//                sut.result eq 115
-//                delay(1000)
-//            }
-//
-//            testSomeAdding(sut)
-//
-//            "mutate SUT and check multiplyBy" so {
-//                sut.result = 3
-//
-//                sut.multiplyBy(3)
-//                sut.result eq 9
-//                sut.multiplyBy(4)
-//                sut.result eq 36
-//
-//                testSomeAdding(sut)
-//            }
-//
-//            "assure that SUT is intact by any of sub tests above" o { // Important: no suspending so we can just use "o"
-//                sut.result eq 10
-//            }
-//        }
-//    }
+    @Test fun microCalcTest() = suspekBlocking {
+
+        "create SUT" so {
+
+            val sut = MicroCalc(10)
+
+            "check add" so {
+                sut.add(5)
+                sut.result eq 15
+                sut.add(100)
+                sut.result eq 115
+            }
+
+            "mutate SUT" so {
+                sut.add(1)
+
+                "incorrectly check add - this should fail" ox {
+                    sut.add(5)
+                    sut.result eq 15
+                }
+            }
+
+            "check add again" so {
+                sut.add(5)
+                sut.result eq 15
+                sut.add(100)
+                sut.result eq 115
+                delay(1000)
+            }
+
+            testSomeAdding(sut)
+
+            "mutate SUT and check multiplyBy" so {
+                sut.result = 3
+
+                sut.multiplyBy(3)
+                sut.result eq 9
+                sut.multiplyBy(4)
+                sut.result eq 36
+
+                testSomeAdding(sut)
+            }
+
+            "assure that SUT is intact by any of sub tests above" o { // Important: no suspending so we can just use "o"
+                sut.result eq 10
+            }
+        }
+    }
 
     @Test fun loggingTest() =
         runBlocking {
@@ -66,12 +65,10 @@ class MicroCalcTest {
 
                 "blaaaaa" so {
                     sut.result eq 10
-                    yield()
 
-//                    "blee" so {
-//                        sut.result eq 10
-////                        delay(1)
-//                    }
+                    "blee" so {
+                        sut.result eq 10
+                    }
                 }
             }
         }
