@@ -2,10 +2,11 @@ package pl.mareklangiewicz.uspek
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(USpekRunner::class)
+//@RunWith(USpekRunner::class)
 class MicroCalcTest {
 
 //    @Test fun microCalcTest() = suspekBlocking {
@@ -59,16 +60,18 @@ class MicroCalcTest {
 
     @Test fun loggingTest() =
         runBlocking {
-            uspek {
+            suspek {
 
                 val sut = MicroCalc(10)
 
-                "blaaaaa" o {
+                "blaaaaa" so {
                     sut.result eq 10
+                    yield()
 
-                    "blee" o {
-                        sut.result eq 10
-                    }
+//                    "blee" so {
+//                        sut.result eq 10
+////                        delay(1)
+//                    }
                 }
             }
         }

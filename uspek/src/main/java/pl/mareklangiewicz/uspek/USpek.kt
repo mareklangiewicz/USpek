@@ -99,11 +99,15 @@ val Throwable.causeLocation: CodeLocation?
 typealias USpekTrace = List<StackTraceElement>
 
 val StackTrace.uspekTrace: USpekTrace? get() {
+    println("full:")
     logTrace()
+    println()
     val from = findUserCall() ?: return null
-    val to = findUserCall("uspek") ?: return null
+    val to = findUserCall("uspek", "suspek") ?: from
     val ut = slice(from..to)
+    println("sliced:")
     ut.logTrace()
+    println()
     return ut
 }
 
@@ -118,8 +122,8 @@ fun USpekTrace.logTrace() {
     }
 }
 
-private fun StackTrace.findUserCall(uSpekFun: String? = null) = (1 until size).find {
-    uSpekFun in listOf(null, this[it - 1].methodName)
+private fun StackTrace.findUserCall(vararg uspekFunctions: String) = (1 until size).find {
+    uspekFunctions.isEmpty() || this[it - 1].methodName in uspekFunctions
         && this[it - 1].fileName == "USpek.kt"
         && this[it].fileName != "USpek.kt"
 }
