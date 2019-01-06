@@ -4,19 +4,18 @@ fun uspek(code: () -> Unit) {
     while (true) try {
         uspekContext.branch = uspekContext.root
         code()
-        return
+        break
     } catch (e: USpekException) {
         uspekContext.branch.end = e
-        uspekLogger(uspekContext.branch)
+        uspekLog(uspekContext.branch)
     }
 }
 
 infix fun String.o(code: () -> Unit) {
-    val subbranch = uspekContext.branch.branches[this] ?: USpekTree(this)
+    val subbranch = uspekContext.branch.branches.getOrPut(this) { USpekTree(this) }
     subbranch.end === null || return // already tested so skip this whole subbranch
-    uspekContext.branch.branches[this] = subbranch // add new subbranch if not already there
     uspekContext.branch = subbranch // step through the tree into the subbranch
-    uspekLogger(subbranch)
+    uspekLog(subbranch)
     throw try { code(); USpekException() }
     catch (e: USpekException) { e }
     catch (e: Throwable) { USpekException(e) }
@@ -42,7 +41,7 @@ data class USpekTree(
 
 class USpekException(cause: Throwable? = null) : RuntimeException(cause)
 
-var uspekLogger: (USpekTree) -> Unit = { println(it.status) }
+var uspekLog: (USpekTree) -> Unit = { println(it.status) }
 
 val USpekTree.status get() = when {
         failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n"
@@ -54,7 +53,7 @@ val USpekTree.finished get() = end !== null
 
 val USpekTree.failed get() = end?.cause !== null
 
-val USpekTree?.location get() = this?.end?.stackTrace?.uspekTrace?.get(0)?.location
+val USpekTree?.location get() = this?.end?.stackTrace?.userCall?.location
 
 val USpekTree?.causeLocation get() = this?.end?.causeLocation
 
@@ -76,12 +75,8 @@ val Throwable.causeLocation: CodeLocation?
         return frame?.location
     }
 
-typealias USpekTrace = List<StackTraceElement>
+val StackTrace.userCall get() = findUserCall()?.let(::getOrNull)
 
-val StackTrace.uspekTrace: USpekTrace get() = slice(findUserCall()!!..findUserCall("uspek")!!)
-
-private fun StackTrace.findUserCall(uSpekFun: String? = null) = (1 until size).find {
-    uSpekFun in listOf(null, this[it - 1].methodName)
-        && this[it - 1].fileName == "USpek.kt"
-        && this[it].fileName != "USpek.kt"
+private fun StackTrace.findUserCall() = (1 until size).find {
+    this[it - 1].fileName == "USpek.kt" && this[it].fileName != "USpek.kt"
 }
