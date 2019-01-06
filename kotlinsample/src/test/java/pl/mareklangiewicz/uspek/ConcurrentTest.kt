@@ -7,7 +7,7 @@ import org.junit.Test
 class ConcurrentTest {
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
-        uspekLogger = { }
+        uspekLog = { }
         "start".ud
         val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); "in1".ud }; "out1".ud; d1.await(); "after1".ud
         val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); "in2".ud }; "out2".ud; d2.await(); "after2".ud
@@ -15,7 +15,7 @@ class ConcurrentTest {
     }
 
     @Test fun tests_concurrent_slowly() = runBlocking(Dispatchers.Default) {
-        uspekLogger = { }
+        uspekLog = { }
         "start".ud
         val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); "in1".ud }; "out1".ud
         val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); "in2".ud }; "out2".ud
