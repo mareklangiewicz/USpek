@@ -1,6 +1,6 @@
 {
   "name": "uspek",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Micro tool for testing with syntax similar to Spek, but shorter.",
   "main": "README.md",
   "scripts": {

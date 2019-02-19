@@ -3,7 +3,7 @@
 /local.properties
 /.idea
 .DS_Store
-/build
 /captures
-uspek/out
 .externalNativeBuild
+/build
+/out
