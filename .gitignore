@@ -7,3 +7,10 @@
 /captures
 uspek/out
 .externalNativeBuild
+
+# Project exclude paths
+/kotlinsample/out/
+/kotlinsample/out/production/classes/
+/kotlinsample/out/test/classes/
+/uspek-junit/out/
+/uspek-junit/out/production/classes/
