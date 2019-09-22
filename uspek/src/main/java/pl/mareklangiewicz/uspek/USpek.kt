@@ -59,7 +59,7 @@ val USpekTree?.causeLocation get() = this?.end?.causeLocation
 
 typealias StackTrace = Array<StackTraceElement>
 
-infix fun <T> T.eq(expected: T) = assert(this == expected) { "$this != $expected" }
+infix fun <T> T.eq(expected: T) = check(this == expected) { "$this != $expected" }
 
 
 data class CodeLocation(val fileName: String, val lineNumber: Int) {

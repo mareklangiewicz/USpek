@@ -4,6 +4,11 @@
 /.idea
 .DS_Store
 /captures
+uspek/out
 .externalNativeBuild
 /build
 /out
+
+# Project exclude paths
+/kotlinsample/out/
+/uspek-junit/out/
