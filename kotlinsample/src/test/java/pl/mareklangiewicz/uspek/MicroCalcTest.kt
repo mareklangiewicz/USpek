@@ -1,12 +1,11 @@
 package pl.mareklangiewicz.uspek
 
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.TestFactory
 
-@RunWith(USpekRunner::class)
 class MicroCalcTest {
 
-    @Test fun microCalcTest() = uspek {
+    @TestFactory
+    fun microCalcTest1() = uspekTestFactory {
 
         "create SUT" o {
 
@@ -52,6 +51,19 @@ class MicroCalcTest {
                 sut.result eq 10
             }
         }
+    }
+
+    @TestFactory
+    fun microCalcTest2() = uspekTestFactory {
+        "Given MicroCalc" o {
+            val calc = MicroCalc(0)
+
+            for (i in 10..50 step 10) "When current result is $i" o {
+                calc.result = i
+                testSomeAdding(calc)
+            }
+        }
+
     }
 
     private fun testSomeAdding(calc: MicroCalc) {

@@ -8,6 +8,9 @@ version = "0.0.4"
 
 dependencies {
     implementation(Deps.kotlinStdlib8)
+    implementation(Deps.junit4)
+
+    api(project(":uspek"))
 }
 
 // Create sources Jar from main kotlin sources

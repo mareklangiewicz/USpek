@@ -4,12 +4,13 @@ plugins {
 }
 
 group = "com.github.langara.uspek"
-version = "0.0.2"
+version = "0.0.4"
 
 dependencies {
     implementation(Deps.kotlinStdlib8)
-    implementation(Deps.junit)
     api(project(":uspek"))
+    api(Deps.junit5)
+    runtimeOnly(Deps.junit5engine)
 }
 
 // Create sources Jar from main kotlin sources
