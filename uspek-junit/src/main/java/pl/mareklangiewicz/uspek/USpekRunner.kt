@@ -11,7 +11,10 @@ import java.util.UUID.randomUUID
 
 /**
  * This runner always runs all tests methods from given testClass
+ * WARNING: There can be issues with deeply nested tests (and/or tests with long names)
+ * (gradle complains when trying to generate reports with long file names)
  */
+@Deprecated("Use uspekFactory with JUnit5 TestFactory")
 class USpekRunner(testClass: Class<*>) : Runner() {
 
     private val description = createSuiteDescription(testClass.simpleName, randomUUID()).apply {

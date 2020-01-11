@@ -4,7 +4,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@Ignore // TODO: check why the USpekRunner fails - in command line too: ./gradlew clean test --info
+@Ignore
 @RunWith(USpekRunner::class)
 class USpekRunnerNestedTest {
 

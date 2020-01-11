@@ -1,6 +1,7 @@
 package pl.mareklangiewicz.uspek
 
 fun uspek(code: () -> Unit) {
+    uspekContext.root.branches.clear()
     while (true) try {
         uspekContext.branch = uspekContext.root
         code()
@@ -66,7 +67,7 @@ data class CodeLocation(val fileName: String, val lineNumber: Int) {
     override fun toString() = "$fileName:$lineNumber"
 }
 
-val StackTraceElement.location get() = CodeLocation(fileName, lineNumber)
+val StackTraceElement.location get() = fileName?.let { CodeLocation(it, lineNumber) }
 
 val Throwable.causeLocation: CodeLocation?
     get() {
