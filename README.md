@@ -64,7 +64,7 @@ Test different nested scenarios without **any** boilerplate code.
     }
    
     dependencies {
-        testImplementation 'com.github.langara:USpek:0.0.2'
+        testImplementation 'com.github.langara:USpek:X.X.X'
     }
 ```
 
