@@ -13,7 +13,7 @@ fun uspekTestFactory(code: () -> Unit): DynamicNode {
 
 private val USpekTree.dnode: DynamicNode get() =
     if (branches.isEmpty()) dtest
-    else dynamicContainer(name, branches.values.map { it.dnode })
+    else dynamicContainer(name, branches.values.map { it.dnode } + dtest)
 
 private val USpekTree.dtest get() = dynamicTest(name) {
     println(status)
