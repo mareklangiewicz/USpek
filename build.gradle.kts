@@ -6,20 +6,16 @@ buildscript {
     }
 
     dependencies {
-        classpath Deps.kotlinGradlePlugin
+        classpath(Deps.kotlinGradlePlugin)
     }
 }
 
 allprojects {
-
     repositories {
         google()
         jcenter()
-        maven { url "https://jitpack.io" }
+        maven(url = "https://jitpack.io")
         mavenCentral()
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
