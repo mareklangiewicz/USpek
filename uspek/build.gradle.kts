@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.langara.uspek"
-version = "0.0.7"
+version = "0.0.8"
 
 dependencies {
     implementation(Deps.kotlinStdlib8)
