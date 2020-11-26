@@ -15,6 +15,8 @@ repositories {
 dependencies {
 //    testImplementation(project(":uspek"))
     testImplementation("com.github.langara.uspek:uspek:0.0.10")
+    testImplementation(Deps.junit5)
+    testImplementation(Deps.junit5engine)
 }
 
 tasks.test {

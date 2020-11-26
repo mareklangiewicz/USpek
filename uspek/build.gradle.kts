@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.langara.uspek"
-version = "0.0.10"
+version = "0.0.11"
 
 repositories {
     mavenCentral()
@@ -12,17 +12,16 @@ repositories {
 
 kotlin {
     jvm()
-//    js {
-//        browser()
-//    }
+    js {
+        browser()
+    }
 //    linuxX64()
 
     sourceSets {
-        val commonMain by getting
-        val commonTest by getting {
+        val commonMain by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                api(kotlin("test-common"))
+                api(kotlin("test-annotations-common"))
             }
         }
         val jvmMain by getting {
@@ -31,6 +30,16 @@ kotlin {
                 implementation(Deps.junit5)
             }
         }
+        val jsMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test-js")
+            }
+        }
+//        val linuxX64Main by getting {
+//            dependencies {
+//                // TODO
+//            }
+//        }
     }
 }
 
