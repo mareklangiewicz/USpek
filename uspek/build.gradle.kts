@@ -13,7 +13,12 @@ repositories {
 kotlin {
     jvm()
     js {
-        browser()
+        nodejs()
+        browser {
+            testTask {
+                enabled = System.getenv("JITPACK") != "true"
+            }
+        }
     }
 //    linuxX64()
 
