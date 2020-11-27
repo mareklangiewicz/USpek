@@ -20,7 +20,7 @@ kotlin {
             }
         }
     }
-//    linuxX64()
+    linuxX64()
 
     sourceSets {
         val commonMain by getting {
@@ -40,11 +40,7 @@ kotlin {
                 implementation(Deps.kotlinTestJs)
             }
         }
-//        val linuxX64Main by getting {
-//            dependencies {
-//                // TODO
-//            }
-//        }
+        val linuxX64Main by getting
     }
 }
 
