@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.uspeksample
+package pl.mareklangiewicz.ktjvmsample
 
 fun main(args: Array<String>) {
     val calc = MicroCalc(0)

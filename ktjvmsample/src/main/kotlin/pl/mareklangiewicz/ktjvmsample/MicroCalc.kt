@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.uspeksample
+package pl.mareklangiewicz.ktjvmsample
 
 
 class MicroCalc(var result: Int) {

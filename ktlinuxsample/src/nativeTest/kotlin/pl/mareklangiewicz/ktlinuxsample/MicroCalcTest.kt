@@ -1,15 +1,23 @@
-package pl.mareklangiewicz.uspeksample
+package pl.mareklangiewicz.ktlinuxsample
 
-import org.junit.jupiter.api.TestFactory
 import pl.mareklangiewicz.uspek.eq
 import pl.mareklangiewicz.uspek.o
 import pl.mareklangiewicz.uspek.ox
-import pl.mareklangiewicz.uspek.uspekTestFactory
+import pl.mareklangiewicz.uspek.uspek
+import kotlin.test.Test
+
+
+class MicroCalc(var result: Int) {
+    fun add(x: Int) { result += x }
+    fun multiplyBy(x: Int) { result *= x }
+    fun ensureResultIs(expectedResult: Int) =
+        check(result == expectedResult) { "result is not: $expectedResult; it is actually: $result" }
+}
 
 class MicroCalcTest {
 
-    @TestFactory
-    fun microCalcTest1() = uspekTestFactory {
+    @Test
+    fun microCalcTest1() = uspek {
 
         "create SUT" o {
 
@@ -57,8 +65,8 @@ class MicroCalcTest {
         }
     }
 
-    @TestFactory
-    fun microCalcTest2() = uspekTestFactory {
+    @Test
+    fun microCalcTest2() = uspek {
         "Given MicroCalc" o {
             val calc = MicroCalc(0)
 

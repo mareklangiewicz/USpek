@@ -1,15 +1,14 @@
-package pl.mareklangiewicz.uspeksample
+package pl.mareklangiewicz.ktlinuxsample
 
-import org.junit.jupiter.api.TestFactory
 import pl.mareklangiewicz.uspek.o
 import pl.mareklangiewicz.uspek.ox
-import pl.mareklangiewicz.uspek.uspekTestFactory
-import pl.mareklangiewicz.uspeksample.MicroCalc
+import pl.mareklangiewicz.uspek.uspek
+import kotlin.test.Test
 
 class USpekJUnitFactoryNestedTest {
 
-    @TestFactory
-    fun uspekExampleTestFactory() = uspekTestFactory {
+    @Test
+    fun uspekExampleTestFactory() = uspek {
         "On big test structure" o {
             "Generated 3 passing tests" o {
                 for (i in 1..3) "generated passing test $i" o { println("inside generated passing test $i") }
