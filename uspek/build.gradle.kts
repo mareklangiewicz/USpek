@@ -25,19 +25,19 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(kotlin("test-common"))
-                api(kotlin("test-annotations-common"))
+                api(Deps.kotlinTestCommon)
+                api(Deps.kotlinTestAnnotationsCommon)
             }
         }
         val jvmMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-test-junit")
+                implementation(Deps.kotlinTestJUnit)
                 implementation(Deps.junit5)
             }
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-test-js")
+                implementation(Deps.kotlinTestJs)
             }
         }
 //        val linuxX64Main by getting {
