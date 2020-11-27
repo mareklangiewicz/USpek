@@ -28,8 +28,8 @@ kotlin {
         val commonMain by getting
         val commonTest by getting {
             dependencies {
-//                implementation(project(":uspek"))
-                implementation(Deps.uspek)
+                implementation(project(":uspek"))
+//                implementation(Deps.uspek)
             }
         }
         val nativeMain by getting

@@ -13,8 +13,8 @@ repositories {
 }
 
 dependencies {
-//    testImplementation(project(":uspek"))
-    testImplementation(Deps.uspek)
+    testImplementation(project(":uspek"))
+//    testImplementation(Deps.uspek)
     testImplementation(Deps.junit5)
     testImplementation(Deps.junit5engine)
 }
