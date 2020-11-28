@@ -1,1 +1,1 @@
-include(":uspek", ":ktjvmsample", ":ktlinuxsample")
+include(":uspek", ":ktjvmsample", "ktjsreactsample", ":ktlinuxsample")
