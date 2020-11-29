@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-//    implementation(project(":uspek"))
-    implementation(Deps.uspek)
+    implementation(project(":uspek"))
+//    implementation(Deps.uspek)
     implementation("org.jetbrains:kotlin-react:16.13.1-pre.113-kotlin-1.4.0")
     implementation("org.jetbrains:kotlin-react-dom:16.13.1-pre.113-kotlin-1.4.0")
     testImplementation(kotlin("test-js"))
@@ -23,6 +23,9 @@ dependencies {
 
 kotlin {
     js {
+        // FIXME: getting runtime(browser) errors and empty blue page when using js(IR) here and in ktjsreactsample
+        //   (check again after some deps updates)
+
         browser {
             binaries.executable()
             webpackTask {
