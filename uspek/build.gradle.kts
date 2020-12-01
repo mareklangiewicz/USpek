@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    `maven-publish`
+    id("maven-publish")
 }
 
 group = "com.github.langara.uspek"

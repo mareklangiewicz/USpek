@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClassName = "pl.mareklangiewicz.uspeksample.MainKt"
+    mainClassName = "pl.mareklangiewicz.ktjvmsample.MainKt"
 }
 
 repositories {
