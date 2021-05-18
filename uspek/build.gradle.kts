@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.langara.uspek"
-version = "0.0.15"
+version = "0.0.16"
 
 repositories {
     mavenCentral()
@@ -12,7 +12,7 @@ repositories {
 
 kotlin {
     jvm()
-    js {
+    js(IR) {
         nodejs()
         browser {
             testTask {

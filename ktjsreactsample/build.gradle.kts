@@ -22,7 +22,7 @@ dependencies {
 }
 
 kotlin {
-    js {
+    js(IR) {
         // FIXME: getting runtime(browser) errors and empty blue page when using js(IR) here and in ktjsreactsample
         //   (check again after some deps updates)
 
