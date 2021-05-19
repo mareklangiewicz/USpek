@@ -3,12 +3,11 @@ plugins {
 }
 
 group = "pl.mareklangiewicz"
-version = "0.0.1"
+version = "0.0.02"
 
 repositories {
-    jcenter()
     mavenCentral()
-    maven("https://dl.bintray.com/kotlin/kotlin-js-wrappers")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers")
     maven("https://jitpack.io")
 
 }
@@ -16,8 +15,17 @@ repositories {
 dependencies {
     implementation(project(":uspek"))
 //    implementation(Deps.uspek)
-    implementation("org.jetbrains:kotlin-react:16.13.1-pre.113-kotlin-1.4.0")
-    implementation("org.jetbrains:kotlin-react-dom:16.13.1-pre.113-kotlin-1.4.0")
+
+    implementation(Deps.kotlinxCoroutinesCore)
+
+    implementation(Deps.kotlinJsWrappersReact)
+    implementation(Deps.kotlinJsWrappersReactDom)
+    implementation(Deps.kotlinJsWrappersStyled)
+
+    implementation(npm("react", Vers.npmReact))
+    implementation(npm("react-dom", Vers.npmReact))
+    implementation(npm("styled-components", Vers.npmStyled))
+
     testImplementation(kotlin("test-js"))
 }
 

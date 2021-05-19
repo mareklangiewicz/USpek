@@ -15,9 +15,10 @@ import pl.mareklangiewicz.uspek.status
 import pl.mareklangiewicz.uspek.uspekContext
 import pl.mareklangiewicz.uspek.uspekLog
 
-interface PlaygroundProps : RProps { var speed: Int }
-interface PlaygroundState : RState { var tree: USpekTree }
+external interface PlaygroundProps : RProps { var speed: Int }
+external interface PlaygroundState : RState { var tree: USpekTree }
 
+@JsExport
 class Playground(props: PlaygroundProps) : RComponent<PlaygroundProps, PlaygroundState>(props) {
 
     override fun PlaygroundState.init(props: PlaygroundProps) {
@@ -56,7 +57,6 @@ class Playground(props: PlaygroundProps) : RComponent<PlaygroundProps, Playgroun
                                 println(color)
                             }
                         }
-
                     }
                 }
             }
