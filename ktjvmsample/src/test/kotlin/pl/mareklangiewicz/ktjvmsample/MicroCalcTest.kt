@@ -1,14 +1,13 @@
-package pl.mareklangiewicz.uspek
+package pl.mareklangiewicz.ktjvmsample
 
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.TestFactory
+import pl.mareklangiewicz.uspek.*
 
-@RunWith(USpekRunner::class)
 class MicroCalcTest {
 
-    @Test fun microCalcTest() = suspekBlocking {
+    @TestFactory
+    fun microCalcTest() = suspekTestFactory {
 
         "create SUT" so {
 
@@ -57,21 +56,16 @@ class MicroCalcTest {
         }
     }
 
-    @Test fun loggingTest() =
-        runBlocking {
-            suspek {
-
-                val sut = MicroCalc(10)
-
-                "blaaaaa" so {
-                    sut.result eq 10
-
-                    "blee" so {
-                        sut.result eq 10
-                    }
-                }
+    @TestFactory
+    fun loggingTest() = suspekTestFactory {
+        val sut = MicroCalc(10)
+        "blaaaaa" so {
+            sut.result eq 10
+            "blee" so {
+                sut.result eq 10
             }
         }
+    }
 
 
     private suspend fun testSomeAdding(calc: MicroCalc) {

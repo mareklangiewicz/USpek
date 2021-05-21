@@ -7,28 +7,20 @@ import kotlinx.html.js.onClickFunction
 import painting.clearCanvas
 import painting.paintSomething
 import painting.pickColor
-import pl.mareklangiewicz.uspek.finished
-import pl.mareklangiewicz.uspek.status
-import pl.mareklangiewicz.uspek.uspekContext
-import pl.mareklangiewicz.uspek.uspekLog
+import pl.mareklangiewicz.uspek.*
 
 external interface PlaygroundProps : RProps { var speed: Int }
 
 val Playground = functionalComponent<PlaygroundProps> { props ->
 
-    var tree by useState(uspekContext.root)
+    var tree by useState(GlobalUSpekContext.root)
 
     useEffect(emptyList()) {
         uspekLog = {
             println(it.status)
             // we don't need any setState here because tree is useState hook delegate property
-            tree = uspekContext.root.copy() // FIXME: is copy needed? check (and debug!) how react compares states
+            tree = GlobalUSpekContext.root.copy() // FIXME: is copy needed? check (and debug!) how react compares states
             paintSomething()
-    //            delay(40) // FIXME: make it work (it works on my homepage (with suspending uspek copied&pasted))
-            // probably all uspek functions have to be either suspending or inline...
-            // maybe it's possible to force react to update DOM, then sleep for 40ms (so it's animating and browser
-            // have a chance to refresh each time) - probably not (without loosing stack frames / breaking uspek control flow)..
-
             if (it.finished) clearCanvas()
         }
         // FIXME: We should have scope cancelling when leaving playground

@@ -1,21 +1,31 @@
 package pl.mareklangiewicz.uspek
 
-fun uspek(code: () -> Unit) {
-    uspekContext.root.branches.clear()
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
+
+suspend fun suspek(code: suspend () -> Unit) = coroutineContext.ucontext.uspek { code() }
+
+fun uspek(code: () -> Unit) = GlobalUSpekContext.uspek(code)
+
+private inline fun USpekContext.uspek(code: () -> Unit) {
     while (true) try {
-        uspekContext.branch = uspekContext.root
+        branch = root
         code()
         break
     } catch (e: USpekException) {
-        uspekContext.branch.end = e
-        uspekLog(uspekContext.branch)
+        branch.end = e
+        uspekLog(branch)
     }
 }
 
-infix fun String.o(code: () -> Unit) {
-    val subbranch = uspekContext.branch.branches.getOrPut(this) { USpekTree(this) }
+suspend infix fun String.so(code: suspend () -> Unit): Unit = coroutineContext.ucontext.o(this) { code() }
+
+infix fun String.o(code: () -> Unit) = GlobalUSpekContext.o(this, code)
+
+private inline fun USpekContext.o(name: String, code: () -> Unit) {
+    val subbranch = branch.branches.getOrPut(name) { USpekTree(name) }
     subbranch.end === null || return // already tested so skip this whole subbranch
-    uspekContext.branch = subbranch // step through the tree into the subbranch
+    branch = subbranch // step through the tree into the subbranch
     uspekLog(subbranch)
     throw try { code(); USpekException() }
     catch (e: USpekException) { e }
@@ -26,12 +36,21 @@ infix fun String.o(code: () -> Unit) {
 @Deprecated("Enable this test code", ReplaceWith("o(code)"))
 infix fun String.ox(code: () -> Unit) = Unit
 
+@Suppress("UNUSED_PARAMETER")
+@Deprecated("Enable this test code", ReplaceWith("so(code)"))
+infix fun String.sox(code: suspend () -> Unit) = Unit
+
 data class USpekContext(
     val root: USpekTree = USpekTree("uspek"),
     var branch: USpekTree = root
-)
+) : CoroutineContext.Element {
+    override val key: CoroutineContext.Key<USpekContext> = Key
+    companion object Key : CoroutineContext.Key<USpekContext>
+}
 
-val uspekContext = USpekContext()
+val GlobalUSpekContext = USpekContext()
+
+val CoroutineContext.ucontext get() = this[USpekContext] ?: GlobalUSpekContext
 
 data class USpekTree(
     val name: String,

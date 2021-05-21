@@ -25,8 +25,6 @@ dependencies {
     implementation(npm("react", Vers.npmReact))
     implementation(npm("react-dom", Vers.npmReact))
     implementation(npm("styled-components", Vers.npmStyled))
-
-    testImplementation(kotlin("test-js"))
 }
 
 kotlin {

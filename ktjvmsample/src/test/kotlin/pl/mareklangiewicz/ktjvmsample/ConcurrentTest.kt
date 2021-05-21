@@ -1,8 +1,9 @@
-package pl.mareklangiewicz.uspek
+package pl.mareklangiewicz.ktjvmsample
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import pl.mareklangiewicz.uspek.*
 
 class ConcurrentTest {
 

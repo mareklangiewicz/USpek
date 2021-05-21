@@ -1,14 +1,19 @@
 package pl.mareklangiewicz.uspek
 
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
 import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import java.net.URI
 
+fun suspekTestFactory(code: suspend () -> Unit): DynamicNode = runBlocking {
+    suspek(code)
+    coroutineContext.ucontext.root.dnode
+}
 
 fun uspekTestFactory(code: () -> Unit): DynamicNode {
     uspek(code)
-    return uspekContext.root.dnode
+    return GlobalUSpekContext.root.dnode
 }
 
 private val USpekTree.dnode: DynamicNode get() =
