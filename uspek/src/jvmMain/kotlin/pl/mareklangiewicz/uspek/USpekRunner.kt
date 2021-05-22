@@ -53,15 +53,3 @@ import java.util.UUID.randomUUID
 //    else branches.values.forEach { it.run(name + "." + it.name, notifier) }
 //}
 
-fun suspekBlocking(code: suspend () -> Unit) = runBlocking { suspek(code) }
-
-fun CoroutineScope.suspekAsync(code: suspend () -> Unit) =
-    async(USpekContext()) { suspek(code); coroutineContext.ucontext.root }
-
-/** micro debugging ;-) */
-val String.ud get() =
-    println("ud [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
-
-val ud get() = "".ud
-
-private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }

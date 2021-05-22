@@ -4,56 +4,74 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import pl.mareklangiewicz.uspek.*
+import java.util.Locale
+
+
+/** micro debugging ;-) */
+private fun ud(s: String) =
+    println("ud [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $s")
+
+private val ud get() = ud("")
+
+private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }
 
 class ConcurrentTest {
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
-        "start".ud
-        val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); "in1".ud }; "out1".ud; d1.await(); "after1".ud
-        val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); "in2".ud }; "out2".ud; d2.await(); "after2".ud
-        "end".ud
+        ud("start")
+        val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); ud("in1") }; ud("out1"); d1.await(); ud("after1")
+        val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); ud("in2") }; ud("out2"); d2.await(); ud("after2")
+        ud("end")
     }
 
     @Test fun tests_concurrent_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
-        "start".ud
-        val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); "in1".ud }; "out1".ud
-        val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); "in2".ud }; "out2".ud
-        d1.await(); "after1".ud
-        d2.await(); "after2".ud
-        "end".ud
+        ud("start")
+        val d1 = suspekAsync { checkAddSlowly(1, 1, 9000); ud("in1") }; ud("out1")
+        val d2 = suspekAsync { checkAddSlowly(2, 1, 9000); ud("in2") }; ud("out2")
+        d1.await(); ud("after1")
+        d2.await(); ud("after2")
+        ud("end")
     }
 
     @Test fun tests_simple_massively() = suspekBlocking {
-        "start".ud
-        checkAddFaster(100, 199, 1, 2_000_000_000); "1".ud
-        checkAddFaster(200, 299, 1, 2_000_000_000); "2".ud
-        checkAddFaster(300, 399, 1, 2_000_000_000); "3".ud
-        checkAddFaster(400, 499, 1, 2_000_000_000); "4".ud
-        "end".ud
+        ud("start")
+        checkAddFaster(100, 199, 1, 2_000_000_000); ud("1")
+        checkAddFaster(200, 299, 1, 2_000_000_000); ud("2")
+        checkAddFaster(300, 399, 1, 2_000_000_000); ud("3")
+        checkAddFaster(400, 499, 1, 2_000_000_000); ud("4")
+        ud("end")
     }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
-        "start".ud
-        val d1 = suspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); "in1".ud }; "out1".ud; d1.await(); "after1".ud
-        val d2 = suspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); "in2".ud }; "out2".ud; d2.await(); "after2".ud
-        val d3 = suspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); "in3".ud }; "out3".ud; d3.await(); "after3".ud
-        val d4 = suspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); "in4".ud }; "out4".ud; d4.await(); "after4".ud
-        "end".ud
+        ud("start")
+        val d1 = suspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); ud("in1") }; ud("out1"); d1.await(); ud(
+        "after1"
+    )
+        val d2 = suspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); ud("in2") }; ud("out2"); d2.await(); ud(
+        "after2"
+    )
+        val d3 = suspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); ud("in3") }; ud("out3"); d3.await(); ud(
+        "after3"
+    )
+        val d4 = suspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); ud("in4") }; ud("out4"); d4.await(); ud(
+        "after4"
+    )
+        ud("end")
     }
 
     @Test fun tests_concurrent_massively() = runBlocking(Dispatchers.Default) {
-        "start".ud
-        val d1 = suspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); "in1".ud }; "out1".ud
-        val d2 = suspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); "in2".ud }; "out2".ud
-        val d3 = suspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); "in3".ud }; "out3".ud
-        val d4 = suspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); "in4".ud }; "out4".ud
-        d1.await(); "after1".ud
-        d2.await(); "after2".ud
-        d3.await(); "after3".ud
-        d4.await(); "after4".ud
-        "end".ud
+        ud("start")
+        val d1 = suspekAsync { checkAddFaster(100, 199, 1, 2_000_000_000); ud("in1") }; ud("out1")
+        val d2 = suspekAsync { checkAddFaster(200, 299, 1, 2_000_000_000); ud("in2") }; ud("out2")
+        val d3 = suspekAsync { checkAddFaster(300, 399, 1, 2_000_000_000); ud("in3") }; ud("out3")
+        val d4 = suspekAsync { checkAddFaster(400, 499, 1, 2_000_000_000); ud("in4") }; ud("out4")
+        d1.await(); ud("after1")
+        d2.await(); ud("after2")
+        d3.await(); ud("after3")
+        d4.await(); ud("after4")
+        ud("end")
     }
 
     suspend fun checkAddSlowly(addArg: Int, resultFrom: Int, resultTo: Int) {
