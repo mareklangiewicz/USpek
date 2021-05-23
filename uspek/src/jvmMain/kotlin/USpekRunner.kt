@@ -1,5 +1,3 @@
-package pl.mareklangiewicz.uspek
-
 //import java.util.Locale
 //import java.util.UUID.randomUUID
 //
