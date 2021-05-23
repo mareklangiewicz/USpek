@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    id("maven-publish")
 }
 
 group = USpekKonf.group
@@ -20,7 +21,7 @@ kotlin {
             }
         }
     }
-    //linuxX64() // TODO_later: enable and experiment (something was working already)
+    linuxX64()
 
     sourceSets {
         val commonMain by getting {
@@ -35,6 +36,6 @@ kotlin {
             }
         }
         val jsMain by getting
-//        val linuxX64Main by getting
+        val linuxX64Main by getting
     }
 }
