@@ -8,4 +8,7 @@ plugins {
     id("pl.mareklangiewicz.deps.settings")
 }
 
-include(":uspek", ":ktjvmsample", "ktjsreactsample", ":ktlinuxsample")
+rootProject.name = "USpek"
+
+include(":uspek", ":uspekx", ":ktjvmsample", "ktjsreactsample")
+//include(":uspek", ":uspekx", ":ktjvmsample", "ktjsreactsample", ":ktlinuxsample")

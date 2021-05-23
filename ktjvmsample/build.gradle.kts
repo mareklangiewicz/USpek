@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClassName = "pl.mareklangiewicz.ktjvmsample.MainKt"
+    mainClass.set("pl.mareklangiewicz.ktjvmsample.MainKt")
 }
 
 repositories {
@@ -13,10 +13,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation(project(":uspek"))
-//    testImplementation(Deps.uspek)
+    testImplementation(project(":uspekx"))
+//    testImplementation(Deps.uspekx)
     testImplementation(Deps.junit5)
-    testImplementation(Deps.junit5engine)
+    testRuntimeOnly(Deps.junit5engine)
 }
 
 tasks.test {

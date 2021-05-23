@@ -8,6 +8,7 @@ uspek/out
 .externalNativeBuild
 /build
 /out
+/buildSrc/build
 
 # Project exclude paths
 /kotlinsample/out/

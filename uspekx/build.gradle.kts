@@ -1,6 +1,5 @@
 plugins {
     kotlin("multiplatform")
-    id("maven-publish")
 }
 
 group = USpekKonf.group
@@ -26,11 +25,15 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(kotlin("test"))
+                api(project(":uspek"))
+                api(Deps.kotlinxCoroutinesCore)
             }
         }
-        val jvmMain by getting
-        val jvmTest by getting
+        val jvmMain by getting {
+            dependencies {
+                implementation(Deps.junit5)
+            }
+        }
         val jsMain by getting
 //        val linuxX64Main by getting
     }

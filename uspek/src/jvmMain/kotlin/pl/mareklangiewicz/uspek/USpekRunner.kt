@@ -1,15 +1,12 @@
 package pl.mareklangiewicz.uspek
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
-import java.util.Locale
-import java.util.UUID.randomUUID
-
-/**
- * This runner always runs all tests methods from given testClass
- * // FIXME: will I need sth like this?? for android testing??
- */
+//import java.util.Locale
+//import java.util.UUID.randomUUID
+//
+///**
+// * This runner always runs all tests methods from given testClass
+// * // FIXME: will I need sth like this?? for android testing??
+// */
 //class USpekRunner(testClass: Class<*>) : Runner() {
 //
 //    private val context = GlobalUSpekContext

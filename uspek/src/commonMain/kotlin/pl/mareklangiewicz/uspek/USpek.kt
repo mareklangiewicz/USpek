@@ -3,9 +3,9 @@ package pl.mareklangiewicz.uspek
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
-suspend fun suspek(code: suspend () -> Unit) = coroutineContext.ucontext.uspek { code() }
-
 fun uspek(code: () -> Unit) = GlobalUSpekContext.uspek(code)
+
+suspend fun suspek(code: suspend () -> Unit) = coroutineContext.ucontext.uspek { code() }
 
 private inline fun USpekContext.uspek(code: () -> Unit) {
     while (true) try {
@@ -18,13 +18,13 @@ private inline fun USpekContext.uspek(code: () -> Unit) {
     }
 }
 
-suspend infix fun String.so(code: suspend () -> Unit): Unit = coroutineContext.ucontext.o(this) { code() }
-
 infix fun String.o(code: () -> Unit) = GlobalUSpekContext.o(this, code)
+
+suspend infix fun String.so(code: suspend () -> Unit): Unit = coroutineContext.ucontext.o(this) { code() }
 
 private inline fun USpekContext.o(name: String, code: () -> Unit) {
     val subbranch = branch.branches.getOrPut(name) { USpekTree(name) }
-    subbranch.end === null || return // already tested so skip this whole subbranch
+    subbranch.end == null || return // already tested so skip this whole subbranch
     branch = subbranch // step through the tree into the subbranch
     uspekLog(subbranch)
     throw try { code(); USpekException() }

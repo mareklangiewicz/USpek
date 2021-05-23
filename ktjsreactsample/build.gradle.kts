@@ -2,8 +2,8 @@ plugins {
     kotlin("js")
 }
 
-group = "pl.mareklangiewicz"
-version = "0.0.02"
+group = USpekKonf.group
+version = USpekKonf.verStr
 
 repositories {
     mavenCentral()
@@ -13,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":uspek"))
-//    implementation(Deps.uspek)
+    implementation(project(":uspekx"))
+//    implementation(Deps.uspekx)
 
     implementation(Deps.kotlinxCoroutinesCore)
 
@@ -29,9 +29,6 @@ dependencies {
 
 kotlin {
     js(IR) {
-        // FIXME: getting runtime(browser) errors and empty blue page when using js(IR) here and in ktjsreactsample
-        //   (check again after some deps updates)
-
         browser {
             binaries.executable()
             webpackTask {

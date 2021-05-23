@@ -1,26 +1,25 @@
 package pl.mareklangiewicz.ktjvmsample
 
-import kotlinx.coroutines.delay
 import org.junit.jupiter.api.TestFactory
 import pl.mareklangiewicz.uspek.*
 
 class MicroCalcTest {
 
     @TestFactory
-    fun microCalcTest() = suspekTestFactory {
+    fun microCalcTest() = uspekTestFactory {
 
-        "create SUT" so {
+        "create SUT" o {
 
             val sut = MicroCalc(10)
 
-            "check add" so {
+            "check add" o {
                 sut.add(5)
                 sut.result eq 15
                 sut.add(100)
                 sut.result eq 115
             }
 
-            "mutate SUT" so {
+            "mutate SUT" o {
                 sut.add(1)
 
                 "incorrectly check add - this should fail" ox {
@@ -29,17 +28,16 @@ class MicroCalcTest {
                 }
             }
 
-            "check add again" so {
+            "check add again" o {
                 sut.add(5)
                 sut.result eq 15
                 sut.add(100)
                 sut.result eq 115
-                delay(1000)
             }
 
             testSomeAdding(sut)
 
-            "mutate SUT and check multiplyBy" so {
+            "mutate SUT and check multiplyBy" o {
                 sut.result = 3
 
                 sut.multiplyBy(3)
@@ -50,42 +48,42 @@ class MicroCalcTest {
                 testSomeAdding(sut)
             }
 
-            "assure that SUT is intact by any of sub tests above" o { // Important: no suspending so we can just use "o"
+            "assure that SUT is intact by any of sub tests above" o {
                 sut.result eq 10
             }
         }
     }
 
     @TestFactory
-    fun loggingTest() = suspekTestFactory {
+    fun loggingTest() = uspekTestFactory {
         val sut = MicroCalc(10)
-        "blaaaaa" so {
+        "blaaaaa" o {
             sut.result eq 10
-            "blee" so {
+            "blee" o {
                 sut.result eq 10
             }
         }
     }
 
 
-    private suspend fun testSomeAdding(calc: MicroCalc) {
+    private fun testSomeAdding(calc: MicroCalc) {
         val start = calc.result
-        "add 5 to $start" so {
+        "add 5 to $start" o {
             calc.add(5)
             val afterAdd5 = start + 5
-            "result should be $afterAdd5" so { calc.result eq afterAdd5 }
+            "result should be $afterAdd5" o { calc.result eq afterAdd5 }
 
-            "add 7 more" so {
+            "add 7 more" o {
                 calc.add(7)
                 val afterAdd5Add7 = afterAdd5 + 7
-                "result should be $afterAdd5Add7" so { calc.result eq afterAdd5Add7 }
+                "result should be $afterAdd5Add7" o { calc.result eq afterAdd5Add7 }
             }
         }
 
-        "subtract 3" so {
+        "subtract 3" o {
             calc.add(-3)
             val afterSub3 = start - 3
-            "result should be $afterSub3" so { calc.result eq afterSub3 }
+            "result should be $afterSub3" o { calc.result eq afterSub3 }
         }
 
     }
