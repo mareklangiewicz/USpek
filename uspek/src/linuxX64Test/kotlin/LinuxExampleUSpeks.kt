@@ -32,6 +32,7 @@ class LinuxExampleUSpeks {
             "mutate SUT" o {
                 sut.add(1)
 
+                @Suppress("Deprecation")
                 "incorrectly check add - this should fail" ox {
                     sut.add(5)
                     sut.result eq 15

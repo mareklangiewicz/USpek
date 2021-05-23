@@ -32,11 +32,9 @@ private inline fun USpekContext.o(name: String, code: () -> Unit) {
     catch (e: Throwable) { USpekException(e) }
 }
 
-@Suppress("UNUSED_PARAMETER")
 @Deprecated("Enable this test code", ReplaceWith("o(code)"))
 infix fun String.ox(code: () -> Unit) = Unit
 
-@Suppress("UNUSED_PARAMETER")
 @Deprecated("Enable this test code", ReplaceWith("so(code)"))
 infix fun String.sox(code: suspend () -> Unit) = Unit
 
