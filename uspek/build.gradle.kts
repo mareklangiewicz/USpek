@@ -21,7 +21,7 @@ kotlin {
             }
         }
     }
-    //linuxX64() // TODO_later: enable and experiment (something was working already)
+    linuxX64()
 
     sourceSets {
         val commonMain by getting {
@@ -32,6 +32,6 @@ kotlin {
         val jvmMain by getting
         val jvmTest by getting
         val jsMain by getting
-//        val linuxX64Main by getting
+        val linuxX64Main by getting
     }
 }

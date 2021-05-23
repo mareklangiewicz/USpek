@@ -10,5 +10,4 @@ plugins {
 
 rootProject.name = "USpek"
 
-include(":uspek", ":uspekx", ":ktjvmsample", "ktjsreactsample")
-//include(":uspek", ":uspekx", ":ktjvmsample", "ktjsreactsample", ":ktlinuxsample")
+include(":uspek", ":uspekx", ":ktjvmsample", "ktjsreactsample", ":ktlinuxsample")
