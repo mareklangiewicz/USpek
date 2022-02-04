@@ -1,5 +1,5 @@
 object USpekKonf {
-    const val verInt = 17
+    const val verInt = 18
     const val verStr = "0.0.$verInt"
     const val group = "pl.mareklangiewicz"
     const val author = "Marek Langiewicz"

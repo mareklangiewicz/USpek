@@ -1,7 +1,5 @@
-import pl.mareklangiewicz.uspek.eq
+import pl.mareklangiewicz.uspek.*
 import pl.mareklangiewicz.uspek.o
-import pl.mareklangiewicz.uspek.ox
-import pl.mareklangiewicz.uspek.uspek
 import kotlin.test.Test
 
 
@@ -64,17 +62,21 @@ class JsExampleUSpeks {
         }
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun microCalcTest2() = uspek {
         "Given MicroCalc" o {
             val calc = MicroCalc(0)
 
-            for (i in 10..50 step 10) "When current result is $i" o {
+            for (i in 10..50 step 10) "When current result is $i".oAfterEach(
+                codeAfter = {
+                    println("after - calc.result:${calc.result}")
+//                    calc.result eq 1 // intentional fail
+                }) {
                 calc.result = i
                 testSomeAdding(calc)
             }
         }
-
     }
 
     private fun testSomeAdding(calc: MicroCalc) {
@@ -99,3 +101,13 @@ class JsExampleUSpeks {
 
     }
 }
+
+// This seems to work, but I don't like it - too hacky even for me.
+@ExperimentalStdlibApi
+fun String.oAfterEach(codeAfter: () -> Unit, code: () -> Unit) =
+    try { this o code }
+    catch (e: USpekException) {
+        e.cause == null || throw e
+        codeAfter()
+        throw e
+    }
