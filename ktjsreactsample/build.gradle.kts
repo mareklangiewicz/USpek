@@ -2,8 +2,7 @@ plugins {
     kotlin("js")
 }
 
-group = USpekKonf.group
-version = USpekKonf.verStr
+defaultGroupAndVer(Deps.uspek)
 
 repositories {
     mavenCentral()
@@ -18,6 +17,7 @@ dependencies {
 
     implementation(Deps.kotlinxCoroutinesCore)
 
+    implementation(enforcedPlatform(Deps.kotlinJsWrappersBoM))
     implementation(Deps.kotlinJsWrappersReact)
     implementation(Deps.kotlinJsWrappersReactDom)
     implementation(Deps.kotlinJsWrappersStyled)

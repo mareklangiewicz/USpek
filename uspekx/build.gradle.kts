@@ -3,8 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-group = USpekKonf.group
-version = USpekKonf.verStr
+defaultGroupAndVer(Deps.uspekx)
 description = USpekKonf.description
 
 repositories {
