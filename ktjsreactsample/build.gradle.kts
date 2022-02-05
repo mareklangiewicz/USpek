@@ -40,7 +40,8 @@ kotlin {
             testTask {
                 enabled = System.getenv("JITPACK") != "true"
                 useKarma {
-                    useChrome()
+//                    useChrome()
+                    useChromeHeadless()
                     webpackConfig.cssSupport.enabled = true
                 }
             }

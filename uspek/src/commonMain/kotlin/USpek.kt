@@ -4,10 +4,10 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
 // TODO_later: analyze again if I could get rid API of duplication: uspek+suspek and o+so
-// It would be great just to implement suspended version and if compiler infer usages without suspension..
+// It would be great just to implement suspended version and if compiler infer usages without suspension.
 // Roman Elizarov answered to my question on Medium that it's possible only for inline functions,
 // (https://medium.com/@marek.langiewicz/it-would-be-nice-if-i-could-do-things-like-8cc1aa463bfa)
-// (inline is problematic because I use some call stack analysis in uspek - do I HAVE TO?)
+// (inline is problematic because I use some call-stack analysis in uspek - do I HAVE TO?)
 // but it was long time ago and this area of kotlin compiler is changing in 1.6...
 // (https://blog.jetbrains.com/kotlin/2021/11/kotlin-1-6-0-is-released/#language-features)
 // (and JetBrains is planning to improve coroutines testing story overall)

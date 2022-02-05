@@ -17,6 +17,9 @@ kotlin {
         browser {
             testTask {
                 enabled = System.getenv("JITPACK") != "true"
+                useKarma {
+                    useChromeHeadless()
+                }
             }
         }
     }
@@ -28,9 +31,5 @@ kotlin {
                 api(kotlin("test"))
             }
         }
-        val jvmMain by getting
-        val jvmTest by getting
-        val jsMain by getting
-        val linuxX64Main by getting
     }
 }
