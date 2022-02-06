@@ -12,17 +12,7 @@ repositories {
 
 kotlin {
     jvm()
-    js(IR) {
-        nodejs()
-        browser {
-            testTask {
-                enabled = System.getenv("JITPACK") != "true"
-                useKarma {
-                    useChromeHeadless()
-                }
-            }
-        }
-    }
+    jsDefault(withNode = true)
     linuxX64()
 
     sourceSets {
