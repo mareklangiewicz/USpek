@@ -1,6 +1,7 @@
 buildscript {
 
     repositories {
+        gradlePluginPortal()
         mavenCentral()
     }
 
@@ -8,6 +9,35 @@ buildscript {
         classpath(Deps.kotlinGradlePlugin)
     }
 }
+
+plugins {
+    id("io.github.gradle-nexus.publish-plugin") version Vers.nexusPublishGradlePlugin
+}
+
+defaultGroupAndVer(Deps.uspek)
+
+ext["signing.keyId"] = System.getenv("MYKOTLIBS_SIGNING_KEYID")
+ext["signing.password"] = System.getenv("MYKOTLIBS_SIGNING_PASS")
+ext["signing.key"] = System.getenv("MYKOTLIBS_SIGNING_KEY")
+ext["ossrhUsername"] = System.getenv("MYKOTLIBS_OSSRH_USERNAME")
+ext["ossrhPassword"] = System.getenv("MYKOTLIBS_OSSRH_PASSWORD")
+ext["sonatypeStagingProfileId"] = System.getenv("MYKOTLIBS_SONATYPE_STAGING_PROFILEID")
+
+fun getExtraString(name: String) = rootProject.ext[name]?.toString()
+
+nexusPublishing {
+    repositories {
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            stagingProfileId.set(getExtraString("sonatypeStagingProfileId"))
+            username.set(getExtraString("ossrhUsername"))
+            password.set(getExtraString("ossrhPassword"))
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
+
+
 
 allprojects {
     repositories {
