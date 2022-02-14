@@ -25,51 +25,20 @@ kotlin {
     }
 }
 
+// Stub javadoc.jar artifact (sonatype requires javadoc artifact) FIXME: stop using stubs
 val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
-fun getExtraString(name: String) = rootProject.ext[name]?.toString()
-
 publishing {
-
-    // Configure all publications
-    publications.withType<MavenPublication> {
-
-        // Stub javadoc.jar artifact (sonatype requires javadoc artifact)
-        artifact(javadocJar.get())
-
-        // Provide artifacts information requited by Maven Central
-        pom {
-            name.set("USpek")
-            description.set("Micro tool for testing with syntax similar to Spek, but shorter.")
-            url.set("https://github.com/langara/uspek")
-
-            licenses {
-                license {
-                    name.set("Apache-2.0")
-                    url.set("https://opensource.org/licenses/Apache-2.0")
-                }
-            }
-            developers {
-                developer {
-                    id.set("langara")
-                    name.set("Marek Langiewicz")
-                    email.set("marek.langiewicz@gmail.com")
-                }
-            }
-            scm {
-                url.set("https://github.com/langara/uspek")
-            }
-        }
-    }
+    publications.withType<MavenPublication> { defaultUSpekPublication(javadocJar) }
 }
 
 signing {
     useInMemoryPgpKeys(
-        getExtraString("signing.keyId"),
-        getExtraString("signing.key"),
-        getExtraString("signing.password")
+        rootExt("signing.keyId"),
+        rootExt("signing.key"),
+        rootExt("signing.password")
     )
     sign(publishing.publications)
 }

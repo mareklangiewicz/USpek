@@ -21,16 +21,14 @@ ext["signing.password"] = System.getenv("MYKOTLIBS_SIGNING_PASS")
 ext["signing.key"] = System.getenv("MYKOTLIBS_SIGNING_KEY")
 ext["ossrhUsername"] = System.getenv("MYKOTLIBS_OSSRH_USERNAME")
 ext["ossrhPassword"] = System.getenv("MYKOTLIBS_OSSRH_PASSWORD")
-ext["sonatypeStagingProfileId"] = System.getenv("MYKOTLIBS_SONATYPE_STAGING_PROFILEID")
-
-fun getExtraString(name: String) = rootProject.ext[name]?.toString()
+ext["sonatypeStagingProfileId"] = System.getenv("MYKOTLIBS_STAGING_PROFILEID")
 
 nexusPublishing {
     repositories {
         sonatype {  //only for users registered in Sonatype after 24 Feb 2021
-            stagingProfileId.set(getExtraString("sonatypeStagingProfileId"))
-            username.set(getExtraString("ossrhUsername"))
-            password.set(getExtraString("ossrhPassword"))
+            stagingProfileId.set(rootExt("sonatypeStagingProfileId"))
+            username.set(rootExt("ossrhUsername"))
+            password.set(rootExt("ossrhPassword"))
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
