@@ -25,6 +25,10 @@ kotlin {
     }
 }
 
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+}
+
 fun getExtraString(name: String) = rootProject.ext[name]?.toString()
 
 publishing {
@@ -32,8 +36,8 @@ publishing {
     // Configure all publications
     publications.withType<MavenPublication> {
 
-//        // Stub javadoc.jar artifact
-//        artifact(javadocJar.get())
+        // Stub javadoc.jar artifact (sonatype requires javadoc artifact)
+        artifact(javadocJar.get())
 
         // Provide artifacts information requited by Maven Central
         pom {
