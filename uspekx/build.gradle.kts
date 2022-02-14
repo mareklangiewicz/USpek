@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("maven-publish")
+    id("signing")
 }
 
 defaultGroupAndVer(Deps.uspekx)
@@ -28,4 +29,22 @@ kotlin {
             }
         }
     }
+}
+
+// Stub javadoc.jar artifact (sonatype requires javadoc artifact) FIXME: stop using stubs
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+}
+
+publishing {
+    publications.withType<MavenPublication> { defaultUSpekPublication(javadocJar) }
+}
+
+signing {
+    useInMemoryPgpKeys(
+        rootExt("signing.keyId"),
+        rootExt("signing.key"),
+        rootExt("signing.password")
+    )
+    sign(publishing.publications)
 }
