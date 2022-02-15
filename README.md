@@ -55,17 +55,22 @@ Test different nested scenarios without **any** boilerplate code.
 
 ```
 
-[![](https://jitpack.io/v/langara/USpek.svg)](https://jitpack.io/#langara/USpek)
+UPDATE: We have two "flavors" now. USpek and USpekX.
+USpekX also contains less essential stuff like fun for test factories for JUnit5.
+Use USpekX when in doubt. Both flavors are multiplatform.
 
-### Building with JitPack
+### Building with Gradle
 ```gradle
     repositories {
-        maven { url "https://jitpack.io" }
+        mavenCentral()
     }
    
     dependencies {
-        testImplementation 'com.github.langara:USpek:X.X.X'
+        // either:
+        testImplementation 'pl.mareklangiewicz:uspekx:A.B.C'
+        // or:
+        testImplementation 'pl.mareklangiewicz:uspek:A.B.C'
     }
 ```
 
-details: https://jitpack.io/#langara/USpek
+https://repo1.maven.org/maven2/pl/mareklangiewicz/

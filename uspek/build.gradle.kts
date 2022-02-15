@@ -25,20 +25,6 @@ kotlin {
     }
 }
 
-// Stub javadoc.jar artifact (sonatype requires javadoc artifact) FIXME: stop using stubs
-val javadocJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("javadoc")
-}
+defaultUSpekPublishing()
 
-publishing {
-    publications.withType<MavenPublication> { defaultUSpekPublication(javadocJar) }
-}
-
-signing {
-    useInMemoryPgpKeys(
-        rootExt("signing.keyId"),
-        rootExt("signing.key"),
-        rootExt("signing.password")
-    )
-    sign(publishing.publications)
-}
+defaultSigning()

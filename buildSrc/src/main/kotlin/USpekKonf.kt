@@ -1,6 +1,10 @@
+import org.gradle.api.*
+import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.*
 import org.gradle.api.tasks.bundling.*
+import org.gradle.kotlin.dsl.*
+import java.io.*
 
 object USpekKonf {
     const val name = "USpek"
@@ -13,7 +17,21 @@ object USpekKonf {
     const val licenceUrl = "https://opensource.org/licenses/Apache-2.0"
 }
 
-fun MavenPublication.defaultUSpekPublication(javaDoc: TaskProvider<Jar>) {
+fun Project.defaultUSpekPublishing() {
+
+    val javadocJar by tasks.registering(Jar::class) {
+        val file = File(rootDir, "README.md")
+        from(file) // TODO_maybe: use dokka?
+//        dependsOn(file)
+        archiveClassifier.set("javadoc")
+    }
+
+    extensions.configure(PublishingExtension::class) {
+        publications.withType<MavenPublication> { defaultUSpekPublication(javadocJar) }
+    }
+}
+
+private fun MavenPublication.defaultUSpekPublication(javaDoc: TaskProvider<Jar>) {
 
     artifact(javaDoc.get())
 
