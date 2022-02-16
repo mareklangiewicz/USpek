@@ -17,23 +17,30 @@ object USpekKonf {
     const val licenceUrl = "https://opensource.org/licenses/Apache-2.0"
 }
 
-fun Project.defaultUSpekPublishing() {
+fun Project.defaultUSpekPublishing(readmeFile: File = File(rootDir, "README.md")) {
 
-    val javadocJar by tasks.registering(Jar::class) {
-        val file = File(rootDir, "README.md")
-        from(file) // TODO_maybe: use dokka?
-//        dependsOn(file)
+    val readmeJavadocJar by tasks.registering(Jar::class) {
+        from(readmeFile) // TODO_maybe: use dokka to create real docs? (but it's not even java..)
         archiveClassifier.set("javadoc")
     }
 
     extensions.configure(PublishingExtension::class) {
-        publications.withType<MavenPublication> { defaultUSpekPublication(javadocJar) }
+        publications.withType<MavenPublication> { defaultUSpekPublication(readmeJavadocJar) }
     }
 }
 
-private fun MavenPublication.defaultUSpekPublication(javaDoc: TaskProvider<Jar>) {
+private fun MavenPublication.defaultUSpekPublication(javaDocProvider: TaskProvider<Jar>) {
 
-    artifact(javaDoc.get())
+    artifact(javaDocProvider)
+        // Adding javadoc artifact generates warnings like:
+        // Execution optimizations have been disabled for task ':uspek:signJvmPublication'
+        // It looks like a bug in kotlin multiplatform plugin:
+        // https://youtrack.jetbrains.com/issue/KT-46466
+        // FIXME_someday: Watch the issue.
+        // If it's a bug in kotlin multiplatform then remove this comment when it's fixed.
+        // Some related bug reports:
+        // https://youtrack.jetbrains.com/issue/KT-47936
+        // https://github.com/gradle/gradle/issues/17043
 
     // Provide artifacts information requited by Maven Central
     pom {
