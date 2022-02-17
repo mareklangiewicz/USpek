@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClass.set("pl.mareklangiewicz.ktjvmsample.MainKt")
+    mainClass put "pl.mareklangiewicz.ktjvmsample.MainKt"
 }
 
 repositories {

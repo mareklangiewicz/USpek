@@ -1,4 +1,5 @@
 import org.gradle.api.*
+import org.gradle.api.provider.*
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.*
@@ -17,11 +18,13 @@ object USpekKonf {
     const val licenceUrl = "https://opensource.org/licenses/Apache-2.0"
 }
 
+private infix fun <T> Property<in T>.put(src: T) = set(src) // deps.kt is not accessible here :/
+
 fun Project.defaultUSpekPublishing(readmeFile: File = File(rootDir, "README.md")) {
 
     val readmeJavadocJar by tasks.registering(Jar::class) {
         from(readmeFile) // TODO_maybe: use dokka to create real docs? (but it's not even java..)
-        archiveClassifier.set("javadoc")
+        archiveClassifier put "javadoc"
     }
 
     extensions.configure(PublishingExtension::class) {
@@ -30,6 +33,11 @@ fun Project.defaultUSpekPublishing(readmeFile: File = File(rootDir, "README.md")
 }
 
 private fun MavenPublication.defaultUSpekPublication(javaDocProvider: TaskProvider<Jar>) {
+
+//    javaDocProvider.flatMap {  }
+//    javaDocProvider.map {  }
+
+//    TODO NOW: understand Provider.java and Property.java And use it somehow - documentation if form of tests? SourceFun?
 
     artifact(javaDocProvider)
         // Adding javadoc artifact generates warnings like:
@@ -44,25 +52,25 @@ private fun MavenPublication.defaultUSpekPublication(javaDocProvider: TaskProvid
 
     // Provide artifacts information requited by Maven Central
     pom {
-        name.set(USpekKonf.name)
-        description.set(USpekKonf.description)
-        url.set(USpekKonf.githubUrl)
+        name put USpekKonf.name
+        description put USpekKonf.description
+        url put USpekKonf.githubUrl
 
         licenses {
             license {
-                name.set(USpekKonf.licenceName)
-                url.set(USpekKonf.licenceUrl)
+                name put USpekKonf.licenceName
+                url put USpekKonf.licenceUrl
             }
         }
         developers {
             developer {
-                id.set(USpekKonf.authorId)
-                name.set(USpekKonf.authorName)
-                email.set(USpekKonf.authorEmail)
+                id put USpekKonf.authorId
+                name put USpekKonf.authorName
+                email put USpekKonf.authorEmail
             }
         }
         scm {
-            url.set(USpekKonf.githubUrl)
+            url put USpekKonf.githubUrl
         }
     }
 }

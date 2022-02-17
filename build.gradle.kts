@@ -26,11 +26,11 @@ ext["sonatypeStagingProfileId"] = System.getenv("MYKOTLIBS_STAGING_PROFILEID")
 nexusPublishing {
     repositories {
         sonatype {  //only for users registered in Sonatype after 24 Feb 2021
-            stagingProfileId.set(rootExt("sonatypeStagingProfileId"))
-            username.set(rootExt("ossrhUsername"))
-            password.set(rootExt("ossrhPassword"))
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            stagingProfileId put rootExt("sonatypeStagingProfileId")
+            username put rootExt("ossrhUsername")
+            password put rootExt("ossrhPassword")
+            nexusUrl put uri("https://s01.oss.sonatype.org/service/local/")
+            snapshotRepositoryUrl put uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
         }
     }
 }
