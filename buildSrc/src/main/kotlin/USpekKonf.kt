@@ -27,7 +27,7 @@ fun Project.defaultUSpekPublishing(readmeFile: File = File(rootDir, "README.md")
         archiveClassifier put "javadoc"
     }
 
-    extensions.configure(PublishingExtension::class) {
+    extensions.configure<PublishingExtension> {
         publications.withType<MavenPublication> { defaultUSpekPublication(readmeJavadocJar) }
     }
 }
