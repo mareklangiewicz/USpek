@@ -34,11 +34,6 @@ fun Project.defaultUSpekPublishing(readmeFile: File = File(rootDir, "README.md")
 
 private fun MavenPublication.defaultUSpekPublication(javaDocProvider: TaskProvider<Jar>) {
 
-//    javaDocProvider.flatMap {  }
-//    javaDocProvider.map {  }
-
-//    TODO NOW: understand Provider.java and Property.java And use it somehow - documentation if form of tests? SourceFun?
-
     artifact(javaDocProvider)
         // Adding javadoc artifact generates warnings like:
         // Execution optimizations have been disabled for task ':uspek:signJvmPublication'

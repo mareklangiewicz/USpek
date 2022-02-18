@@ -9,6 +9,7 @@ uspek/out
 /build
 /out
 /buildSrc/build
+my.gradle.log
 
 # Project exclude paths
 /kotlinsample/out/
