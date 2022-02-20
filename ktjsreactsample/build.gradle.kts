@@ -1,3 +1,5 @@
+import pl.mareklangiewicz.defaults.*
+
 plugins {
     kotlin("js")
 }

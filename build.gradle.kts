@@ -1,3 +1,5 @@
+import pl.mareklangiewicz.defaults.*
+
 buildscript {
 
     repositories {
