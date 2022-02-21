@@ -1,5 +1,7 @@
+import pl.mareklangiewicz.utils.*
+
 plugins {
-    kotlin("jvm")
+    kotlin("jvm") version Vers.kotlin
     application
 }
 

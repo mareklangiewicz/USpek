@@ -1,14 +1,11 @@
 import pl.mareklangiewicz.defaults.*
+import pl.mareklangiewicz.utils.*
 
 buildscript {
 
     repositories {
         gradlePluginPortal()
         mavenCentral()
-    }
-
-    dependencies {
-        classpath(Deps.kotlinGradlePlugin)
     }
 }
 
