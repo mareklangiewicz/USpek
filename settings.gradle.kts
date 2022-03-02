@@ -3,7 +3,7 @@
 import pl.mareklangiewicz.evts.*
 import pl.mareklangiewicz.utils.*
 
-gradle.logSomeEventsToFile(rootOkioPath / "my.gradle.log")
+gradle.logSomeEventsToFile(rootProjectPath / "my.gradle.log")
 
 pluginManagement {
     includeBuild("../deps.kt")
