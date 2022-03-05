@@ -1,10 +1,10 @@
 import pl.mareklangiewicz.defaults.*
 
 plugins {
-    kotlin("js") version Vers.kotlin
+    kotlin("js") version vers.kotlin
 }
 
-defaultGroupAndVer(Deps.uspek)
+defaultGroupAndVer(deps.uspek)
 
 repositories {
     mavenCentral()
@@ -15,18 +15,18 @@ repositories {
 
 dependencies {
     implementation(project(":uspekx"))
-//    implementation(Deps.uspekx)
+//    implementation(deps.uspekx)
 
-    implementation(Deps.kotlinxCoroutinesCore)
+    implementation(deps.kotlinxCoroutinesCore)
 
-    implementation(enforcedPlatform(Deps.kotlinJsWrappersBoM))
-    implementation(Deps.kotlinJsWrappersReact)
-    implementation(Deps.kotlinJsWrappersReactDom)
-    implementation(Deps.kotlinJsWrappersStyled)
+    implementation(enforcedPlatform(deps.kotlinJsWrappersBoM))
+    implementation(deps.kotlinJsWrappersReact)
+    implementation(deps.kotlinJsWrappersReactDom)
+    implementation(deps.kotlinJsWrappersStyled)
 
-    implementation(npm("react", Vers.npmReact))
-    implementation(npm("react-dom", Vers.npmReact))
-    implementation(npm("styled-components", Vers.npmStyled))
+    implementation(npm("react", vers.npmReact))
+    implementation(npm("react-dom", vers.npmReact))
+    implementation(npm("styled-components", vers.npmStyled))
 }
 
 kotlin {

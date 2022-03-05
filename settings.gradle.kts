@@ -10,7 +10,7 @@ pluginManagement {
 }
 
 plugins {
-    id("pl.mareklangiewicz.deps.settings")
+    id("pl.mareklangiewicz.deps.settings") version "0.2.17"
 }
 
 rootProject.name = "USpek"

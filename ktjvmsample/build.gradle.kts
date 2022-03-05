@@ -1,7 +1,7 @@
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    kotlin("jvm") version Vers.kotlin
+    kotlin("jvm") version vers.kotlin
     application
 }
 
@@ -16,9 +16,9 @@ repositories {
 
 dependencies {
     testImplementation(project(":uspekx"))
-//    testImplementation(Deps.uspekx)
-    testImplementation(Deps.junit5)
-    testRuntimeOnly(Deps.junit5engine)
+//    testImplementation(deps.uspekx)
+    testImplementation(deps.junit5)
+    testRuntimeOnly(deps.junit5engine)
 }
 
 tasks.test {

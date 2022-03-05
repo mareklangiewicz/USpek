@@ -2,12 +2,12 @@ import pl.mareklangiewicz.defaults.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
 plugins {
-    kotlin("multiplatform") version Vers.kotlin
+    kotlin("multiplatform") version vers.kotlin
     id("maven-publish")
     id("signing")
 }
 
-defaultGroupAndVer(Deps.uspekx)
+defaultGroupAndVer(deps.uspekx)
 description = USpekKonf.description
 
 repositories {
@@ -23,12 +23,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":uspek"))
-                api(Deps.kotlinxCoroutinesCore)
+                api(deps.kotlinxCoroutinesCore)
             }
         }
         val jvmMain by getting {
             dependencies {
-                implementation(Deps.junit5)
+                implementation(deps.junit5)
             }
         }
     }

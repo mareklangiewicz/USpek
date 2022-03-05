@@ -10,10 +10,10 @@ buildscript {
 }
 
 plugins {
-    id("io.github.gradle-nexus.publish-plugin") version Vers.nexusPublishGradlePlugin
+    id("io.github.gradle-nexus.publish-plugin") version vers.nexusPublishGradlePlugin
 }
 
-defaultGroupAndVer(Deps.uspek)
+defaultGroupAndVer(deps.uspek)
 
 ext["signing.keyId"] = System.getenv("MYKOTLIBS_SIGNING_KEYID")
 ext["signing.password"] = System.getenv("MYKOTLIBS_SIGNING_PASS")

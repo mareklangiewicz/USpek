@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version Vers.kotlin
+    kotlin("multiplatform") version vers.kotlin
 }
 
 repositories {
@@ -29,7 +29,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(project(":uspek"))
-//                implementation(Deps.uspek)
+//                implementation(deps.uspek)
             }
         }
         val nativeMain by getting

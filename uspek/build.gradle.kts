@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.dsl.*
 import pl.mareklangiewicz.defaults.*
 
 plugins {
-    kotlin("multiplatform") version Vers.kotlin
+    kotlin("multiplatform") version vers.kotlin
     id("maven-publish")
     id("signing")
 }
 
-defaultGroupAndVer(Deps.uspek)
+defaultGroupAndVer(deps.uspek)
 description = USpekKonf.description
 
 repositories {
