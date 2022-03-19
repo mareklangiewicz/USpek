@@ -7,8 +7,7 @@ plugins {
     id("signing")
 }
 
-defaultGroupAndVer(deps.uspekx)
-description = USpekKonf.description
+defaultGroupAndVerAndDescription(libs.uspek)
 
 repositories {
     mavenCentral()
@@ -34,7 +33,7 @@ kotlin {
     }
 }
 
-defaultUSpekPublishing()
+defaultPublishing(libs.uspek)
 
 defaultSigning()
 
