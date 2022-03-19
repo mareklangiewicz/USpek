@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 import pl.mareklangiewicz.defaults.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
@@ -7,7 +9,7 @@ plugins {
     id("signing")
 }
 
-defaultGroupAndVerAndDescription(libs.uspek)
+defaultGroupAndVerAndDescription(libs.USpek)
 
 repositories {
     mavenCentral()
@@ -33,7 +35,7 @@ kotlin {
     }
 }
 
-defaultPublishing(libs.uspek)
+defaultPublishing(libs.USpek)
 
 defaultSigning()
 

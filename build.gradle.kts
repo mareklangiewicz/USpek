@@ -10,7 +10,7 @@ buildscript {
 
 plugins { id("io.github.gradle-nexus.publish-plugin") version vers.nexusPublishGradlePlugin }
 
-defaultGroupAndVer(deps.uspek)
+defaultGroupAndVerAndDescription(libs.USpek)
 
 ext.addAllFromSystemEnvs("MYKOTLIBS_")
 
