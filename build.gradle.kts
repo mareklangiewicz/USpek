@@ -20,8 +20,8 @@ nexusPublishing {
             stagingProfileId put rootExt("sonatypeStagingProfileId")
             username put rootExt("ossrhUsername")
             password put rootExt("ossrhPassword")
-            nexusUrl put uri("https://s01.oss.sonatype.org/service/local/")
-            snapshotRepositoryUrl put uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            nexusUrl put uri(repos.sonatypeOssNexus)
+            snapshotRepositoryUrl put uri(repos.sonatypeOssSnapshots)
         }
     }
 }
