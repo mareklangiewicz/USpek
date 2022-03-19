@@ -2,25 +2,17 @@ import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.utils.*
 
 buildscript {
-
     repositories {
         gradlePluginPortal()
         mavenCentral()
     }
 }
 
-plugins {
-    id("io.github.gradle-nexus.publish-plugin") version vers.nexusPublishGradlePlugin
-}
+plugins { id("io.github.gradle-nexus.publish-plugin") version vers.nexusPublishGradlePlugin }
 
 defaultGroupAndVer(deps.uspek)
 
-ext["signing.keyId"] = System.getenv("MYKOTLIBS_SIGNING_KEYID")
-ext["signing.password"] = System.getenv("MYKOTLIBS_SIGNING_PASS")
-ext["signing.key"] = System.getenv("MYKOTLIBS_SIGNING_KEY")
-ext["ossrhUsername"] = System.getenv("MYKOTLIBS_OSSRH_USERNAME")
-ext["ossrhPassword"] = System.getenv("MYKOTLIBS_OSSRH_PASSWORD")
-ext["sonatypeStagingProfileId"] = System.getenv("MYKOTLIBS_STAGING_PROFILEID")
+ext.addAllFromSystemEnvs("MYKOTLIBS_")
 
 nexusPublishing {
     repositories {
@@ -43,4 +35,3 @@ allprojects {
         maven("https://jitpack.io")
     }
 }
-
