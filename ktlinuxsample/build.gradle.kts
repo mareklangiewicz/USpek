@@ -1,9 +1,10 @@
 plugins {
-    kotlin("multiplatform") version vers.kotlin
+    kotlin("multiplatform")
 }
 
 repositories {
 //    mavenLocal()
+    mavenCentral()
     maven("https://jitpack.io")
 }
 

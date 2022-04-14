@@ -1,7 +1,7 @@
 import pl.mareklangiewicz.defaults.*
 
 plugins {
-    kotlin("js") version vers.kotlin
+    kotlin("js")
 }
 
 defaultGroupAndVer(deps.uspek)
