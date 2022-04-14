@@ -16,12 +16,17 @@ defaultBuildTemplateForMppLib(
 )
 
 kotlin {
+    @Suppress("UNUSED_VARIABLE")
     sourceSets {
-        @Suppress("UNUSED_VARIABLE")
         val commonMain by getting {
             dependencies {
                 api(project(":uspek"))
                 api(deps.kotlinxCoroutinesCore)
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation(deps.junit5engine)
             }
         }
     }

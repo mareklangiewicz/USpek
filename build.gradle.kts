@@ -14,6 +14,9 @@ defaultSonatypeOssStuffFromSystemEnvs()
 private val rootBuild = rootProjectPath / "build.gradle.kts"
 private val uspekModuleBuild = rootProjectPath / "uspek" / "build.gradle.kts"
 private val uspekxModuleBuild = rootProjectPath / "uspekx" / "build.gradle.kts"
+private val ktJvmSampleModuleBuild = rootProjectPath / "ktjvmsample" / "build.gradle.kts"
+private val ktLinuxSampleModuleBuild = rootProjectPath / "ktlinuxsample" / "build.gradle.kts"
+private val ktReactSampleModuleBuild = rootProjectPath / "ktreactsample" / "build.gradle.kts"
 
 tasks.registerAllThatGroupFun("inject",
     ::checkTemplates,
@@ -22,14 +25,16 @@ tasks.registerAllThatGroupFun("inject",
 
 fun checkTemplates() {
     checkRootBuildTemplate(rootBuild)
-    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild)
-    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild)
+    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
+    checkJvmAppBuildTemplates(ktJvmSampleModuleBuild)
+    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
 }
 
 fun injectTemplates() {
     injectRootBuildTemplate(rootBuild)
-    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild)
-    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild)
+    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
+    injectJvmAppBuildTemplate(ktJvmSampleModuleBuild)
+    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
 }
 
 // region [Root Build Template]

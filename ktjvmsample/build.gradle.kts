@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.plugin.*
+import pl.mareklangiewicz.defaults.*
+import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
@@ -5,28 +8,7 @@ plugins {
     application
 }
 
-application {
-    mainClass put "pl.mareklangiewicz.ktjvmsample.MainKt"
-}
-
-repositories {
-//    mavenLocal()
-    mavenCentral()
-    maven("https://jitpack.io")
-}
-
-dependencies {
-    testImplementation(project(":uspekx"))
-//    testImplementation(deps.uspekx)
-    testImplementation(deps.junit5)
-    testRuntimeOnly(deps.junit5engine)
-}
-
-tasks.defaultKotlinCompileOptions()
-
-tasks.test {
-    useJUnitPlatform()
-}
+defaultBuildTemplateForJvmApp(appMainPackage = "pl.mareklangiewicz.ktjvmsample")
 
 // region [Kotlin Module Build Template]
 
@@ -41,3 +23,32 @@ fun TaskCollection<Task>.defaultKotlinCompileOptions(
 }
 
 // endregion [Kotlin Module Build Template]
+
+// region [Jvm App Build Template]
+
+@Suppress("UNUSED_VARIABLE")
+fun Project.defaultBuildTemplateForJvmApp(
+    appMainPackage: String,
+    appMainClass: String = "MainKt",
+    details: LibDetails = libs.Unknown,
+    addMainDependencies: KotlinDependencyHandler.() -> Unit = {}
+) {
+    repositories { defaultRepos() }
+    defaultGroupAndVerAndDescription(details)
+
+    kotlin {
+        sourceSets {
+            val main by getting {
+                dependencies {
+                    addMainDependencies()
+                }
+            }
+        }
+    }
+
+    application { mainClass put "$appMainPackage.$appMainClass" }
+
+    tasks.defaultKotlinCompileOptions()
+}
+
+// endregion [Jvm App Build Template]
