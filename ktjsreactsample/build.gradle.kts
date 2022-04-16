@@ -4,16 +4,14 @@ plugins {
     kotlin("js")
 }
 
-defaultGroupAndVer(deps.uspek)
+defaultGroupAndVerAndDescription(libs.USpek)
 
 repositories {
     mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers")
-    maven("https://jitpack.io")
-
 }
 
 dependencies {
+    implementation(kotlin("test"))
     implementation(project(":uspekx"))
 //    implementation(deps.uspekx)
 

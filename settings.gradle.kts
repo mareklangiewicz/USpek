@@ -19,6 +19,6 @@ include(
     ":uspek",
     ":uspekx",
     ":ktjvmsample",
-    // ":ktjsreactsample",
+    ":ktjsreactsample",
     ":ktlinuxsample"
 )

@@ -1,5 +1,6 @@
 package playground
 
+import csstype.*
 import react.*
 import react.dom.*
 import kotlinx.coroutines.*
@@ -32,12 +33,12 @@ val Playground = FC<PlaygroundProps> { props ->
         }
     }
     div {
-        className = "playground"
-        div { className = "tests-side"; rtree(tree) }
+        className = ClassName("playground")
+        div { className = ClassName("tests-side"); rtree(tree) }
         div {
-            className = "canvas-side"
+            className = ClassName("canvas-side")
             div {
-                className = "canvas"
+                className = ClassName("canvas")
                 canvas {
                     onClick = {
                         val event = it.asDynamic()

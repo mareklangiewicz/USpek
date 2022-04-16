@@ -1,5 +1,6 @@
 package playground
 
+import csstype.*
 import pl.mareklangiewicz.uspek.USpekTree
 import pl.mareklangiewicz.uspek.failed
 import pl.mareklangiewicz.uspek.finished
@@ -9,11 +10,11 @@ import react.dom.html.ReactHTML.div
 
 fun ChildrenBuilder.rtree(tree: USpekTree) {
     div {
-        className = "tree background " + tree.result
+        className = ClassName("tree background " + tree.result)
         div {
-            className = "tree overlay " + tree.result
+            className = ClassName("tree overlay " + tree.result)
             div {
-                className = "tree content"
+                className = ClassName("tree content")
                 +tree.title
                 for (branch in tree.branches.values) rtree(branch)
             }
