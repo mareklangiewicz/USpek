@@ -31,6 +31,8 @@ fun Project.defaultBuildTemplateForJvmApp(
     appMainPackage: String,
     appMainClass: String = "MainKt",
     details: LibDetails = libs.Unknown,
+    withTestJUnit5: Boolean = true,
+    withTestUSpekX: Boolean = true,
     addMainDependencies: KotlinDependencyHandler.() -> Unit = {}
 ) {
     repositories { defaultRepos() }
@@ -43,12 +45,19 @@ fun Project.defaultBuildTemplateForJvmApp(
                     addMainDependencies()
                 }
             }
+            val test by getting {
+                dependencies {
+                    if (withTestJUnit5) implementation(deps.junit5engine)
+                    if (withTestUSpekX) implementation(deps.uspekx)
+                }
+            }
         }
     }
 
     application { mainClass put "$appMainPackage.$appMainClass" }
 
     tasks.defaultKotlinCompileOptions()
+    tasks.defaultTestsOptions(onJvmUseJUnitPlatform = withTestJUnit5)
 }
 
 // endregion [Jvm App Build Template]

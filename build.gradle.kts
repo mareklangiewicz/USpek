@@ -16,7 +16,7 @@ private val uspekModuleBuild = rootProjectPath / "uspek" / "build.gradle.kts"
 private val uspekxModuleBuild = rootProjectPath / "uspekx" / "build.gradle.kts"
 private val ktJvmSampleModuleBuild = rootProjectPath / "ktjvmsample" / "build.gradle.kts"
 private val ktLinuxSampleModuleBuild = rootProjectPath / "ktlinuxsample" / "build.gradle.kts"
-private val ktReactSampleModuleBuild = rootProjectPath / "ktreactsample" / "build.gradle.kts"
+private val ktJsReactSampleModuleBuild = rootProjectPath / "ktjsreactsample" / "build.gradle.kts"
 
 tasks.registerAllThatGroupFun("inject",
     ::checkTemplates,
@@ -25,16 +25,16 @@ tasks.registerAllThatGroupFun("inject",
 
 fun checkTemplates() {
     checkRootBuildTemplate(rootBuild)
-    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
+    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
     checkJvmAppBuildTemplates(ktJvmSampleModuleBuild)
-    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
+    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 fun injectTemplates() {
     injectRootBuildTemplate(rootBuild)
-    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
+    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
     injectJvmAppBuildTemplate(ktJvmSampleModuleBuild)
-    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktReactSampleModuleBuild)
+    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 // region [Root Build Template]
