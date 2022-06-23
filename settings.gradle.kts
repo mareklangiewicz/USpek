@@ -18,7 +18,9 @@ rootProject.name = "USpek"
 include(
     ":uspek",
     ":uspekx",
+    ":uspekx-junit4",
     ":ktjvmsample",
+    ":ktjunit4sample",
     ":ktjsreactsample",
     ":ktlinuxsample"
 )

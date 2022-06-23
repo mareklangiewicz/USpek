@@ -14,6 +14,7 @@ defaultSonatypeOssStuffFromSystemEnvs()
 private val rootBuild = rootProjectPath / "build.gradle.kts"
 private val uspekModuleBuild = rootProjectPath / "uspek" / "build.gradle.kts"
 private val uspekxModuleBuild = rootProjectPath / "uspekx" / "build.gradle.kts"
+private val uspekxJUnit4ModuleBuild = rootProjectPath / "uspekx-junit4" / "build.gradle.kts"
 private val ktJvmSampleModuleBuild = rootProjectPath / "ktjvmsample" / "build.gradle.kts"
 private val ktLinuxSampleModuleBuild = rootProjectPath / "ktlinuxsample" / "build.gradle.kts"
 private val ktJsReactSampleModuleBuild = rootProjectPath / "ktjsreactsample" / "build.gradle.kts"
@@ -25,16 +26,16 @@ tasks.registerAllThatGroupFun("inject",
 
 fun checkTemplates() {
     checkRootBuildTemplate(rootBuild)
-    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
     checkJvmAppBuildTemplates(ktJvmSampleModuleBuild)
-    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 fun injectTemplates() {
     injectRootBuildTemplate(rootBuild)
-    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
     injectJvmAppBuildTemplate(ktJvmSampleModuleBuild)
-    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 // region [Root Build Template]
