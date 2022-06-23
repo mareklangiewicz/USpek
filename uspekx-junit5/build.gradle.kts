@@ -11,13 +11,27 @@ plugins {
 
 defaultBuildTemplateForMppLib(
     details = libs.USpek,
-    withNativeLinux64 = true,
+    withJs = false,
+    withNativeLinux64 = false,
     withTestJUnit4 = false,
     withTestJUnit5 = false,
     withTestUSpekX = false,
-) {
-    api(project(":uspek"))
-    api(deps.kotlinxCoroutinesCore)
+)
+
+kotlin {
+    @Suppress("UNUSED_VARIABLE")
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(project(":uspekx"))
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation(deps.junit5engine)
+            }
+        }
+    }
 }
 
 // region [Kotlin Module Build Template]

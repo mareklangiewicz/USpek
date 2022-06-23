@@ -19,8 +19,9 @@ include(
     ":uspek",
     ":uspekx",
     ":uspekx-junit4",
-    ":ktjvmsample",
+    ":uspekx-junit5",
     ":ktjunit4sample",
-    ":ktjsreactsample",
+    ":ktjunit5sample",
+    // ":ktjsreactsample", // FIXME
     ":ktlinuxsample"
 )
