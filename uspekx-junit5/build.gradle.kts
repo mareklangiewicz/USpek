@@ -118,7 +118,11 @@ fun KotlinMultiplatformExtension.allDefault(
                 dependencies {
                     if (withTestJUnit4) implementation(deps.junit4)
                     if (withTestJUnit5) implementation(deps.junit5engine)
-                    // TODO uspekx+junitx
+                    if (withTestUSpekX) {
+                        implementation(deps.uspekx)
+                        if (withTestJUnit4) implementation(deps.uspekxJUnit4)
+                        if (withTestJUnit5) implementation(deps.uspekxJUnit5)
+                    }
                 }
             }
         }

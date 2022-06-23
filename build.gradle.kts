@@ -31,6 +31,7 @@ fun checkTemplates() {
     checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
     checkJvmAppBuildTemplates(ktJUnit4SampleModuleBuild, ktJUnit4SampleModuleBuild)
     checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    checkMppAppBuildTemplates(ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 fun injectTemplates() {
@@ -38,6 +39,7 @@ fun injectTemplates() {
     injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
     injectJvmAppBuildTemplate(ktJUnit4SampleModuleBuild, ktJUnit5SampleModuleBuild)
     injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    injectMppAppBuildTemplate(ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 // region [Root Build Template]

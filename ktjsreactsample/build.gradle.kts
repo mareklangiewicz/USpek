@@ -1,7 +1,10 @@
+import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.dsl.*
+import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.defaults.*
 
 plugins {
-    kotlin("js")
+    kotlin("multiplatform")
 }
 
 defaultGroupAndVerAndDescription(libs.USpek)
@@ -10,23 +13,23 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(kotlin("test"))
-    implementation(project(":uspekx"))
-//    implementation(deps.uspekx)
-
-    implementation(deps.kotlinxCoroutinesCore)
-
-    implementation(enforcedPlatform(deps.kotlinJsWrappersBoM))
-    implementation(deps.kotlinJsWrappersReact)
-    implementation(deps.kotlinJsWrappersReactDom)
-    implementation(deps.kotlinJsWrappersStyled)
-
-    implementation(npm("react", vers.npmReact))
-    implementation(npm("react-dom", vers.npmReact))
-    implementation(npm("styled-components", vers.npmStyled))
-}
-
+// dependencies {
+//     implementation(kotlin("test"))
+//     implementation(project(":uspekx"))
+// //    implementation(deps.uspekx)
+//
+//     implementation(deps.kotlinxCoroutinesCore)
+//
+//     implementation(enforcedPlatform(deps.kotlinJsWrappersBoM))
+//     implementation(deps.kotlinJsWrappersReact)
+//     implementation(deps.kotlinJsWrappersReactDom)
+//     implementation(deps.kotlinJsWrappersStyled)
+//
+//     implementation(npm("react", vers.npmReact))
+//     implementation(npm("react-dom", vers.npmReact))
+//     implementation(npm("styled-components", vers.npmStyled))
+// }
+//
 kotlin {
     js(IR) {
         browser {
@@ -134,7 +137,11 @@ fun KotlinMultiplatformExtension.allDefault(
                 dependencies {
                     if (withTestJUnit4) implementation(deps.junit4)
                     if (withTestJUnit5) implementation(deps.junit5engine)
-                    // TODO uspekx+junitx
+                    if (withTestUSpekX) {
+                        implementation(deps.uspekx)
+                        if (withTestJUnit4) implementation(deps.uspekxJUnit4)
+                        if (withTestJUnit5) implementation(deps.uspekxJUnit5)
+                    }
                 }
             }
         }
@@ -168,3 +175,52 @@ fun KotlinMultiplatformExtension.jsDefault(
 }
 
 // endregion [MPP Module Build Template]
+
+// region [MPP App Build Template]
+
+fun Project.defaultBuildTemplateForMppApp(
+    appMainPackage: String,
+    appMainFun: String = "main",
+    details: LibDetails = libs.Unknown,
+    withJvm: Boolean = true,
+    withJs: Boolean = true,
+    withNativeLinux64: Boolean = false,
+    withKotlinxHtml: Boolean = false,
+    withComposeJbDevRepo: Boolean = false,
+    withTestJUnit4: Boolean = false,
+    withTestJUnit5: Boolean = true,
+    withTestUSpekX: Boolean = true,
+    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {}
+) {
+    defaultBuildTemplateForMppLib(
+        details = details,
+        withJvm = withJvm,
+        withJs = withJs,
+        withNativeLinux64 = withNativeLinux64,
+        withKotlinxHtml = withKotlinxHtml,
+        withComposeJbDevRepo = withComposeJbDevRepo,
+        withTestJUnit4 = withTestJUnit4,
+        withTestJUnit5 = withTestJUnit5,
+        withTestUSpekX = withTestUSpekX,
+        addCommonMainDependencies = addCommonMainDependencies
+    )
+    kotlin {
+        if (withJvm) jvm {
+            println("MPP App ${project.name}: Generating general jvm executables with kotlin multiplatform plugin is not supported (without compose).")
+            // TODO_someday: Will they support multiplatform way of declaring jvm app?
+            //binaries.executable()
+        }
+        if (withJs) js(IR) {
+            binaries.executable()
+        }
+        if (withNativeLinux64) linuxX64 {
+            binaries {
+                executable {
+                    entryPoint = "$appMainPackage.$appMainFun"
+                }
+            }
+        }
+    }
+}
+
+// endregion [MPP App Build Template]

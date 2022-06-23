@@ -22,6 +22,6 @@ include(
     ":uspekx-junit5",
     ":ktjunit4sample",
     ":ktjunit5sample",
-    // ":ktjsreactsample", // FIXME
+    ":ktjsreactsample",
     ":ktlinuxsample"
 )

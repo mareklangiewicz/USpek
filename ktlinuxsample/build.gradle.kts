@@ -28,7 +28,6 @@ fun TaskCollection<Task>.defaultKotlinCompileOptions(
 
 // endregion [Kotlin Module Build Template]
 
-
 // region [MPP Module Build Template]
 
 /** Only for very standard small libs. In most cases it's better to not use this function. */
@@ -99,7 +98,11 @@ fun KotlinMultiplatformExtension.allDefault(
                 dependencies {
                     if (withTestJUnit4) implementation(deps.junit4)
                     if (withTestJUnit5) implementation(deps.junit5engine)
-                    // TODO uspekx+junitx
+                    if (withTestUSpekX) {
+                        implementation(deps.uspekx)
+                        if (withTestJUnit4) implementation(deps.uspekxJUnit4)
+                        if (withTestJUnit5) implementation(deps.uspekxJUnit5)
+                    }
                 }
             }
         }
@@ -145,6 +148,7 @@ fun Project.defaultBuildTemplateForMppApp(
     withNativeLinux64: Boolean = false,
     withKotlinxHtml: Boolean = false,
     withComposeJbDevRepo: Boolean = false,
+    withTestJUnit4: Boolean = false,
     withTestJUnit5: Boolean = true,
     withTestUSpekX: Boolean = true,
     addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {}
@@ -156,6 +160,7 @@ fun Project.defaultBuildTemplateForMppApp(
         withNativeLinux64 = withNativeLinux64,
         withKotlinxHtml = withKotlinxHtml,
         withComposeJbDevRepo = withComposeJbDevRepo,
+        withTestJUnit4 = withTestJUnit4,
         withTestJUnit5 = withTestJUnit5,
         withTestUSpekX = withTestUSpekX,
         addCommonMainDependencies = addCommonMainDependencies
