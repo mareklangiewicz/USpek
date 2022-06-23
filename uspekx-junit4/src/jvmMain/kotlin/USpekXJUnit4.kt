@@ -24,6 +24,7 @@ class USpekJUnit4Runner(klass: Class<*>) : BlockJUnit4ClassRunner(klass) {
 
     // Disabling validation because I get "No runnable methods" when no @Test methods in class.
     // TODO_someday: extend ParentRunner directly (instead of BlockJUnit4ClassRunner) and implement correct validations
+    // https://www.mscharhag.com/java/understanding-junits-runner-architecture
     override fun collectInitializationErrors(errors: MutableList<Throwable>) = Unit
 }
 
