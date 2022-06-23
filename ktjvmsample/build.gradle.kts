@@ -31,6 +31,7 @@ fun Project.defaultBuildTemplateForJvmApp(
     appMainPackage: String,
     appMainClass: String = "MainKt",
     details: LibDetails = libs.Unknown,
+    withTestJUnit4: Boolean = false,
     withTestJUnit5: Boolean = true,
     withTestUSpekX: Boolean = true,
     addMainDependencies: KotlinDependencyHandler.() -> Unit = {}
@@ -47,8 +48,10 @@ fun Project.defaultBuildTemplateForJvmApp(
             }
             val test by getting {
                 dependencies {
+                    if (withTestJUnit4) implementation(deps.junit4)
                     if (withTestJUnit5) implementation(deps.junit5engine)
                     if (withTestUSpekX) implementation(deps.uspekx)
+                    // TODO: uspekx+junitx
                 }
             }
         }

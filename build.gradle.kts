@@ -16,6 +16,7 @@ private val uspekModuleBuild = rootProjectPath / "uspek" / "build.gradle.kts"
 private val uspekxModuleBuild = rootProjectPath / "uspekx" / "build.gradle.kts"
 private val uspekxJUnit4ModuleBuild = rootProjectPath / "uspekx-junit4" / "build.gradle.kts"
 private val ktJvmSampleModuleBuild = rootProjectPath / "ktjvmsample" / "build.gradle.kts"
+private val ktJUnit4SampleModuleBuild = rootProjectPath / "ktjunit4sample" / "build.gradle.kts"
 private val ktLinuxSampleModuleBuild = rootProjectPath / "ktlinuxsample" / "build.gradle.kts"
 private val ktJsReactSampleModuleBuild = rootProjectPath / "ktjsreactsample" / "build.gradle.kts"
 
@@ -26,15 +27,15 @@ tasks.registerAllThatGroupFun("inject",
 
 fun checkTemplates() {
     checkRootBuildTemplate(rootBuild)
-    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
-    checkJvmAppBuildTemplates(ktJvmSampleModuleBuild)
+    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    checkJvmAppBuildTemplates(ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild)
     checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 fun injectTemplates() {
     injectRootBuildTemplate(rootBuild)
-    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
-    injectJvmAppBuildTemplate(ktJvmSampleModuleBuild)
+    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    injectJvmAppBuildTemplate(ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild)
     injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 

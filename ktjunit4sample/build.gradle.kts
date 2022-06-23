@@ -57,6 +57,7 @@ fun Project.defaultBuildTemplateForJvmApp(
                     if (withTestJUnit4) implementation(deps.junit4)
                     if (withTestJUnit5) implementation(deps.junit5engine)
                     if (withTestUSpekX) implementation(deps.uspekx)
+                    // TODO: uspekx+junitx
                 }
             }
         }
