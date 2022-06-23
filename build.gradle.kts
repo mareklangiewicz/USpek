@@ -15,8 +15,9 @@ private val rootBuild = rootProjectPath / "build.gradle.kts"
 private val uspekModuleBuild = rootProjectPath / "uspek" / "build.gradle.kts"
 private val uspekxModuleBuild = rootProjectPath / "uspekx" / "build.gradle.kts"
 private val uspekxJUnit4ModuleBuild = rootProjectPath / "uspekx-junit4" / "build.gradle.kts"
-private val ktJvmSampleModuleBuild = rootProjectPath / "ktjvmsample" / "build.gradle.kts"
+private val uspekxJUnit5ModuleBuild = rootProjectPath / "uspekx-junit5" / "build.gradle.kts"
 private val ktJUnit4SampleModuleBuild = rootProjectPath / "ktjunit4sample" / "build.gradle.kts"
+private val ktJUnit5SampleModuleBuild = rootProjectPath / "ktjunit5sample" / "build.gradle.kts"
 private val ktLinuxSampleModuleBuild = rootProjectPath / "ktlinuxsample" / "build.gradle.kts"
 private val ktJsReactSampleModuleBuild = rootProjectPath / "ktjsreactsample" / "build.gradle.kts"
 
@@ -27,16 +28,16 @@ tasks.registerAllThatGroupFun("inject",
 
 fun checkTemplates() {
     checkRootBuildTemplate(rootBuild)
-    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
-    checkJvmAppBuildTemplates(ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild)
-    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    checkKotlinModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    checkJvmAppBuildTemplates(ktJUnit4SampleModuleBuild, ktJUnit4SampleModuleBuild)
+    checkMppModuleBuildTemplates(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 fun injectTemplates() {
     injectRootBuildTemplate(rootBuild)
-    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
-    injectJvmAppBuildTemplate(ktJvmSampleModuleBuild, ktJUnit4SampleModuleBuild)
-    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    injectKotlinModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktJUnit4SampleModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
+    injectJvmAppBuildTemplate(ktJUnit4SampleModuleBuild, ktJUnit5SampleModuleBuild)
+    injectMppModuleBuildTemplate(uspekModuleBuild, uspekxModuleBuild, uspekxJUnit4ModuleBuild, uspekxJUnit5ModuleBuild, ktLinuxSampleModuleBuild, ktJsReactSampleModuleBuild)
 }
 
 // region [Root Build Template]
