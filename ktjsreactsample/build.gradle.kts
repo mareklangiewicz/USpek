@@ -4,52 +4,40 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.defaults.*
 
 plugins {
-    kotlin("multiplatform")
+    kotlin("multiplatform") version vers.kotlin17 // with kotlin16 I get task jsBrowserDevelopmentRun SKIPPED
 }
 
-defaultGroupAndVerAndDescription(libs.USpek)
+defaultBuildTemplateForMppApp(
+    appMainPackage = "pl.mareklangiewicz.ktjsreactsample",
+    withJvm = false,
+    withJs = true,
+    withNativeLinux64 = false,
+    withTestUSpekX = true,
+)
 
-repositories {
-    mavenCentral()
-}
-
-// dependencies {
-//     implementation(kotlin("test"))
-//     implementation(project(":uspekx"))
-// //    implementation(deps.uspekx)
-//
-//     implementation(deps.kotlinxCoroutinesCore)
-//
-//     implementation(enforcedPlatform(deps.kotlinJsWrappersBoM))
-//     implementation(deps.kotlinJsWrappersReact)
-//     implementation(deps.kotlinJsWrappersReactDom)
-//     implementation(deps.kotlinJsWrappersStyled)
-//
-//     implementation(npm("react", vers.npmReact))
-//     implementation(npm("react-dom", vers.npmReact))
-//     implementation(npm("styled-components", vers.npmStyled))
-// }
-//
 kotlin {
-    js(IR) {
-        browser {
-            binaries.executable()
-            webpackTask {
-                cssSupport.enabled = true
-            }
-            runTask {
-                cssSupport.enabled = true
-            }
-            testTask {
-                enabled = System.getenv("JITPACK") != "true"
-                useKarma {
-//                    useChrome()
-                    useChromeHeadless()
-                    webpackConfig.cssSupport.enabled = true
-                }
+    @Suppress("UNUSED_VARIABLE")
+    sourceSets {
+        val jsMain by getting {
+            dependencies {
+                implementation(deps.uspekx)
+                implementation(deps.kotlinxCoroutinesCore)
+                implementation(project.dependencies.enforcedPlatform(deps.kotlinJsWrappersBoM))
+                implementation(deps.kotlinJsWrappersReact)
+                implementation(deps.kotlinJsWrappersReactDom)
+                implementation(deps.kotlinJsWrappersStyled)
+                implementation(npm("react", vers.npmReact))
+                implementation(npm("react-dom", vers.npmReact))
+                implementation(npm("styled-components", vers.npmStyled))
             }
         }
     }
+}
+
+// Fixes webpack-cli incompatibility by pinning the newest version.
+// https://stackoverflow.com/questions/72731436/kotlin-multiplatform-gradle-task-jsrun-gives-error-webpack-cli-typeerror-c/72731728
+rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+    versions.webpackCli.version = "4.10.0"
 }
 
 

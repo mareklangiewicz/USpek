@@ -4,7 +4,7 @@ import pl.mareklangiewicz.utils.*
 
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version vers.nexusPublishGradlePlugin
-    kotlin("multiplatform") version vers.kotlin apply false
+    kotlin("multiplatform") version vers.kotlin17 apply false
 }
 
 defaultGroupAndVerAndDescription(libs.USpek)
