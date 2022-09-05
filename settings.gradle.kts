@@ -7,6 +7,10 @@ gradle.logSomeEventsToFile(rootProjectPath / "my.gradle.log")
 
 pluginManagement {
     includeBuild("../deps.kt")
+    repositories {
+        google()
+        gradlePluginPortal()
+    }
 }
 
 plugins {
