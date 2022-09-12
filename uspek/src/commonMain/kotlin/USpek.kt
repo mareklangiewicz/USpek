@@ -1,6 +1,7 @@
 package pl.mareklangiewicz.uspek
 
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.cancellation.*
 import kotlin.coroutines.coroutineContext
 
 // TODO_later: analyze again if I could get rid API of duplication: uspek+suspek and o+so
@@ -37,8 +38,7 @@ private inline fun USpekContext.o(name: String, code: () -> Unit) {
     branch = subbranch // step through the tree into the subbranch
     uspekLog(subbranch)
     throw try { code(); USpekException() }
-    catch (e: USpekException) { e }
-    catch (e: Throwable) { USpekException(e) }
+    catch (e: Throwable) { e as? CancellationException ?: e as? USpekException ?: USpekException(e) }
 }
 
 @Deprecated("Enable this test code", ReplaceWith("o(code)"))

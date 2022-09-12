@@ -11,6 +11,8 @@ annotation class USpekTestTree(val expectedCount: Int)
 
 class USpekJUnit4Runner(klass: Class<*>) : BlockJUnit4ClassRunner(klass) {
 
+    init { GlobalUSpekContext.root.run { branches.clear(); end = null; data = null } }
+
     override fun getChildren(): List<FrameworkMethod> = buildList {
         addAll(testClass.getAnnotatedMethods(Test::class.java))
         val uspekTestsMethods = testClass.getAnnotatedMethods(USpekTestTree::class.java)
