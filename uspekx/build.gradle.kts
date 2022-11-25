@@ -49,11 +49,13 @@ fun RepositoryHandler.defaultRepos(
 
 fun TaskCollection<Task>.defaultKotlinCompileOptions(
     jvmTargetVer: String = vers.defaultJvm,
-    requiresOptIn: Boolean = true
+    renderInternalDiagnosticNames: Boolean = false,
 ) = withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = jvmTargetVer
-        if (requiresOptIn) freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+        if (renderInternalDiagnosticNames) freeCompilerArgs = freeCompilerArgs + "-Xrender-internal-diagnostic-names"
+        // useful for example to suppress some errors when accessing internal code from some library, like:
+        // @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "EXPOSED_PARAMETER_TYPE", "EXPOSED_PROPERTY_TYPE", "CANNOT_OVERRIDE_INVISIBLE_MEMBER")
     }
 }
 
@@ -94,7 +96,7 @@ fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
 /** See also: root project template-mpp: fun Project.defaultSonatypeOssStuffFromSystemEnvs */
 fun Project.defaultSigning(
     keyId: String = rootExt("signing.keyId"),
-    key: String = rootExt("signing.key"),
+    key: String = rootExtReadFileUtf8("signing.keyFile"),
     password: String = rootExt("signing.password"),
 ) = extensions.configure<SigningExtension> {
     useInMemoryPgpKeys(keyId, key, password)
@@ -143,7 +145,7 @@ fun Project.defaultBuildTemplateForMppLib(
     withTestJUnit4: Boolean = false,
     withTestJUnit5: Boolean = true,
     withTestUSpekX: Boolean = true,
-    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {}
+    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {},
 ) {
     repositories {
         defaultRepos(
@@ -163,24 +165,25 @@ fun Project.defaultBuildTemplateForMppLib(
         }
     }
     defaultGroupAndVerAndDescription(details)
-    kotlin { allDefault(
-        withJvm,
-        withJs,
-        withNativeLinux64,
-        withKotlinxHtml,
-        withTestJUnit4,
-        withTestJUnit5,
-        withTestUSpekX,
-        addCommonMainDependencies
-    ) }
+    kotlin {
+        allDefault(
+            withJvm,
+            withJs,
+            withNativeLinux64,
+            withKotlinxHtml,
+            withTestJUnit4,
+            withTestJUnit5,
+            withTestUSpekX,
+            addCommonMainDependencies
+        )
+    }
     tasks.defaultKotlinCompileOptions()
     tasks.defaultTestsOptions(onJvmUseJUnitPlatform = withTestJUnit5)
     if (plugins.hasPlugin("maven-publish")) {
         defaultPublishing(details)
         if (plugins.hasPlugin("signing")) defaultSigning()
         else println("MPP Module ${name}: signing disabled")
-    }
-    else println("MPP Module ${name}: publishing (and signing) disabled")
+    } else println("MPP Module ${name}: publishing (and signing) disabled")
 }
 
 /** Only for very standard small libs. In most cases it's better to not use this function. */
@@ -193,7 +196,7 @@ fun KotlinMultiplatformExtension.allDefault(
     withTestJUnit4: Boolean = false,
     withTestJUnit5: Boolean = true,
     withTestUSpekX: Boolean = true,
-    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {}
+    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {},
 ) {
     if (withJvm) jvm()
     if (withJs) jsDefault()

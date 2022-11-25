@@ -44,11 +44,13 @@ fun RepositoryHandler.defaultRepos(
 
 fun TaskCollection<Task>.defaultKotlinCompileOptions(
     jvmTargetVer: String = vers.defaultJvm,
-    requiresOptIn: Boolean = true
+    renderInternalDiagnosticNames: Boolean = false,
 ) = withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = jvmTargetVer
-        if (requiresOptIn) freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+        if (renderInternalDiagnosticNames) freeCompilerArgs = freeCompilerArgs + "-Xrender-internal-diagnostic-names"
+        // useful for example to suppress some errors when accessing internal code from some library, like:
+        // @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "EXPOSED_PARAMETER_TYPE", "EXPOSED_PROPERTY_TYPE", "CANNOT_OVERRIDE_INVISIBLE_MEMBER")
     }
 }
 
@@ -89,7 +91,7 @@ fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
 /** See also: root project template-mpp: fun Project.defaultSonatypeOssStuffFromSystemEnvs */
 fun Project.defaultSigning(
     keyId: String = rootExt("signing.keyId"),
-    key: String = rootExt("signing.key"),
+    key: String = rootExtReadFileUtf8("signing.keyFile"),
     password: String = rootExt("signing.password"),
 ) = extensions.configure<SigningExtension> {
     useInMemoryPgpKeys(keyId, key, password)
@@ -134,7 +136,7 @@ fun Project.defaultBuildTemplateForJvmApp(
     withTestJUnit4: Boolean = false,
     withTestJUnit5: Boolean = true,
     withTestUSpekX: Boolean = true,
-    addMainDependencies: KotlinDependencyHandler.() -> Unit = {}
+    addMainDependencies: KotlinDependencyHandler.() -> Unit = {},
 ) {
     repositories { defaultRepos() }
     defaultGroupAndVerAndDescription(details)
