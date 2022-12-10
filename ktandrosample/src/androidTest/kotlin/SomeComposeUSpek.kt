@@ -1,5 +1,19 @@
 package pl.mareklangiewicz.uspek.sample.compose
 
+import android.util.*
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.test.junit4.*
+import org.junit.*
+import org.junit.Test
+import org.junit.runner.*
+import pl.mareklangiewicz.uspek.*
+import java.lang.Thread.*
+import kotlin.test.*
+
 @RunWith(USpekJUnit4Runner::class)
 class SomeComposeUSpek {
     init {
@@ -54,4 +68,3 @@ class SomeComposeUSpek {
         }
     }
 }
-
