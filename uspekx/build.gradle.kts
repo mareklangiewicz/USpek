@@ -141,7 +141,7 @@ fun Project.defaultBuildTemplateForMppLib(
     withNativeLinux64: Boolean = false,
     withKotlinxHtml: Boolean = false,
     withComposeJbDevRepo: Boolean = false,
-    withComposeCompilerFix: Boolean = false,
+    withComposeCompilerAndroidxDevRepo: Boolean = false,
     withTestJUnit4: Boolean = false,
     withTestJUnit5: Boolean = true,
     withTestUSpekX: Boolean = true,
@@ -151,18 +151,8 @@ fun Project.defaultBuildTemplateForMppLib(
         defaultRepos(
             withKotlinxHtml = withKotlinxHtml,
             withComposeJbDev = withComposeJbDevRepo,
-            withComposeCompilerAndroidxDev = withComposeCompilerFix,
+            withComposeCompilerAndroidxDev = withComposeCompilerAndroidxDevRepo,
         )
-    }
-    if (withComposeCompilerFix) {
-        require(withComposeJbDevRepo) { "Compose compiler fix is available only for compose-jb projects." }
-        configurations.all {
-            resolutionStrategy.dependencySubstitution {
-                substitute(module(deps.composeCompilerJbDev)).apply {
-                    using(module(deps.composeCompilerAndroidxDev))
-                }
-            }
-        }
     }
     defaultGroupAndVerAndDescription(details)
     kotlin {
