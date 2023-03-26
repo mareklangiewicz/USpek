@@ -3,7 +3,7 @@
 import pl.mareklangiewicz.evts.*
 import pl.mareklangiewicz.utils.*
 
-gradle.logSomeEventsToFile(rootProjectPath / "my.gradle.log")
+//gradle.logSomeEventsToFile(rootProjectPath / "my.gradle.log")
 
 pluginManagement {
     includeBuild("../deps.kt")
@@ -14,7 +14,7 @@ pluginManagement {
 }
 
 plugins {
-    id("pl.mareklangiewicz.deps.settings") version "0.2.17"
+    id("pl.mareklangiewicz.deps.settings") version "0.2.25"
 }
 
 rootProject.name = "USpek"

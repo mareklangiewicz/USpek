@@ -109,15 +109,15 @@ fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
 
 /** See also: root project template-mpp: fun Project.defaultSonatypeOssStuffFromSystemEnvs */
 fun Project.defaultSigning(
-    keyId: String = rootExt("signing.keyId"),
+    keyId: String = rootExtString["signing.keyId"],
     key: String = rootExtReadFileUtf8("signing.keyFile"),
-    password: String = rootExt("signing.password"),
+    password: String = rootExtString["signing.password"],
 ) = extensions.configure<SigningExtension> {
     useInMemoryPgpKeys(keyId, key, password)
     sign(extensions.getByType<PublishingExtension>().publications)
 }
 
-fun Project.defaultPublishing(lib: LibDetails, readmeFile: File = File(rootDir, "README.md")) {
+fun Project.defaultPublishing(lib: LibDetails, readmeFile: File = File(rootDir, "README.md"), withSignErrorWorkaround: Boolean = true) {
 
     val readmeJavadocJar by tasks.registering(Jar::class) {
         from(readmeFile) // TODO_maybe: use dokka to create real docs? (but it's not even java..)
@@ -129,6 +129,7 @@ fun Project.defaultPublishing(lib: LibDetails, readmeFile: File = File(rootDir, 
             artifact(readmeJavadocJar)
             // Adding javadoc artifact generates warnings like:
             // Execution optimizations have been disabled for task ':uspek:signJvmPublication'
+            // (UPDATE: now it's errors - see workaround below)
             // It looks like a bug in kotlin multiplatform plugin:
             // https://youtrack.jetbrains.com/issue/KT-46466
             // FIXME_someday: Watch the issue.
@@ -140,7 +141,30 @@ fun Project.defaultPublishing(lib: LibDetails, readmeFile: File = File(rootDir, 
             defaultPOM(lib)
         }
     }
+    if (withSignErrorWorkaround) tasks.withSignErrorWorkaround() //very much related to comments above too
 }
+
+/*
+Hacky workaround for gradle error with signing+publishing on gradle 8.1-rc-1:
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+A problem was found with the configuration of task ':template-mpp-lib:signJvmPublication' (type 'Sign').
+  - Gradle detected a problem with the following location: '/home/marek/code/kotlin/deps.kt/template-mpp/template-mpp-lib/build/libs/template-mpp-lib-0.0.02-javadoc.jar.asc'.
+
+    Reason: Task ':template-mpp-lib:publishJsPublicationToMavenLocal' uses this output of task ':template-mpp-lib:signJvmPublication' without declaring an explicit or implicit dependency. This can lead to incorrect results being produced, depending on what order the tasks are executed.
+
+    Possible solutions:
+      1. Declare task ':template-mpp-lib:signJvmPublication' as an input of ':template-mpp-lib:publishJsPublicationToMavenLocal'.
+      2. Declare an explicit dependency on ':template-mpp-lib:signJvmPublication' from ':template-mpp-lib:publishJsPublicationToMavenLocal' using Task#dependsOn.
+      3. Declare an explicit dependency on ':template-mpp-lib:signJvmPublication' from ':template-mpp-lib:publishJsPublicationToMavenLocal' using Task#mustRunAfter.
+
+    Please refer to https://docs.gradle.org/8.1-rc-1/userguide/validation_problems.html#implicit_dependency for more details about this problem.
+
+ */
+fun TaskContainer.withSignErrorWorkaround() =
+    withType<AbstractPublishToMaven>().configureEach { dependsOn(withType<Sign>()) }
 
 
 // endregion [Kotlin Module Build Template]
