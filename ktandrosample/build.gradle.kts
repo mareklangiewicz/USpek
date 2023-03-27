@@ -29,7 +29,7 @@ android {
 // region [Kotlin Module Build Template]
 
 fun RepositoryHandler.defaultRepos(
-    withMavenLocal: Boolean = false,
+    withMavenLocal: Boolean = true,
     withMavenCentral: Boolean = true,
     withGradle: Boolean = false,
     withGoogle: Boolean = true,

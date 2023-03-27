@@ -45,7 +45,7 @@ rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.N
 // region [Kotlin Module Build Template]
 
 fun RepositoryHandler.defaultRepos(
-    withMavenLocal: Boolean = false,
+    withMavenLocal: Boolean = true,
     withMavenCentral: Boolean = true,
     withGradle: Boolean = false,
     withGoogle: Boolean = true,
