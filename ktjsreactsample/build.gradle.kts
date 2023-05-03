@@ -21,26 +21,26 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             dependencies {
-                implementation(deps.uspekx)
-                implementation(deps.kotlinxCoroutinesCore)
-                implementation(project.dependencies.enforcedPlatform(deps.kotlinJsWrappersBoM))
-                implementation(deps.kotlinJsWrappersReact)
-                implementation(deps.kotlinJsWrappersReactDom)
-                implementation(deps.kotlinJsWrappersStyled)
-                implementation(npm("react", vers.npmReact))
-                implementation(npm("react-dom", vers.npmReact))
-                implementation(npm("styled-components", vers.npmStyled))
+                implementation(depsOld.uspekx)
+                implementation(depsOld.kotlinxCoroutinesCore)
+                implementation(project.dependencies.enforcedPlatform(depsOld.kotlinJsWrappersBoM))
+                implementation(depsOld.kotlinJsWrappersReact)
+                implementation(depsOld.kotlinJsWrappersReactDom)
+                implementation(depsOld.kotlinJsWrappersStyled)
+                implementation(npm("react", versOld.npmReact))
+                implementation(npm("react-dom", versOld.npmReact))
+                implementation(npm("styled-components", versOld.npmStyled))
             }
         }
     }
 }
 
-// Fixes webpack-cli incompatibility by pinning the newest version.
-// https://stackoverflow.com/questions/72731436/kotlin-multiplatform-gradle-task-jsrun-gives-error-webpack-cli-typeerror-c/72731728
-rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-    versions.webpackCli.version = "4.10.0"
-}
-
+//// Fixes webpack-cli incompatibility by pinning the newest version.
+//// https://stackoverflow.com/questions/72731436/kotlin-multiplatform-gradle-task-jsrun-gives-error-webpack-cli-typeerror-c/72731728
+//rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+//    versions.webpackCli.version = "4.10.0"
+//}
+//
 
 // region [Kotlin Module Build Template]
 
@@ -69,13 +69,13 @@ fun RepositoryHandler.defaultRepos(
 }
 
 fun TaskCollection<Task>.defaultKotlinCompileOptions(
-    jvmTargetVer: String = vers.defaultJvm,
+    jvmTargetVer: String = versNew.JvmDefaultVer,
     renderInternalDiagnosticNames: Boolean = false,
 ) = withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = jvmTargetVer
         if (renderInternalDiagnosticNames) freeCompilerArgs = freeCompilerArgs + "-Xrender-internal-diagnostic-names"
-        // useful for example to suppress some errors when accessing internal code from some library, like:
+        // useful, for example, to suppress some errors when accessing internal code from some library, like:
         // @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "EXPOSED_PARAMETER_TYPE", "EXPOSED_PROPERTY_TYPE", "CANNOT_OVERRIDE_INVISIBLE_MEMBER")
     }
 }
@@ -117,7 +117,7 @@ fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
 /** See also: root project template-mpp: fun Project.defaultSonatypeOssStuffFromSystemEnvs */
 fun Project.defaultSigning(
     keyId: String = rootExtString["signing.keyId"],
-    key: String = rootExtReadFileUtf8("signing.keyFile"),
+    key: String = rootExtReadFileUtf8TryOrNull("signing.keyFile") ?: rootExtString["signing.key"],
     password: String = rootExtString["signing.password"],
 ) = extensions.configure<SigningExtension> {
     useInMemoryPgpKeys(keyId, key, password)
@@ -158,7 +158,7 @@ FAILURE: Build failed with an exception.
 
 * What went wrong:
 A problem was found with the configuration of task ':template-mpp-lib:signJvmPublication' (type 'Sign').
-  - Gradle detected a problem with the following location: '/home/marek/code/kotlin/deps.kt/template-mpp/template-mpp-lib/build/libs/template-mpp-lib-0.0.02-javadoc.jar.asc'.
+  - Gradle detected a problem with the following location: '/home/marek/code/kotlin/DepsKt/template-mpp/template-mpp-lib/build/libs/template-mpp-lib-0.0.02-javadoc.jar.asc'.
 
     Reason: Task ':template-mpp-lib:publishJsPublicationToMavenLocal' uses this output of task ':template-mpp-lib:signJvmPublication' without declaring an explicit or implicit dependency. This can lead to incorrect results being produced, depending on what order the tasks are executed.
 
@@ -180,7 +180,7 @@ fun TaskContainer.withSignErrorWorkaround() =
 
 /** Only for very standard small libs. In most cases it's better to not use this function. */
 fun Project.defaultBuildTemplateForMppLib(
-    details: LibDetails = libs.Unknown,
+    details: LibDetails = rootExtLibDetails,
     withJvm: Boolean = true,
     withJs: Boolean = true,
     withNativeLinux64: Boolean = false,
@@ -212,6 +212,7 @@ fun Project.defaultBuildTemplateForMppLib(
             addCommonMainDependencies
         )
     }
+    configurations.checkVerSync()
     tasks.defaultKotlinCompileOptions()
     tasks.defaultTestsOptions(onJvmUseJUnitPlatform = withTestJUnit5)
     if (plugins.hasPlugin("maven-publish")) {
@@ -239,25 +240,25 @@ fun KotlinMultiplatformExtension.allDefault(
     sourceSets {
         val commonMain by getting {
             dependencies {
-                if (withKotlinxHtml) implementation(deps.kotlinxHtml)
+                if (withKotlinxHtml) implementation(KotlinX.html)
                 addCommonMainDependencies()
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                if (withTestUSpekX) implementation(deps.uspekx)
+                if (withTestUSpekX) implementation(Langiewicz.uspekx)
             }
         }
         if (withJvm) {
             val jvmTest by getting {
                 dependencies {
-                    if (withTestJUnit4) implementation(deps.junit4)
-                    if (withTestJUnit5) implementation(deps.junit5engine)
+                    if (withTestJUnit4) implementation(JUnit.junit)
+                    if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
                     if (withTestUSpekX) {
-                        implementation(deps.uspekx)
-                        if (withTestJUnit4) implementation(deps.uspekxJUnit4)
-                        if (withTestJUnit5) implementation(deps.uspekxJUnit5)
+                        implementation(Langiewicz.uspekx)
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
                     }
                 }
             }
@@ -298,7 +299,7 @@ fun KotlinMultiplatformExtension.jsDefault(
 fun Project.defaultBuildTemplateForMppApp(
     appMainPackage: String,
     appMainFun: String = "main",
-    details: LibDetails = libs.Unknown,
+    details: LibDetails = rootExtLibDetails,
     withJvm: Boolean = true,
     withJs: Boolean = true,
     withNativeLinux64: Boolean = false,

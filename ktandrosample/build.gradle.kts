@@ -5,25 +5,21 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    // id("maven-publish")
-    // id("signing")
+    plugAll(plugs.AndroLib, plugs.KotlinAndro)
 }
 
 defaultBuildTemplateForAndroidLib(
     libNamespace = "pl.mareklangiewicz.ktandrosample",
     withCompose = true,
-    withComposeCompilerVer = vers.composeCompilerEdge,
+    details = langaraLibDetails(
+        name = "ktandrosample",
+        version = Ver(0, 0, 7)
+    )
 )
 
-android {
-    dependencies {
-        // TODO_later: Analyze why do I have to repeat it with "androidTestImplementation" configuration.
-        // I already added it in with "testImplementation" configuration (in defaultBuildTemplateForAndroidLib)
-        // Isn't testImplementation always included in androidTestImplementation?? I thought it is.
-        defaultAndroTestDeps("androidTestImplementation", withCompose = true)
-    }
+dependencies {
+    defaultAndroTestDeps(configuration = "androidTestImplementation", withCompose = true)
+    // TODO_someday: investigate why "androidTestImplementation" doesn't inherit from "testImplementation"
 }
 
 // region [Kotlin Module Build Template]
@@ -53,13 +49,13 @@ fun RepositoryHandler.defaultRepos(
 }
 
 fun TaskCollection<Task>.defaultKotlinCompileOptions(
-    jvmTargetVer: String = vers.defaultJvm,
+    jvmTargetVer: String = versNew.JvmDefaultVer,
     renderInternalDiagnosticNames: Boolean = false,
 ) = withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = jvmTargetVer
         if (renderInternalDiagnosticNames) freeCompilerArgs = freeCompilerArgs + "-Xrender-internal-diagnostic-names"
-        // useful for example to suppress some errors when accessing internal code from some library, like:
+        // useful, for example, to suppress some errors when accessing internal code from some library, like:
         // @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "EXPOSED_PARAMETER_TYPE", "EXPOSED_PROPERTY_TYPE", "CANNOT_OVERRIDE_INVISIBLE_MEMBER")
     }
 }
@@ -101,7 +97,7 @@ fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
 /** See also: root project template-mpp: fun Project.defaultSonatypeOssStuffFromSystemEnvs */
 fun Project.defaultSigning(
     keyId: String = rootExtString["signing.keyId"],
-    key: String = rootExtReadFileUtf8("signing.keyFile"),
+    key: String = rootExtReadFileUtf8TryOrNull("signing.keyFile") ?: rootExtString["signing.key"],
     password: String = rootExtString["signing.password"],
 ) = extensions.configure<SigningExtension> {
     useInMemoryPgpKeys(keyId, key, password)
@@ -142,7 +138,7 @@ FAILURE: Build failed with an exception.
 
 * What went wrong:
 A problem was found with the configuration of task ':template-mpp-lib:signJvmPublication' (type 'Sign').
-  - Gradle detected a problem with the following location: '/home/marek/code/kotlin/deps.kt/template-mpp/template-mpp-lib/build/libs/template-mpp-lib-0.0.02-javadoc.jar.asc'.
+  - Gradle detected a problem with the following location: '/home/marek/code/kotlin/DepsKt/template-mpp/template-mpp-lib/build/libs/template-mpp-lib-0.0.02-javadoc.jar.asc'.
 
     Reason: Task ':template-mpp-lib:publishJsPublicationToMavenLocal' uses this output of task ':template-mpp-lib:signJvmPublication' without declaring an explicit or implicit dependency. This can lead to incorrect results being produced, depending on what order the tasks are executed.
 
@@ -163,7 +159,7 @@ fun TaskContainer.withSignErrorWorkaround() =
 // region [Andro Common Build Template]
 
 
-/** usually not needed - see template-andro */
+@Deprecated("Use plugins { plugAll(..) }") // FIXME_later: do I still need to use it somewhere?
 fun ScriptHandlerScope.defaultAndroBuildScript() {
     repositories {
         defaultRepos(withGradle = true)
@@ -174,59 +170,67 @@ fun ScriptHandlerScope.defaultAndroBuildScript() {
 }
 
 
-/** usually not needed - see template-android */
+@Deprecated("Use plugins { plugAll(..) }") // FIXME_later: do I still need to use it somewhere?
 fun DependencyHandler.defaultAndroBuildScriptDeps(
 ) {
-    add("classpath", deps.kotlinGradlePlugin)
-    add("classpath", deps.androidGradlePlugin)
+    add("classpath", plugs.KotlinAndro.mvn)
+    add("classpath", "com.android.tools.build:gradle:${versNew.AndroPlug.ver}")
 }
 
 
 fun DependencyHandler.defaultAndroDeps(
     configuration: String = "implementation",
     withCompose: Boolean = false,
-) = deps.run {
+    withMDC: Boolean = false,
+) {
     addAll(
         configuration,
-        androidxCoreKtx,
-        androidxAppcompat,
-        androidMaterial,
-        androidxLifecycleCompiler,
-        androidxLifecycleRuntimeKtx,
+        AndroidX.Core.ktx,
+        AndroidX.AppCompat.appcompat,
+        AndroidX.Lifecycle.compiler,
+        AndroidX.Lifecycle.runtime_ktx,
     )
-    if (withCompose) addAll(
-        configuration,
-        composeAndroidUi,
-        composeAndroidUiTooling,
-        composeAndroidUiToolingPreview,
-        composeAndroidMaterial3,
-        composeAndroidMaterial,
-        androidxActivityCompose,
-    )
+    if (withCompose) {
+        addAllWithVer(
+            configuration,
+            VersNew.ComposeAndro,
+            AndroidX.Compose.Ui.ui,
+            AndroidX.Compose.Ui.tooling,
+            AndroidX.Compose.Ui.tooling_preview,
+            AndroidX.Compose.Material.material,
+        )
+        addAll(
+            configuration,
+            AndroidX.Activity.compose,
+            AndroidX.Compose.Material3.material3,
+        )
+    }
+    if (withMDC) add(configuration, Com.Google.Android.Material.material)
 }
 
 fun DependencyHandler.defaultAndroTestDeps(
     configuration: String = "testImplementation",
     withCompose: Boolean = false,
-) = deps.run {
+) {
     addAll(
         configuration,
-        kotlinTestJUnit,
-        junit4, // FIXME_someday: when will android move to JUnit5?
-        uspekxJUnit4,
-        androidxEspressoCore,
-        googleTruth,
-        androidxTestRules,
-        androidxTestRunner,
-        androidxTestExtTruth,
-        androidxTestExtJUnit,
-        mockitoKotlin4,
+        Kotlin.test_junit.withVer(VersNew.Kotlin),
+        JUnit.junit, // FIXME_someday: when will android move to JUnit5?
+        Langiewicz.uspekx_junit4,
+        AndroidX.Test.Espresso.core,
+        Com.Google.Truth.truth,
+        AndroidX.Test.rules,
+        AndroidX.Test.runner,
+        AndroidX.Test.Ext.truth,
+        AndroidX.Test.Ext.junit,
+        Org.Mockito.Kotlin.mockito_kotlin,
     )
-    if (withCompose) addAll(
+    if (withCompose) addAllWithVer(
         configuration,
-        composeAndroidUiTest,
-        composeAndroidUiTestJUnit4,
-        composeAndroidUiTestManifest,
+        versNew.ComposeAndro,
+        AndroidX.Compose.Ui.test,
+        AndroidX.Compose.Ui.test_junit4,
+        AndroidX.Compose.Ui.test_manifest,
     )
 }
 
@@ -240,23 +244,23 @@ fun MutableSet<String>.defaultAndroExcludedResources() = addAll(
     )
 )
 
-fun CommonExtension<*, *, *, *>.defaultCompileOptions(
-    jvmVersion: String = vers.defaultJvm,
+fun CommonExtension<*, *, *, *, *>.defaultCompileOptions(
+    jvmVersion: String = versNew.JvmDefaultVer,
 ) = compileOptions {
     sourceCompatibility(jvmVersion)
     targetCompatibility(jvmVersion)
 }
 
-fun CommonExtension<*, *, *, *>.defaultComposeStuff(withComposeCompilerVer: String? = null) {
+fun CommonExtension<*, *, *, *, *>.defaultComposeStuff(withComposeCompilerVer: Ver? = VersNew.ComposeCompiler) {
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = withComposeCompilerVer
+        kotlinCompilerExtensionVersion = withComposeCompilerVer?.ver
     }
 }
 
-fun CommonExtension<*, *, *, *>.defaultPackagingOptions() = packagingOptions {
+fun CommonExtension<*, *, *, *, *>.defaultPackagingOptions() = packaging {
     resources.excludes.defaultAndroExcludedResources()
 }
 
@@ -287,24 +291,26 @@ fun Project.defaultPublishingOfAndroApp(
 
 fun Project.defaultBuildTemplateForAndroidLib(
     libNamespace: String,
-    jvmVersion: String = vers.defaultJvm,
-    sdkCompile: Int = vers.androidSdkCompile,
-    sdkTarget: Int = vers.androidSdkTarget,
-    sdkMin: Int = vers.androidSdkMin,
+    jvmVersion: String = versNew.JvmDefaultVer,
+    sdkCompile: Int = versNew.AndroSdkCompile,
+    sdkMin: Int = versNew.AndroSdkMin,
     withCompose: Boolean = false,
-    withComposeCompilerVer: String? = null,
-    details: LibDetails = libs.Unknown,
+    withComposeCompilerVer: Ver? = VersNew.ComposeCompiler,
+    withMDC: Boolean = false,
+    details: LibDetails = rootExtLibDetails,
     publishVariant: String? = null, // null means disable publishing to maven repo
 ) {
     repositories { defaultRepos(withComposeCompilerAndroidxDev = withCompose) }
     android {
-        defaultAndroLib(libNamespace, jvmVersion, sdkCompile, sdkTarget, sdkMin, withCompose, withComposeCompilerVer)
+        defaultAndroLib(libNamespace, jvmVersion, sdkCompile, sdkMin, withCompose, withComposeCompilerVer)
         publishVariant?.let { defaultAndroLibPublishVariant(it) }
     }
     dependencies {
-        defaultAndroDeps(withCompose = withCompose)
+        defaultAndroDeps(withCompose = withCompose, withMDC = withMDC)
         defaultAndroTestDeps(withCompose = withCompose)
+        debugImplementation(AndroidX.Tracing.ktx) // https://github.com/android/android-test/issues/1755
     }
+    configurations.checkVerSync()
     tasks.defaultKotlinCompileOptions()
     defaultGroupAndVerAndDescription(details)
     publishVariant?.let {
@@ -315,16 +321,15 @@ fun Project.defaultBuildTemplateForAndroidLib(
 
 fun LibraryExtension.defaultAndroLib(
     libNamespace: String,
-    jvmVersion: String = vers.defaultJvm,
-    sdkCompile: Int = vers.androidSdkCompile,
-    sdkTarget: Int = vers.androidSdkTarget,
-    sdkMin: Int = vers.androidSdkMin,
+    jvmVersion: String = versNew.JvmDefaultVer,
+    sdkCompile: Int = versNew.AndroSdkCompile,
+    sdkMin: Int = versNew.AndroSdkMin,
     withCompose: Boolean = false,
-    withComposeCompilerVer: String? = null,
+    withComposeCompilerVer: Ver? = VersNew.ComposeCompiler,
 ) {
-    compileSdk = sdkCompile
+    if (sdkCompile == 34) compileSdkPreview = "UpsideDownCake" else compileSdk = sdkCompile
     defaultCompileOptions(jvmVersion)
-    defaultDefaultConfig(libNamespace, sdkTarget, sdkMin)
+    defaultDefaultConfig(libNamespace, sdkMin)
     defaultBuildTypes()
     if (withCompose) defaultComposeStuff(withComposeCompilerVer)
     defaultPackagingOptions()
@@ -332,13 +337,11 @@ fun LibraryExtension.defaultAndroLib(
 
 fun LibraryExtension.defaultDefaultConfig(
     libNamespace: String,
-    sdkTarget: Int = vers.androidSdkTarget,
-    sdkMin: Int = vers.androidSdkMin,
+    sdkMin: Int = versNew.AndroSdkMin,
 ) = defaultConfig {
     namespace = libNamespace
-    targetSdk = sdkTarget
     minSdk = sdkMin
-    testInstrumentationRunner = vers.androidTestRunnerClass
+    testInstrumentationRunner = versNew.AndroTestRunner
 }
 
 fun LibraryExtension.defaultBuildTypes() = buildTypes { release { isMinifyEnabled = false } }

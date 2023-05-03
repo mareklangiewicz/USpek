@@ -14,6 +14,8 @@ import pl.mareklangiewicz.uspek.*
 import java.lang.Thread.*
 import kotlin.test.*
 
+// I use custom runner here and it seems to work, but consider changing default runner as experimental/dangerous.
+// See more info in comments in andro tests in DepsKt/template-andro
 @RunWith(USpekJUnit4Runner::class)
 class SomeComposeUSpek {
     init {
@@ -28,6 +30,7 @@ class SomeComposeUSpek {
 
     @Test
     fun simpleTest() = assertEquals(2, 2)
+
     @Test
     fun simpleFailingTest() = assertEquals(3, 4)
 

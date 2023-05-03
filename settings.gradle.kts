@@ -6,7 +6,7 @@ import pl.mareklangiewicz.utils.*
 //gradle.logSomeEventsToFile(rootProjectPath / "my.gradle.log")
 
 pluginManagement {
-    includeBuild("../deps.kt")
+    includeBuild("../DepsKt")
     repositories {
         google()
         gradlePluginPortal()
@@ -14,7 +14,7 @@ pluginManagement {
 }
 
 plugins {
-    id("pl.mareklangiewicz.deps.settings") version "0.2.25"
+    id("pl.mareklangiewicz.deps.settings") version "0.2.36"
 }
 
 rootProject.name = "USpek"
@@ -28,5 +28,4 @@ include(
     ":ktjunit5sample",
     ":ktjsreactsample",
     ":ktlinuxsample",
-    //":ktandrosample",
 )
