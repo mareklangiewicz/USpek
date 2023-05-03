@@ -1,0 +1,35 @@
+# This file was generated using a Kotlin DSL.
+# If you want to modify the workflow, please change the Kotlin source and regenerate this YAML file.
+# Generated with https://github.com/typesafegithub/github-workflows-kt
+
+name: dbuild
+on:
+  push:
+    branches:
+    - master
+    - main
+  pull_request: {}
+env:
+  MYKOTLIBS_signing_keyId: ${{ secrets.MYKOTLIBS_signing_keyId }}
+  MYKOTLIBS_signing_password: ${{ secrets.MYKOTLIBS_signing_password }}
+  MYKOTLIBS_signing_key: ${{ secrets.MYKOTLIBS_signing_key }}
+  MYKOTLIBS_ossrhUsername: ${{ secrets.MYKOTLIBS_ossrhUsername }}
+  MYKOTLIBS_ossrhPassword: ${{ secrets.MYKOTLIBS_ossrhPassword }}
+  MYKOTLIBS_sonatypeStagingProfileId: ${{ secrets.MYKOTLIBS_sonatypeStagingProfileId }}
+jobs:
+  build-for-UbuntuLatest:
+    runs-on: ubuntu-latest
+    steps:
+    - id: step-0
+      uses: actions/checkout@v3
+    - id: step-1
+      name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: zulu
+    - id: step-2
+      name: Build
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: build
