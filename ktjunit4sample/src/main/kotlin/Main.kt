@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktjvmsample
+package pl.mareklangiewicz.ktjunit4sample
 
 fun main(args: Array<String>) {
     val calc = MicroCalc(0)

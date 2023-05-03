@@ -4,11 +4,10 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    kotlin("jvm")
-    application
+    plugAll(plugs.KotlinJvm, plugs.JvmApp)
 }
 
-defaultBuildTemplateForJvmApp(appMainPackage = "pl.mareklangiewicz.ktjvmsample")
+defaultBuildTemplateForJvmApp(appMainPackage = "pl.mareklangiewicz.ktjunit5sample")
 
 // region [Kotlin Module Build Template]
 

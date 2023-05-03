@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktjvmsample
+package pl.mareklangiewicz.ktjunit5sample
 
 import org.junit.jupiter.api.TestFactory
 import pl.mareklangiewicz.uspek.o

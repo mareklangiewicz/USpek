@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktjvmsample
+package pl.mareklangiewicz.ktjunit4sample
 
 import org.junit.runner.*
 import pl.mareklangiewicz.uspek.*

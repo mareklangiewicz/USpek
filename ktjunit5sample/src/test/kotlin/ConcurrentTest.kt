@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktjvmsample
+package pl.mareklangiewicz.ktjunit5sample
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

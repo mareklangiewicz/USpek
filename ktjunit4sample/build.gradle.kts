@@ -4,8 +4,7 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    kotlin("jvm")
-    application
+    plugAll(plugs.KotlinJvm, plugs.JvmApp)
 }
 
 defaultBuildTemplateForJvmApp(
