@@ -1,20 +1,16 @@
-import playground.playground
-import react.RBuilder
-import react.RComponent
+import playground.Playground
+import react.FC
 import react.Props
-import react.State
-import react.dom.div
-import react.dom.h2
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h2
+import web.cssom.ClassName
 
-@JsExport
-class App : RComponent<Props, State>() {
+val App = FC<Props> {
 
-    override fun RBuilder.render() {
-        div("App-header") {
+        div {
+            className = ClassName("App-header")
             h2 { +"Welcome to μSpek Playground" }
         }
-        playground()
-    }
+        Playground()
 }
 
-fun RBuilder.app() = child(App::class) {}

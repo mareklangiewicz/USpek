@@ -1,12 +1,11 @@
 package playground
 
-import csstype.*
 import pl.mareklangiewicz.uspek.USpekTree
 import pl.mareklangiewicz.uspek.failed
 import pl.mareklangiewicz.uspek.finished
-import react.*
-import react.dom.html.*
+import react.ChildrenBuilder
 import react.dom.html.ReactHTML.div
+import web.cssom.ClassName
 
 fun ChildrenBuilder.rtree(tree: USpekTree) {
     div {

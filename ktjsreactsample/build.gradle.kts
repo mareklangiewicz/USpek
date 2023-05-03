@@ -21,26 +21,16 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             dependencies {
-                implementation(depsOld.uspekx)
-                implementation(depsOld.kotlinxCoroutinesCore)
-                implementation(project.dependencies.enforcedPlatform(depsOld.kotlinJsWrappersBoM))
-                implementation(depsOld.kotlinJsWrappersReact)
-                implementation(depsOld.kotlinJsWrappersReactDom)
-                implementation(depsOld.kotlinJsWrappersStyled)
-                implementation(npm("react", versOld.npmReact))
-                implementation(npm("react-dom", versOld.npmReact))
-                implementation(npm("styled-components", versOld.npmStyled))
+                implementation(Langiewicz.uspekx)
+                implementation(KotlinX.coroutines_core)
+                implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
+                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react.withNoVer())
+                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react_dom.withNoVer())
+                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_styled.withNoVer())
             }
         }
     }
 }
-
-//// Fixes webpack-cli incompatibility by pinning the newest version.
-//// https://stackoverflow.com/questions/72731436/kotlin-multiplatform-gradle-task-jsrun-gives-error-webpack-cli-typeerror-c/72731728
-//rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-//    versions.webpackCli.version = "4.10.0"
-//}
-//
 
 // region [Kotlin Module Build Template]
 

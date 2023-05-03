@@ -1,10 +1,11 @@
-import kotlinext.js.requireAll
-import react.dom.render
-import kotlinx.browser.document
-import kotlinx.browser.window
+import react.create
+import react.dom.client.createRoot
+import web.dom.document
+import web.window.window
 
 fun main() {
     window.onload = {
-        render(document.getElementById("root")!!) { app() }
+        val container = document.getElementById("root") ?: error("Couldn't find root container!")
+        createRoot(container).render(App.create())
     }
 }

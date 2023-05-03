@@ -1,15 +1,22 @@
 package playground
 
-import csstype.*
-import react.*
-import react.dom.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import painting.clearCanvas
 import painting.paintSomething
 import painting.pickColor
-import pl.mareklangiewicz.uspek.*
+import pl.mareklangiewicz.uspek.GlobalUSpekContext
+import pl.mareklangiewicz.uspek.finished
+import pl.mareklangiewicz.uspek.status
+import pl.mareklangiewicz.uspek.uspekLog
+import react.FC
+import react.Props
 import react.dom.html.ReactHTML.canvas
 import react.dom.html.ReactHTML.div
+import react.useEffect
+import react.useState
+import web.cssom.ClassName
 
 external interface PlaygroundProps : Props { var speed: Int }
 
@@ -51,5 +58,3 @@ val Playground = FC<PlaygroundProps> { props ->
         }
     }
 }
-
-fun RBuilder.playground(speed: Int = 400) = child(Playground) { attrs.speed = speed }
