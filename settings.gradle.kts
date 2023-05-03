@@ -6,7 +6,7 @@ import pl.mareklangiewicz.utils.*
 //gradle.logSomeEventsToFile(rootProjectPath / "my.gradle.log")
 
 pluginManagement {
-    includeBuild("../DepsKt")
+//    includeBuild("../DepsKt")
     repositories {
         google()
         gradlePluginPortal()
