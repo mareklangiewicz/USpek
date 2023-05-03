@@ -26,7 +26,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(depsOld.junit5engine)
+                implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
             }
         }
     }

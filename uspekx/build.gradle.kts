@@ -15,7 +15,7 @@ defaultBuildTemplateForMppLib(
     withTestUSpekX = false,
 ) {
     api(project(":uspek"))
-    api(depsOld.kotlinxCoroutinesCore)
+    api(KotlinX.coroutines_core)
 }
 
 // region [Kotlin Module Build Template]

@@ -24,7 +24,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(depsOld.junit4)
+                implementation(JUnit.junit)
             }
         }
     }

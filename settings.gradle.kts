@@ -28,4 +28,6 @@ include(
     ":ktjunit5sample",
     ":ktjsreactsample",
     ":ktlinuxsample",
+    // ktandrosample is a separate project with own settings (should be opened in Android Studio separately)
+    //   it's this way because issues with opening andro projects in Intellij (IDE andro plugin incompatible with new gradle andro plugin)
 )
