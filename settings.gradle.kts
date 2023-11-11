@@ -1,20 +1,15 @@
-@file:Suppress("UnstableApiUsage")
-
-import pl.mareklangiewicz.evts.*
-import pl.mareklangiewicz.utils.*
-
-//gradle.logSomeEventsToFile(rootProjectPath / "my.gradle.log")
 
 pluginManagement {
-//    includeBuild("../DepsKt")
     repositories {
-        google()
         gradlePluginPortal()
+        google()
+        mavenCentral()
     }
 }
 
 plugins {
-    id("pl.mareklangiewicz.deps.settings") version "0.2.36"
+    id("pl.mareklangiewicz.deps.settings") version "0.2.58" // https://plugins.gradle.org/search?term=mareklangiewicz
+    id("com.gradle.enterprise") version "3.15.1" // https://docs.gradle.com/enterprise/gradle-plugin/
 }
 
 rootProject.name = "USpek"

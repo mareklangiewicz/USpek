@@ -3,6 +3,7 @@
 pluginManagement {
     includeBuild("../../DepsKt")
     repositories {
+        mavenLocal()
         google()
         gradlePluginPortal()
         mavenCentral()

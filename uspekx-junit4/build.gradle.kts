@@ -102,7 +102,7 @@ fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
     scm { url put lib.githubUrl }
 }
 
-/** See also: root project template-mpp: fun Project.defaultSonatypeOssStuffFromSystemEnvs */
+/** See also: root project template-mpp: addDefaultStuffFromSystemEnvs */
 fun Project.defaultSigning(
     keyId: String = rootExtString["signing.keyId"],
     key: String = rootExtReadFileUtf8TryOrNull("signing.keyFile") ?: rootExtString["signing.key"],
@@ -112,7 +112,12 @@ fun Project.defaultSigning(
     sign(extensions.getByType<PublishingExtension>().publications)
 }
 
-fun Project.defaultPublishing(lib: LibDetails, readmeFile: File = File(rootDir, "README.md"), withSignErrorWorkaround: Boolean = true) {
+fun Project.defaultPublishing(
+    lib: LibDetails,
+    readmeFile: File = File(rootDir, "README.md"),
+    withSignErrorWorkaround: Boolean = true,
+    withPublishingPrintln: Boolean = true,
+) {
 
     val readmeJavadocJar by tasks.registering(Jar::class) {
         from(readmeFile) // TODO_maybe: use dokka to create real docs? (but it's not even java..)
@@ -120,6 +125,16 @@ fun Project.defaultPublishing(lib: LibDetails, readmeFile: File = File(rootDir, 
     }
 
     extensions.configure<PublishingExtension> {
+
+        // We have at least two cases:
+        // 1. With plug.KotlinMulti it creates publications automatically (so no need to create here)
+        // 2. With plug.KotlinJvm it does not create publications (so we have to create it manually)
+        if (plugins.hasPlugin("org.jetbrains.kotlin.jvm")) {
+            publications.create<MavenPublication>("jvm") {
+                from(components["kotlin"])
+            }
+        }
+
         publications.withType<MavenPublication> {
             artifact(readmeJavadocJar)
             // Adding javadoc artifact generates warnings like:
@@ -137,6 +152,7 @@ fun Project.defaultPublishing(lib: LibDetails, readmeFile: File = File(rootDir, 
         }
     }
     if (withSignErrorWorkaround) tasks.withSignErrorWorkaround() //very much related to comments above too
+    if (withPublishingPrintln) tasks.withPublishingPrintln()
 }
 
 /*
@@ -161,6 +177,61 @@ A problem was found with the configuration of task ':template-mpp-lib:signJvmPub
 fun TaskContainer.withSignErrorWorkaround() =
     withType<AbstractPublishToMaven>().configureEach { dependsOn(withType<Sign>()) }
 
+fun TaskContainer.withPublishingPrintln() = withType<AbstractPublishToMaven>().configureEach {
+    val coordinates = publication.run { "$groupId:$artifactId:$version" }
+    when (this) {
+        is PublishToMavenRepository -> doFirst {
+            println("Publishing $coordinates to ${repository.url}")
+        }
+        is PublishToMavenLocal -> doFirst {
+            val localRepo = System.getenv("HOME")!! + "/.m2/repository"
+            val localPath = localRepo + publication.run { "/$groupId/$artifactId".replace('.', '/') }
+            println("Publishing $coordinates to $localPath")
+        }
+    }
+}
+
+@Suppress("UNUSED_VARIABLE")
+fun Project.defaultBuildTemplateForJvmLib(
+    details: LibDetails = rootExtLibDetails,
+    withTestJUnit4: Boolean = false,
+    withTestJUnit5: Boolean = true,
+    withTestUSpekX: Boolean = true,
+    addMainDependencies: KotlinDependencyHandler.() -> Unit = {},
+) {
+    repositories { defaultRepos() }
+    defaultGroupAndVerAndDescription(details)
+
+    kotlin {
+        sourceSets {
+            val main by getting {
+                dependencies {
+                    addMainDependencies()
+                }
+            }
+            val test by getting {
+                dependencies {
+                    if (withTestJUnit4) implementation(JUnit.junit)
+                    if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
+                    if (withTestUSpekX) {
+                        implementation(Langiewicz.uspekx)
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
+                    }
+                }
+            }
+        }
+    }
+
+    configurations.checkVerSync()
+    tasks.defaultKotlinCompileOptions()
+    tasks.defaultTestsOptions(onJvmUseJUnitPlatform = withTestJUnit5)
+    if (plugins.hasPlugin("maven-publish")) {
+        defaultPublishing(details)
+        if (plugins.hasPlugin("signing")) defaultSigning()
+        else println("JVM Module ${name}: signing disabled")
+    } else println("JVM Module ${name}: publishing (and signing) disabled")
+}
 
 // endregion [Kotlin Module Build Template]
 
@@ -267,14 +338,14 @@ fun KotlinMultiplatformExtension.jsDefault(
 ) {
     js(IR) {
         if (withBrowser) browser {
-            testTask {
+            testTask(Action {
                 useKarma {
                     when (testWithChrome to testHeadless) {
                         true to true -> useChromeHeadless()
                         true to false -> useChrome()
                     }
                 }
-            }
+            })
         }
         if (withNode) nodejs()
     }
