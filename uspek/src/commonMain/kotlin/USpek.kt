@@ -55,6 +55,7 @@ data class USpekContext(
     companion object Key : CoroutineContext.Key<USpekContext>
 }
 
+/** Delicate Global Mutable Beast ;) (Have to make sure only one computation uses it) */
 val GlobalUSpekContext = USpekContext()
 
 val CoroutineContext.ucontext get() = this[USpekContext] ?: GlobalUSpekContext

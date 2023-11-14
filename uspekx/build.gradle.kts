@@ -10,12 +10,36 @@ plugins {
 
 defaultBuildTemplateForMppLib(
     withNativeLinux64 = true,
+        // FIXME_later: how to support all native platforms? Wait/track JetBrains work on "common modules" / "Universal libraries":
+        //   https://youtrack.jetbrains.com/issue/KT-52666/Kotlin-Multiplatform-libraries-without-platform-specific-code-a.k.a.-Pure-Kotlin-libraries-Universal-libraries
+
     withTestJUnit4 = false,
     withTestJUnit5 = false,
     withTestUSpekX = false,
 ) {
     api(project(":uspek"))
     api(KotlinX.coroutines_core)
+    api(KotlinX.coroutines_test)
+}
+
+kotlin {
+
+//    TODO NOW: add concurrentMain and concurrentTest to default templates under flags.
+    //    but first check it all here if it actually work mpp
+    applyDefaultHierarchyTemplate()
+        // see: https://kotlinlang.org/docs/multiplatform-hierarchy.html#creating-additional-source-sets
+
+    sourceSets {
+        val concurrentMain by creating {
+            dependsOn(commonMain.get())
+        }
+        val jvmMain by getting {
+            dependsOn(concurrentMain)
+        }
+        val nativeMain by getting {
+            dependsOn(concurrentMain)
+        }
+    }
 }
 
 // region [Kotlin Module Build Template]

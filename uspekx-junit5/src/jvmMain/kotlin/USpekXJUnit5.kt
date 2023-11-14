@@ -1,17 +1,31 @@
 package pl.mareklangiewicz.uspek
 
+import kotlinx.coroutines.test.*
 import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest
 import java.net.URI
+import kotlin.coroutines.*
+import kotlin.time.*
+import kotlin.time.Duration.Companion.seconds
 
 fun uspekTestFactory(code: () -> Unit): DynamicNode {
     uspek(code)
     return GlobalUSpekContext.root.dynamicNode()
 }
 
+@Deprecated("Use runTestUSpekJUnit5Factory")
 fun suspekTestFactory(ucontext: USpekContext = USpekContext(), code: suspend () -> Unit): DynamicNode =
-    suspekBlocking(ucontext, code).dynamicNode()
+    runBlockingUSpek(ucontext, code).dynamicNode()
+
+fun runTestUSpekJUnit5Factory(
+    context: CoroutineContext = USpekContext(),
+    timeout: Duration = 10.seconds,
+    code: suspend TestScope.() -> Unit
+): DynamicNode {
+    runTestUSpek(context, timeout, code) // not returning TestResult is fine here - we are on JVM (not multiplatform)
+    return context.ucontext.root.dynamicNode()
+}
 
 private fun USpekTree.dynamicNode(): DynamicNode =
     if (branches.isEmpty()) dynamicTest()

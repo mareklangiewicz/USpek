@@ -17,7 +17,6 @@ defaultBuildTemplateForMppApp(
 )
 
 kotlin {
-    @Suppress("UNUSED_VARIABLE")
     sourceSets {
         val jsMain by getting {
             dependencies {
