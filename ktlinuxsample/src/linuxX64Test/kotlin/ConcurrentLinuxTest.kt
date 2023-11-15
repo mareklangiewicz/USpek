@@ -55,14 +55,14 @@ class ConcurrentLinuxTest {
         ud("start")
         val time = measureTime {
             // runBlockingUSpek { // measured: around 29s for maxLoopLong 500_000; around 5min for 5mln
-            runTestUSpek(timeout = 10.minutes) { // measured: around 30s for maxLoopLong 500_000; around ???s for 5mln
+            runTestUSpek(timeout = 10.minutes) { // measured: around 30s for maxLoopLong 500_000; around 5min for 5mln
                 checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
                 checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
                 checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
                 checkAddFaster(400, 499, 1, maxLoopLong); ud("4")
             }
         }
-        ud("end (measured: $time)") // measured: around 29s for maxLoopLong 500_000; around 5min for 5mln
+        ud("end (measured: $time)")
     }
 
 
