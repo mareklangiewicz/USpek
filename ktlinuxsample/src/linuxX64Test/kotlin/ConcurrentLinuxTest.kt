@@ -1,27 +1,31 @@
-package pl.mareklangiewicz.ktjunit5sample
+@file:OptIn(ObsoleteWorkersApi::class)
+
+package pl.mareklangiewicz.ktlinuxsample
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestFactory
 import pl.mareklangiewicz.uspek.*
-import java.util.Locale
+import kotlin.native.concurrent.*
+import kotlin.system.*
+import kotlin.test.*
 import kotlin.time.*
 
 
 /** micro debugging ;-) */
 private fun ud(s: String) =
-    println("ud [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $s")
+    // See KT-60932 KT-54702
+    println("ud [${Worker.current.name}] [${getCurrentTimeString()}] $s")
 
 private val ud get() = ud("")
 
-private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }
+@Suppress("DEPRECATION")
+private fun getCurrentTimeString() = getTimeMillis().toString()
 
-private const val maxLoopShort = 900
-//private const val maxLoopShort = 9000
+//private const val maxLoopShort = 900
+private const val maxLoopShort = 9000 // WARNING: this can take long time - kotlin/native is sloooow.
 private const val maxLoopLong = 50_000_000
 
-class ConcurrentTest {
+class ConcurrentLinuxTest {
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
@@ -30,7 +34,7 @@ class ConcurrentTest {
             val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); ud("in1") }; ud("out1"); d1.await(); ud("after1")
             val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); ud("in2") }; ud("out2"); d2.await(); ud("after2")
         }
-        ud("end (measured: $time)") // measured: around 200ms for maxLoopShort == 900; around 7.5s for 9000
+        ud("end (measured: $time)") // measured: around 1.5s for maxLoopShort == 900; around 2m 30s for 9000
     }
 
     @Test fun tests_concurrent_slowly() = runBlocking(Dispatchers.Default) {
@@ -42,10 +46,16 @@ class ConcurrentTest {
             d1.await(); ud("after1")
             d2.await(); ud("after2")
         }
-        ud("end (measured: $time)") // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
+        ud("end (measured: $time)") // measured: around 800ms for maxLoopShort == 900; around 1m 30s for 9000
     }
 
-    @Test fun tests_simple_massively() { runBlockingUSpek { // FIXME NOW: check with runTestUSpek also
+
+
+    // TODO NOW: continue updating code below. (while comparing behavior to junit5 version)
+
+
+
+    @Test fun tests_simple_massively() { runBlockingUSpek { // TODO NOW: check with runTestUSpek also
         ud("start")
         checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
         checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
@@ -76,9 +86,11 @@ class ConcurrentTest {
         ud("end")
     }
 
-    @TestFactory fun exampleFactory() = runTestUSpekJUnit5Factory {
+    @Test fun exampleRunTestUSpek() = runTestUSpek {
+        ud("start")
         checkAddSlowly(666, 10, 20)
         checkAddSlowly(999, 50, 60)
+        ud("end")
     }
 
     suspend fun checkAddSlowly(addArg: Int, resultFrom: Int, resultTo: Int) {
@@ -93,7 +105,7 @@ class ConcurrentTest {
                         sut.result = i
                         sut.add(addArg)
                         sut.result eq i + addArg
-//                        require(i < resultTo - 3) // this should fail three times
+                        require(i < resultTo - 3) // this should fail three times
                     }
                 }
             }

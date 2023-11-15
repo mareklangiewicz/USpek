@@ -199,9 +199,9 @@ fun Project.defaultBuildTemplateForJvmLib(
                     if (withTestJUnit4) implementation(JUnit.junit)
                     if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
                     if (withTestUSpekX) {
-                        implementation(Langiewicz.uspekx)
-                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
-                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
+                        implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
                     }
                 }
             }
@@ -291,7 +291,7 @@ fun KotlinMultiplatformExtension.allDefault(
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                if (withTestUSpekX) implementation(Langiewicz.uspekx)
+                if (withTestUSpekX) implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
             }
         }
         if (withJvm) {
@@ -300,9 +300,9 @@ fun KotlinMultiplatformExtension.allDefault(
                     if (withTestJUnit4) implementation(JUnit.junit)
                     if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
                     if (withTestUSpekX) {
-                        implementation(Langiewicz.uspekx)
-                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
-                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
+                        implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
                     }
                 }
             }

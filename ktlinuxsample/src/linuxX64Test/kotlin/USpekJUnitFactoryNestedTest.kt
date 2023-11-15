@@ -7,6 +7,7 @@ import kotlin.test.Test
 
 class USpekJUnitFactoryNestedTest {
 
+    // FIXME NOW: review/fix it all. It's NOT "factory" (factory is only in JUnit5 and this is native)
     @Test
     fun uspekExampleTestFactory() = uspek {
         "On big test structure" o {
