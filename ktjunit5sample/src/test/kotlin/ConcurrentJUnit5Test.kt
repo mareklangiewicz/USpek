@@ -18,9 +18,9 @@ private val ud get() = ud("")
 private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }
 
 private const val maxLoopShort = 900
-//private const val maxLoopShort = 9000
-//private const val maxLoopLong = 500_000
-private const val maxLoopLong = 5_000_000
+// private const val maxLoopShort = 9000
+private const val maxLoopLong = 500_000
+// private const val maxLoopLong = 5_000_000
 
 class ConcurrentJUnit5Test {
 
@@ -49,14 +49,15 @@ class ConcurrentJUnit5Test {
     @Test fun tests_simple_massively() {
         ud("start")
         val time = measureTime {
-            runBlockingUSpek { // FIXME NOW: check with runTestUSpek also
+            // runBlockingUSpek { // measured: around 130ms for maxLoopLong 500_000; around 600ms for 5mln
+            runTestUSpek { // measured: around 180ms for maxLoopLong 500_000; around 670ms for 5mln
                 checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
                 checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
                 checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
                 checkAddFaster(400, 499, 1, maxLoopLong); ud("4")
             }
         }
-        ud("end (measured: $time)") // measured: around 120ms for maxLoopLong 500_000; around 600ms for 5mln
+        ud("end (measured: $time)")
     }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {

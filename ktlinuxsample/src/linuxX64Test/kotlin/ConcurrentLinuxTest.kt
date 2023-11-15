@@ -9,6 +9,7 @@ import kotlin.native.concurrent.*
 import kotlin.system.*
 import kotlin.test.*
 import kotlin.time.*
+import kotlin.time.Duration.Companion.minutes
 
 
 /** micro debugging ;-) */
@@ -21,10 +22,10 @@ private val ud get() = ud("")
 @Suppress("DEPRECATION")
 private fun getCurrentTimeString() = getTimeMillis().toString()
 
-//private const val maxLoopShort = 900
-private const val maxLoopShort = 9000 // WARNING: this can take long time - kotlin/native is sloooow.
-//private const val maxLoopLong = 500_000
-private const val maxLoopLong = 5_000_000 // WARNING: this can take long time - kotlin/native is sloooow.
+private const val maxLoopShort = 900
+// private const val maxLoopShort = 9000 // WARNING: this can take long time - kotlin/native is sloooow.
+private const val maxLoopLong = 500_000
+// private const val maxLoopLong = 5_000_000 // WARNING: this can take long time - kotlin/native is sloooow.
 
 class ConcurrentLinuxTest {
 
@@ -53,7 +54,8 @@ class ConcurrentLinuxTest {
     @Test fun tests_simple_massively() {
         ud("start")
         val time = measureTime {
-            runBlockingUSpek { // FIXME NOW: check with runTestUSpek also
+            // runBlockingUSpek { // measured: around 29s for maxLoopLong 500_000; around 5min for 5mln
+            runTestUSpek(timeout = 10.minutes) { // measured: around 30s for maxLoopLong 500_000; around ???s for 5mln
                 checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
                 checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
                 checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
