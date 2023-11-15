@@ -23,7 +23,8 @@ private fun getCurrentTimeString() = getTimeMillis().toString()
 
 //private const val maxLoopShort = 900
 private const val maxLoopShort = 9000 // WARNING: this can take long time - kotlin/native is sloooow.
-private const val maxLoopLong = 50_000_000
+//private const val maxLoopLong = 500_000
+private const val maxLoopLong = 5_000_000 // WARNING: this can take long time - kotlin/native is sloooow.
 
 class ConcurrentLinuxTest {
 
@@ -49,20 +50,25 @@ class ConcurrentLinuxTest {
         ud("end (measured: $time)") // measured: around 800ms for maxLoopShort == 900; around 1m 30s for 9000
     }
 
-
-
-    // TODO NOW: continue updating code below. (while comparing behavior to junit5 version)
-
-
-
-    @Test fun tests_simple_massively() { runBlockingUSpek { // TODO NOW: check with runTestUSpek also
+    @Test fun tests_simple_massively() {
         ud("start")
-        checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
-        checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
-        checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
-        checkAddFaster(400, 499, 1, maxLoopLong); ud("4")
-        ud("end")
-    } }
+        val time = measureTime {
+            runBlockingUSpek { // FIXME NOW: check with runTestUSpek also
+                checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
+                checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
+                checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
+                checkAddFaster(400, 499, 1, maxLoopLong); ud("4")
+            }
+        }
+        ud("end (measured: $time)") // measured: around 29s for maxLoopLong 500_000; around 5min for 5mln
+    }
+
+
+
+
+// TODO NOW: continue updating code below. (while comparing behavior to junit5 version)
+
+
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
         ud("start")
@@ -93,6 +99,7 @@ class ConcurrentLinuxTest {
         ud("end")
     }
 
+    /** Slowly just because there is for loop with test inside - see longer comment below */
     suspend fun checkAddSlowly(addArg: Int, resultFrom: Int, resultTo: Int) {
         "create SUT for adding $addArg + $resultFrom..$resultTo" so {
             val sut = MicroCalc(666)
@@ -101,6 +108,11 @@ class ConcurrentLinuxTest {
                 for (i in resultFrom..resultTo) {
                     // generating tests in a loop is slow because it starts the loop
                     // again and again just to find and run first not-finished test
+                    // it's technically correct, because each test have different name,
+                    // but not really correct because unnecessary looping and comparing finished tests names each time.
+                    // lesser issue is: generatig so many tests logs a lot by default.
+                    // I'm leaving this code as is, as an interesting example of uspek behavior,
+                    // even though you should never do things like this.
                     "check add $addArg to $i" so {
                         sut.result = i
                         sut.add(addArg)

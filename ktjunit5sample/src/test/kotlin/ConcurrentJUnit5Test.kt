@@ -19,7 +19,8 @@ private fun getCurrentTimeString() = System.currentTimeMillis().let { String.for
 
 private const val maxLoopShort = 900
 //private const val maxLoopShort = 9000
-private const val maxLoopLong = 50_000_000
+//private const val maxLoopLong = 500_000
+private const val maxLoopLong = 5_000_000
 
 class ConcurrentJUnit5Test {
 
@@ -45,14 +46,18 @@ class ConcurrentJUnit5Test {
         ud("end (measured: $time)") // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
     }
 
-    @Test fun tests_simple_massively() { runBlockingUSpek { // FIXME NOW: check with runTestUSpek also
+    @Test fun tests_simple_massively() {
         ud("start")
-        checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
-        checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
-        checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
-        checkAddFaster(400, 499, 1, maxLoopLong); ud("4")
-        ud("end")
-    } }
+        val time = measureTime {
+            runBlockingUSpek { // FIXME NOW: check with runTestUSpek also
+                checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
+                checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
+                checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
+                checkAddFaster(400, 499, 1, maxLoopLong); ud("4")
+            }
+        }
+        ud("end (measured: $time)") // measured: around 120ms for maxLoopLong 500_000; around 600ms for 5mln
+    }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
         ud("start")
@@ -81,6 +86,7 @@ class ConcurrentJUnit5Test {
         checkAddSlowly(999, 50, 60)
     }
 
+    /** Slowly just because there is for loop with test inside - see longer comment below */
     suspend fun checkAddSlowly(addArg: Int, resultFrom: Int, resultTo: Int) {
         "create SUT for adding $addArg + $resultFrom..$resultTo" so {
             val sut = MicroCalc(666)
@@ -89,6 +95,11 @@ class ConcurrentJUnit5Test {
                 for (i in resultFrom..resultTo) {
                     // generating tests in a loop is slow because it starts the loop
                     // again and again just to find and run first not-finished test
+                    // it's technically correct, because each test have different name,
+                    // but not really correct because unnecessary looping and comparing finished tests names each time.
+                    // lesser issue is: generatig so many tests logs a lot by default.
+                    // I'm leaving this code as is, as an interesting example of uspek behavior,
+                    // even though you should never do things like this.
                     "check add $addArg to $i" so {
                         sut.result = i
                         sut.add(addArg)
