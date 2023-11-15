@@ -7,13 +7,6 @@ import pl.mareklangiewicz.uspek.uspek
 import kotlin.test.Test
 
 
-class MicroCalc(var result: Int) {
-    fun add(x: Int) { result += x }
-    fun multiplyBy(x: Int) { result *= x }
-    fun ensureResultIs(expectedResult: Int) =
-        check(result == expectedResult) { "result is not: $expectedResult; it is actually: $result" }
-}
-
 class MicroCalcTest {
 
     @Test
