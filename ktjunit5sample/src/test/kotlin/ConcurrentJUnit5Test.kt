@@ -21,7 +21,7 @@ private const val maxLoopShort = 900
 //private const val maxLoopShort = 9000
 private const val maxLoopLong = 50_000_000
 
-class ConcurrentTest {
+class ConcurrentJUnit5Test {
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }

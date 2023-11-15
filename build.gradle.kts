@@ -16,7 +16,8 @@ defaultBuildTemplateForRootProject(
         version = Ver(0, 0, 27),
         // https://repo1.maven.org/maven2/pl/mareklangiewicz/uspek/
         // https://github.com/langara/USpek/releases
-    )
+    ),
+    withSonatypeOssPublishing = true,
 )
 
 // region [Root Build Template]
