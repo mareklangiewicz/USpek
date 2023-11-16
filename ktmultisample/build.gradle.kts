@@ -6,7 +6,7 @@ import pl.mareklangiewicz.utils.*
 
 
 plugins {
-    plugAll(plugs.KotlinMulti)
+    plugAll(plugs.KotlinMulti, plugs.JvmApp)
 }
 
 defaultBuildTemplateForMppApp(
@@ -18,6 +18,14 @@ defaultBuildTemplateForMppApp(
     withTestJUnit5 = true, // it also invokes "useJUnitPlatform()"
     withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
 )
+
+// region Multi Jvm App Workaround
+
+// see comment inside: fun Project.defaultBuildTemplateForMppApp (below)
+kotlin { jvm { withJava() } }
+application { mainClass.set("pl.mareklangiewicz.ktsample.MainKt") }
+
+// endregion Multi Jvm App Workaround
 
 
 kotlin {
