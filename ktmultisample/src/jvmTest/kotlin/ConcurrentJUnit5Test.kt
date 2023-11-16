@@ -4,16 +4,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
+import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
 import java.nio.file.*
 import java.util.Locale
 import kotlin.time.*
-
-
-private val String.utee get() =
-    println("utee [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
-
-private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }
 
 private const val maxLoopShort = 900
 // private const val maxLoopShort = 9000
@@ -23,70 +18,66 @@ private const val maxLoopLong = 500_000
 
 class ConcurrentJUnit5Test {
 
-    @Test fun a_current_path() { // Just to check if we are running it in ktmultisample or via symlink in ktjunit5sample
-        println(Paths.get("").toAbsolutePath())
-    }
-
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
-        "start".utee
+        "start".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".utee }; "out1".utee; d1.await(); "after1".utee
-            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".utee }; "out2".utee; d2.await(); "after2".utee
+            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".tee }; "out1".tee; d1.await(); "after1".tee
+            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".tee }; "out2".tee; d2.await(); "after2".tee
         }
-        "end (measured: $time)".utee // measured: around 200ms for maxLoopShort == 900; around 7.5s for 9000
+        "end (measured: $time)".tee.unit // measured: around 200ms for maxLoopShort == 900; around 7.5s for 9000
     }
 
     @Test fun tests_concurrent_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
-        "start".utee
+        "start".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".utee }; "out1".utee
-            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".utee }; "out2".utee
-            d1.await(); "after1".utee
-            d2.await(); "after2".utee
+            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".tee }; "out1".tee
+            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".tee }; "out2".tee
+            d1.await(); "after1".tee
+            d2.await(); "after2".tee
         }
-        "end (measured: $time)".utee // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
+        "end (measured: $time)".tee.unit // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
     }
 
     @Test fun tests_simple_massively() {
-        "start".utee
+        "start".teePP
         val time = measureTime {
             runBlockingUSpek { // measured: around 130ms for maxLoopLong 500_000; 600ms for 5mln; 5.5s for 50mln
             // runTestUSpek { // measured: around 180ms for maxLoopLong 500_000; 670ms for 5mln; 5.3s for 50mln
-                checkAddFaster(100, 199, 1, maxLoopLong); "1".utee
-                checkAddFaster(200, 299, 1, maxLoopLong); "2".utee
-                checkAddFaster(300, 399, 1, maxLoopLong); "3".utee
-                checkAddFaster(400, 499, 1, maxLoopLong); "4".utee
+                checkAddFaster(100, 199, 1, maxLoopLong); "1".tee
+                checkAddFaster(200, 299, 1, maxLoopLong); "2".tee
+                checkAddFaster(300, 399, 1, maxLoopLong); "3".tee
+                checkAddFaster(400, 499, 1, maxLoopLong); "4".tee
             }
         }
-        "end (measured: $time)".utee
+        "end (measured: $time)".tee.unit
     }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
-        "start".utee
+        "start".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".utee }; "out1".utee; d1.await(); "after1".utee
-            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".utee }; "out2".utee; d2.await(); "after2".utee
-            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".utee }; "out3".utee; d3.await(); "after3".utee
-            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".utee }; "out4".utee; d4.await(); "after4".utee
+            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".tee }; "out1".tee; d1.await(); "after1".tee
+            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".tee }; "out2".tee; d2.await(); "after2".tee
+            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".tee }; "out3".tee; d3.await(); "after3".tee
+            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".tee }; "out4".tee; d4.await(); "after4".tee
         }
-        "end (measured: $time)".utee // measured: around 105ms for maxLoopLong == 500_000; 600ms for 5mln; 5.3s for 50mln
+        "end (measured: $time)".tee.unit // measured: around 105ms for maxLoopLong == 500_000; 600ms for 5mln; 5.3s for 50mln
     }
 
     @Test fun tests_concurrent_massively() = runBlocking(Dispatchers.Default) {
-        "start".utee
+        "start".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".utee }; "out1".utee
-            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".utee }; "out2".utee
-            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".utee }; "out3".utee
-            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".utee }; "out4".utee
-            d1.await(); "after1".utee
-            d2.await(); "after2".utee
-            d3.await(); "after3".utee
-            d4.await(); "after4".utee
+            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".tee }; "out1".tee
+            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".tee }; "out2".tee
+            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".tee }; "out3".tee
+            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".tee }; "out4".tee
+            d1.await(); "after1".tee
+            d2.await(); "after2".tee
+            d3.await(); "after3".tee
+            d4.await(); "after4".tee
         }
-        "end (measured: $time)".utee // measured: around 120ms for maxLoopLong == 500_000; 390ms for 5mln; 3.3s for 50mln
+        "end (measured: $time)".tee.unit // measured: around 120ms for maxLoopLong == 500_000; 390ms for 5mln; 3.3s for 50mln
     }
 
     @TestFactory fun exampleFactory() = runTestUSpekJUnit5Factory {

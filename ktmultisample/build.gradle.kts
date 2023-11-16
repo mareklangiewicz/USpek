@@ -17,7 +17,9 @@ defaultBuildTemplateForMppApp(
     withTestJUnit4 = false, // FIXME: Can I add it too??
     withTestJUnit5 = true, // it also invokes "useJUnitPlatform()"
     withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
-)
+) {
+    implementation(Langiewicz.kground.withVer(Ver(0, 0, 17)))
+}
 
 // region Multi Jvm App Workaround
 

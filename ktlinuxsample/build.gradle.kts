@@ -13,7 +13,9 @@ defaultBuildTemplateForMppApp(
     withJvm = false,
     withJs = false,
     withNativeLinux64 = true,
-)
+) {
+    implementation(Langiewicz.kground.withVer(Ver(0, 0, 17)))
+}
 
 // region [Kotlin Module Build Template]
 

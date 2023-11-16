@@ -7,7 +7,9 @@ plugins {
     plugAll(plugs.KotlinJvm, plugs.JvmApp)
 }
 
-defaultBuildTemplateForJvmApp(appMainPackage = "pl.mareklangiewicz.ktsample")
+defaultBuildTemplateForJvmApp(appMainPackage = "pl.mareklangiewicz.ktsample") {
+    implementation(Langiewicz.kground.withVer(Ver(0, 0, 17)))
+}
 
 // region [Kotlin Module Build Template]
 
