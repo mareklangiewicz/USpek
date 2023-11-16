@@ -1,13 +1,9 @@
-@file:OptIn(ObsoleteWorkersApi::class)
-
 package pl.mareklangiewicz.ktsample
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
-import kotlin.native.concurrent.*
-import kotlin.system.*
 import kotlin.test.*
 import kotlin.time.*
 import kotlin.time.Duration.Companion.minutes
