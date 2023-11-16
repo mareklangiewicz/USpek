@@ -5,6 +5,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import pl.mareklangiewicz.uspek.*
+import java.nio.file.*
 import java.util.Locale
 import kotlin.time.*
 
@@ -24,6 +25,10 @@ private const val maxLoopLong = 500_000
 // private const val maxLoopLong = 50_000_000
 
 class ConcurrentJUnit5Test {
+
+    @Test fun a_current_path() { // Just to check if we are running it in ktmultisample or via symlink in ktjunit5sample
+        println(Paths.get("").toAbsolutePath())
+    }
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
