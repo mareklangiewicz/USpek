@@ -10,11 +10,8 @@ import java.util.Locale
 import kotlin.time.*
 
 
-/** micro debugging ;-) */
-private fun ud(s: String) =
-    println("ud [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $s")
-
-private val ud get() = ud("")
+private val String.utee get() =
+    println("utee [${Thread.currentThread().name.padEnd(40).substring(0, 40)}] [${getCurrentTimeString()}] $this")
 
 private fun getCurrentTimeString() = System.currentTimeMillis().let { String.format(Locale.US, "%tT:%tL", it, it) }
 
@@ -32,64 +29,64 @@ class ConcurrentJUnit5Test {
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
-        ud("start")
+        "start".utee
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); ud("in1") }; ud("out1"); d1.await(); ud("after1")
-            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); ud("in2") }; ud("out2"); d2.await(); ud("after2")
+            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".utee }; "out1".utee; d1.await(); "after1".utee
+            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".utee }; "out2".utee; d2.await(); "after2".utee
         }
-        ud("end (measured: $time)") // measured: around 200ms for maxLoopShort == 900; around 7.5s for 9000
+        "end (measured: $time)".utee // measured: around 200ms for maxLoopShort == 900; around 7.5s for 9000
     }
 
     @Test fun tests_concurrent_slowly() = runBlocking(Dispatchers.Default) {
         uspekLog = { }
-        ud("start")
+        "start".utee
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); ud("in1") }; ud("out1")
-            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); ud("in2") }; ud("out2")
-            d1.await(); ud("after1")
-            d2.await(); ud("after2")
+            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".utee }; "out1".utee
+            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".utee }; "out2".utee
+            d1.await(); "after1".utee
+            d2.await(); "after2".utee
         }
-        ud("end (measured: $time)") // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
+        "end (measured: $time)".utee // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
     }
 
     @Test fun tests_simple_massively() {
-        ud("start")
+        "start".utee
         val time = measureTime {
             runBlockingUSpek { // measured: around 130ms for maxLoopLong 500_000; 600ms for 5mln; 5.5s for 50mln
             // runTestUSpek { // measured: around 180ms for maxLoopLong 500_000; 670ms for 5mln; 5.3s for 50mln
-                checkAddFaster(100, 199, 1, maxLoopLong); ud("1")
-                checkAddFaster(200, 299, 1, maxLoopLong); ud("2")
-                checkAddFaster(300, 399, 1, maxLoopLong); ud("3")
-                checkAddFaster(400, 499, 1, maxLoopLong); ud("4")
+                checkAddFaster(100, 199, 1, maxLoopLong); "1".utee
+                checkAddFaster(200, 299, 1, maxLoopLong); "2".utee
+                checkAddFaster(300, 399, 1, maxLoopLong); "3".utee
+                checkAddFaster(400, 499, 1, maxLoopLong); "4".utee
             }
         }
-        ud("end (measured: $time)")
+        "end (measured: $time)".utee
     }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
-        ud("start")
+        "start".utee
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); ud("in1") }; ud("out1"); d1.await(); ud("after1")
-            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); ud("in2") }; ud("out2"); d2.await(); ud("after2")
-            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); ud("in3") }; ud("out3"); d3.await(); ud("after3")
-            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); ud("in4") }; ud("out4"); d4.await(); ud("after4")
+            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".utee }; "out1".utee; d1.await(); "after1".utee
+            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".utee }; "out2".utee; d2.await(); "after2".utee
+            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".utee }; "out3".utee; d3.await(); "after3".utee
+            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".utee }; "out4".utee; d4.await(); "after4".utee
         }
-        ud("end (measured: $time)") // measured: around 105ms for maxLoopLong == 500_000; 600ms for 5mln; 5.3s for 50mln
+        "end (measured: $time)".utee // measured: around 105ms for maxLoopLong == 500_000; 600ms for 5mln; 5.3s for 50mln
     }
 
     @Test fun tests_concurrent_massively() = runBlocking(Dispatchers.Default) {
-        ud("start")
+        "start".utee
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); ud("in1") }; ud("out1")
-            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); ud("in2") }; ud("out2")
-            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); ud("in3") }; ud("out3")
-            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); ud("in4") }; ud("out4")
-            d1.await(); ud("after1")
-            d2.await(); ud("after2")
-            d3.await(); ud("after3")
-            d4.await(); ud("after4")
+            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".utee }; "out1".utee
+            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".utee }; "out2".utee
+            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".utee }; "out3".utee
+            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".utee }; "out4".utee
+            d1.await(); "after1".utee
+            d2.await(); "after2".utee
+            d3.await(); "after3".utee
+            d4.await(); "after4".utee
         }
-        ud("end (measured: $time)") // measured: around 120ms for maxLoopLong == 500_000; 390ms for 5mln; 3.3s for 50mln
+        "end (measured: $time)".utee // measured: around 120ms for maxLoopLong == 500_000; 390ms for 5mln; 3.3s for 50mln
     }
 
     @TestFactory fun exampleFactory() = runTestUSpekJUnit5Factory {
