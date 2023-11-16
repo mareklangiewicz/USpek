@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktlinuxsample
+package pl.mareklangiewicz.ktsample
 
 fun main(args: Array<String>) {
     println(EXAMPLE_TEXT)

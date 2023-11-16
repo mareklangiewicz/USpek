@@ -19,6 +19,7 @@ include(
     ":uspekx",
     ":uspekx-junit4",
     ":uspekx-junit5",
+    ":ktmultisample",
     ":ktjunit4sample",
     ":ktjunit5sample",
     ":ktjsreactsample",

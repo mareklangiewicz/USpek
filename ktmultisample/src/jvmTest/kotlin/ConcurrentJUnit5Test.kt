@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktjunit5sample
+package pl.mareklangiewicz.ktsample
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -19,9 +19,9 @@ private fun getCurrentTimeString() = System.currentTimeMillis().let { String.for
 
 private const val maxLoopShort = 900
 // private const val maxLoopShort = 9000
-// private const val maxLoopLong = 500_000
+private const val maxLoopLong = 500_000
 // private const val maxLoopLong = 5_000_000
-private const val maxLoopLong = 50_000_000
+// private const val maxLoopLong = 50_000_000
 
 class ConcurrentJUnit5Test {
 

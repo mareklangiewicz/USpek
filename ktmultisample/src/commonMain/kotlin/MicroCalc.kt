@@ -1,5 +1,4 @@
-package pl.mareklangiewicz.ktjunit5sample
-
+package pl.mareklangiewicz.ktsample
 
 class MicroCalc(var result: Int) {
     fun add(x: Int) { result += x }

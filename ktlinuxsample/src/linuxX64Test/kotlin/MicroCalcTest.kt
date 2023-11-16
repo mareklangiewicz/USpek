@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktlinuxsample
+package pl.mareklangiewicz.ktsample
 
 import pl.mareklangiewicz.uspek.eq
 import pl.mareklangiewicz.uspek.o

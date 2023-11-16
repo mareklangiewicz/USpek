@@ -9,7 +9,7 @@ plugins {
 }
 
 defaultBuildTemplateForMppApp(
-    appMainPackage = "pl.mareklangiewicz.ktlinuxsample",
+    appMainPackage = "pl.mareklangiewicz.ktsample",
     withJvm = false,
     withJs = false,
     withNativeLinux64 = true,

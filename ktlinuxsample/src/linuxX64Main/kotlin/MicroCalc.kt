@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.ktlinuxsample
+package pl.mareklangiewicz.ktsample
 
 
 class MicroCalc(var result: Int) {

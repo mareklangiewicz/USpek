@@ -1,27 +1,42 @@
-import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.plugin.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
+
 plugins {
-    kotlin("multiplatform")
+    plugAll(plugs.KotlinMulti)
 }
 
 defaultBuildTemplateForMppApp(
     appMainPackage = "pl.mareklangiewicz.ktsample",
-    withJvm = false,
+    withJvm = true,
     withJs = true,
-    withNativeLinux64 = false,
-    withTestUSpekX = true,
+    withNativeLinux64 = true,
+    withTestJUnit4 = false, // FIXME: Can I add it too??
+    withTestJUnit5 = true, // it also invokes "useJUnitPlatform()"
+    withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
 )
+
 
 kotlin {
     sourceSets {
+        val commonTest by getting {
+            dependencies {
+                implementation(project(":uspek"))
+                implementation(project(":uspekx"))
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                // implementation(project(":uspekx-junit4")) // FIXME: can it live together with 5
+                implementation(project(":uspekx-junit5"))
+            }
+        }
         val jsMain by getting {
             dependencies {
-                implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver // FIXME: remove hardcoded ver
-                implementation(KotlinX.coroutines_core)
+                // implementation(KotlinX.coroutines_core) // FIXME: do I need this manual dep?
                 implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
                 implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react.withNoVer())
                 implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react_dom.withNoVer())
@@ -215,9 +230,9 @@ fun Project.defaultBuildTemplateForJvmLib(
                     if (withTestJUnit4) implementation(JUnit.junit)
                     if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
                     if (withTestUSpekX) {
-                        implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver // FIXME: remove hardcoded ver
-                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
-                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        implementation(Langiewicz.uspekx)
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
                     }
                 }
             }
@@ -307,7 +322,7 @@ fun KotlinMultiplatformExtension.allDefault(
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                if (withTestUSpekX) implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                if (withTestUSpekX) implementation(Langiewicz.uspekx)
             }
         }
         if (withJvm) {
@@ -316,9 +331,9 @@ fun KotlinMultiplatformExtension.allDefault(
                     if (withTestJUnit4) implementation(JUnit.junit)
                     if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
                     if (withTestUSpekX) {
-                        implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
-                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
-                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        implementation(Langiewicz.uspekx)
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
                     }
                 }
             }

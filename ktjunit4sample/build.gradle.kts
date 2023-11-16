@@ -8,7 +8,7 @@ plugins {
 }
 
 defaultBuildTemplateForJvmApp(
-    appMainPackage = "pl.mareklangiewicz.ktjunit4sample",
+    appMainPackage = "pl.mareklangiewicz.ktsample",
     withTestJUnit4 = true,
     withTestJUnit5 = false,
 ) {

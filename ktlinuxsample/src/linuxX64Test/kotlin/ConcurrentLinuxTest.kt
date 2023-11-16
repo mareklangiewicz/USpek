@@ -1,6 +1,6 @@
 @file:OptIn(ObsoleteWorkersApi::class)
 
-package pl.mareklangiewicz.ktlinuxsample
+package pl.mareklangiewicz.ktsample
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
