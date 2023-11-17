@@ -17,21 +17,23 @@ private const val maxLoopLong = 500_000
 class ConcurrentLinuxTest {
 
     @Test fun tests_sequential_slowly() = runBlocking(Dispatchers.Default) {
+        val max = maxLoopShort
         uspekLog = { }
-        "start".teePP
+        "start tss $max".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".tee }; "out1".tee; d1.await(); "after1".tee
-            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".tee }; "out2".tee; d2.await(); "after2".tee
+            val d1 = asyncUSpek { checkAddSlowly(1, 1, max); "in1".tee }; "out1".tee; d1.await(); "after1".tee
+            val d2 = asyncUSpek { checkAddSlowly(2, 1, max); "in2".tee }; "out2".tee; d2.await(); "after2".tee
         }
         "end (measured: $time)".tee.unit // measured: around 1.5s for maxLoopShort == 900; 2m 30s for 9000
     }
 
     @Test fun tests_concurrent_slowly() = runBlocking(Dispatchers.Default) {
+        val max = maxLoopShort
         uspekLog = { }
-        "start".teePP
+        "start tcs $max".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddSlowly(1, 1, maxLoopShort); "in1".tee }; "out1".tee
-            val d2 = asyncUSpek { checkAddSlowly(2, 1, maxLoopShort); "in2".tee }; "out2".tee
+            val d1 = asyncUSpek { checkAddSlowly(1, 1, max); "in1".tee }; "out1".tee
+            val d2 = asyncUSpek { checkAddSlowly(2, 1, max); "in2".tee }; "out2".tee
             d1.await(); "after1".tee
             d2.await(); "after2".tee
         }
@@ -39,37 +41,40 @@ class ConcurrentLinuxTest {
     }
 
     @Test fun tests_simple_massively() {
-        "start".teePP
+        val max = maxLoopLong
+        "start tsim $max".teePP
         val time = measureTime {
             // runBlockingUSpek { // measured: around 29s for maxLoopLong 500_000; 5min for 5mln
             runTestUSpek(timeout = 10.minutes) { // measured: around 30s for maxLoopLong 500_000; 5min for 5mln
-                checkAddFaster(100, 199, 1, maxLoopLong); "1".tee
-                checkAddFaster(200, 299, 1, maxLoopLong); "2".tee
-                checkAddFaster(300, 399, 1, maxLoopLong); "3".tee
-                checkAddFaster(400, 499, 1, maxLoopLong); "4".tee
+                checkAddFaster(100, 199, 1, max); "1".tee
+                checkAddFaster(200, 299, 1, max); "2".tee
+                checkAddFaster(300, 399, 1, max); "3".tee
+                checkAddFaster(400, 499, 1, max); "4".tee
             }
         }
         "end (measured: $time)".tee.unit
     }
 
     @Test fun tests_sequential_massively() = runBlocking(Dispatchers.Default) {
-        "start".teePP
+        val max = maxLoopLong
+        "start tsem $max".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".tee }; "out1".tee; d1.await(); "after1".tee
-            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".tee }; "out2".tee; d2.await(); "after2".tee
-            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".tee }; "out3".tee; d3.await(); "after3".tee
-            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".tee }; "out4".tee; d4.await(); "after4".tee
+            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, max); "in1".tee }; "out1".tee; d1.await(); "after1".tee
+            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, max); "in2".tee }; "out2".tee; d2.await(); "after2".tee
+            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, max); "in3".tee }; "out3".tee; d3.await(); "after3".tee
+            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, max); "in4".tee }; "out4".tee; d4.await(); "after4".tee
         }
         "end (measured: $time)".tee.unit // measured: around 30s for maxLoopLong == 500_000; 5min for 5mln
     }
 
     @Test fun tests_concurrent_massively() = runBlocking(Dispatchers.Default) {
-        "start".teePP
+        val max = maxLoopLong
+        "start tcm $max".teePP
         val time = measureTime {
-            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, maxLoopLong); "in1".tee }; "out1".tee
-            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, maxLoopLong); "in2".tee }; "out2".tee
-            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, maxLoopLong); "in3".tee }; "out3".tee
-            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, maxLoopLong); "in4".tee }; "out4".tee
+            val d1 = asyncUSpek { checkAddFaster(100, 199, 1, max); "in1".tee }; "out1".tee
+            val d2 = asyncUSpek { checkAddFaster(200, 299, 1, max); "in2".tee }; "out2".tee
+            val d3 = asyncUSpek { checkAddFaster(300, 399, 1, max); "in3".tee }; "out3".tee
+            val d4 = asyncUSpek { checkAddFaster(400, 499, 1, max); "in4".tee }; "out4".tee
             d1.await(); "after1".tee
             d2.await(); "after2".tee
             d3.await(); "after3".tee
