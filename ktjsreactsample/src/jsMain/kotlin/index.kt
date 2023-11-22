@@ -1,3 +1,6 @@
+package pl.mareklangiewicz.ktsample
+
+import App
 import react.create
 import react.dom.client.createRoot
 import web.dom.document
