@@ -1,4 +1,4 @@
-package painting
+package pl.mareklangiewicz.painting
 
 import org.khronos.webgl.get
 import org.w3c.dom.HTMLCanvasElement

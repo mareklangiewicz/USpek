@@ -1,4 +1,6 @@
-import playground.Playground
+package pl.mareklangiewicz.ktsample
+
+import pl.mareklangiewicz.playground.*
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div

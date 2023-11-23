@@ -1,4 +1,4 @@
-package playground
+package pl.mareklangiewicz.playground
 
 import pl.mareklangiewicz.uspek.USpekTree
 import pl.mareklangiewicz.uspek.failed

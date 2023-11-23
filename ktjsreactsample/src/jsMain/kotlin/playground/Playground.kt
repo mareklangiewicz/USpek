@@ -1,11 +1,9 @@
-package playground
+package pl.mareklangiewicz.playground
 
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import painting.clearCanvas
-import painting.paintSomething
-import painting.pickColor
+import pl.mareklangiewicz.painting.*
 import pl.mareklangiewicz.uspek.GlobalUSpekContext
 import pl.mareklangiewicz.uspek.finished
 import pl.mareklangiewicz.uspek.status

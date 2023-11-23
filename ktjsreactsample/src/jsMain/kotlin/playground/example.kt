@@ -1,4 +1,4 @@
-package playground
+package pl.mareklangiewicz.playground
 
 import kotlinx.coroutines.delay
 import pl.mareklangiewicz.uspek.*
