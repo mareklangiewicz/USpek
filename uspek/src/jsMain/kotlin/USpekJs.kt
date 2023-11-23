@@ -1,5 +1,8 @@
 package pl.mareklangiewicz.uspek
 
+// TODO: Kotlin/JS implementation is probably blocked by KJS/IR not supporting SourceMaps yet.
+//   track this: https://youtrack.jetbrains.com/issue/KT-46275/KJS-IR-Support-SourceMaps
+
 //typealias StackTrace = Array<StackTraceElement>
 
 actual val USpekTree?.location:CodeLocation? get() = null // TODO // this?.end?.stackTrace?.userCall?.location
