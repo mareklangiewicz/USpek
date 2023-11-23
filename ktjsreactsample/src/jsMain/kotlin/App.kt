@@ -9,7 +9,7 @@ val App = FC<Props> {
 
         div {
             className = ClassName("App-header")
-            h2 { +"Welcome to μSpek Playground" }
+            h2 { +"Welcome to μSpek Playground (KtJsReactSample)" }
         }
         Playground()
 }

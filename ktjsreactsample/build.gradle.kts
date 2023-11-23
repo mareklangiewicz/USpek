@@ -20,8 +20,13 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             dependencies {
+
+                // I use USpekX in jsMain source here (and not just jsTest) on purpose.
+                // To experiment with react based reporting in browser.
                 implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+
                 implementation(KotlinX.coroutines_core)
+                
                 implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
                 implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react.withNoVer())
                 implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react_dom.withNoVer())

@@ -8,7 +8,7 @@ import web.window.window
 
 fun main() {
     window.onload = {
-        val container = document.getElementById("root") ?: error("Couldn't find root container!")
+        val container = document.getElementById("rootOfKtJsReactSample") ?: error("Couldn't find root container!")
         createRoot(container).render(App.create())
     }
 }
