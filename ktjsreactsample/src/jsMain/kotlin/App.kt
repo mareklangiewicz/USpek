@@ -13,6 +13,6 @@ val App = FC<Props> {
             className = ClassName("App-header")
             h2 { +"Welcome to μSpek Playground (KtJsReactSample)" }
         }
-        Playground()
+        Playground { speed = 600 }
 }
 

@@ -11,31 +11,38 @@ import web.cssom.*
 
 external interface PlaygroundProps : Props { var speed: Int }
 
-
 val Playground = FC<PlaygroundProps> { props ->
+
+    val tree = useUSpekTree {
+        clearCanvas()
+        paintSomething()
+        delay(props.speed.toLong())
+        testSomeMicroCalc()
+    }
+
+    div {
+        className = ClassName("playground")
+        div { className = ClassName("tests-side"); USpekTreeUi(tree) }
+        div { className = ClassName("canvas-side"); CanvasSideUi() }
+    }
+}
+
+// let's try custom hook: https://github.com/JetBrains/kotlin-wrappers/blob/master/docs/guide/react.md#custom-hooks
+fun useUSpekTree(code: suspend () -> Unit): USpekTree {
 
     var tree by useState(GlobalUSpekContext.root)
 
     useEffectOnce {
         val job = MainScope().launch {
             suspek {
-                clearCanvas()
-                paintSomething()
-                delay(400)
                 // we don't need any setState here because tree is useState hook delegate property
                 tree = GlobalUSpekContext.root.copy() // FIXME: is copy needed? check (and debug!) how react compares states
-                testSomeMicroCalc()
-                // this line will almost never be reached, because tests end with exceptions and are caught by suspek
-                println("All tests already finished.")
+                code()
             }
         }
         cleanup { job.cancel() }
     }
-    div {
-        className = ClassName("playground")
-        div { className = ClassName("tests-side"); USpekTreeUi(tree) }
-        div { className = ClassName("canvas-side"); CanvasSideUi() }
-    }
+    return tree
 }
 
 fun ChildrenBuilder.CanvasSideUi() {
