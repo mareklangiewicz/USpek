@@ -14,7 +14,7 @@ defaultBuildTemplateForMppApp(
     withJvm = true,
     withJs = true,
     withNativeLinux64 = true,
-    withTestJUnit4 = false, // FIXME: Can I add it too??
+    withTestJUnit4 = false, // Cannot configure both 4 and 5 (5 does "useJUnitPlatform()")
     withTestJUnit5 = true, // it also invokes "useJUnitPlatform()"
     withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
 ) {
@@ -40,17 +40,7 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                // implementation(project(":uspekx-junit4")) // FIXME: can it live together with 5
                 implementation(project(":uspekx-junit5"))
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                // implementation(KotlinX.coroutines_core) // FIXME: do I need this manual dep?
-                implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
-                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react.withNoVer())
-                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react_dom.withNoVer())
-                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_styled.withNoVer())
             }
         }
     }
