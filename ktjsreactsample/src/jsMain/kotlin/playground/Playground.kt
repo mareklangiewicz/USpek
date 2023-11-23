@@ -33,19 +33,20 @@ val Playground = FC<PlaygroundProps> { props ->
     }
     div {
         className = ClassName("playground")
-        div { className = ClassName("tests-side"); rtree(tree) }
-        div {
-            className = ClassName("canvas-side")
-            div {
-                className = ClassName("canvas")
-                canvas {
-                    onClick = {
-                        val event = it.asDynamic()
-                        val color = pickColor(event.clientX - event.target.offsetLeft, event.clientY - event.target.offsetTop)
-                        // TODO: check what clientX/Y is
-                        println(color)
-                    }
-                }
+        div { className = ClassName("tests-side"); USpekTreeUi(tree) }
+        div { className = ClassName("canvas-side"); CanvasSideUi() }
+    }
+}
+
+fun ChildrenBuilder.CanvasSideUi() {
+    div {
+        className = ClassName("canvas")
+        canvas {
+            onClick = {
+                val event = it.asDynamic()
+                val color = pickColor(event.clientX - event.target.offsetLeft, event.clientY - event.target.offsetTop)
+                // TODO: check what clientX/Y is
+                println(color)
             }
         }
     }

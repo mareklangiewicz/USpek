@@ -7,7 +7,7 @@ import react.ChildrenBuilder
 import react.dom.html.ReactHTML.div
 import web.cssom.ClassName
 
-fun ChildrenBuilder.rtree(tree: USpekTree) {
+fun ChildrenBuilder.USpekTreeUi(tree: USpekTree) {
     div {
         className = ClassName("tree background " + tree.result)
         div {
@@ -15,7 +15,7 @@ fun ChildrenBuilder.rtree(tree: USpekTree) {
             div {
                 className = ClassName("tree content")
                 +tree.title
-                for (branch in tree.branches.values) rtree(branch)
+                for (branch in tree.branches.values) USpekTreeUi(branch)
             }
         }
     }
