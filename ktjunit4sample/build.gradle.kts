@@ -13,7 +13,7 @@ defaultBuildTemplateForJvmApp(
     withTestJUnit5 = false,
 ) {
     implementation(project(":uspekx-junit4"))
-    implementation(Langiewicz.kground.withVer(Ver(0, 0, 19)))
+    implementation(Langiewicz.kground.withVer(Ver(0, 0, 20)))
 }
 
 // region [Kotlin Module Build Template]
