@@ -17,8 +17,7 @@ val Playground = FC<PlaygroundProps> { props ->
     var tree by useState(GlobalUSpekContext.root)
 
     useEffectOnce {
-        // FIXME: We should have scope cancelling when leaving playground
-        MainScope().launch {
+        val job = MainScope().launch {
             suspek {
                 clearCanvas()
                 paintSomething()
@@ -30,6 +29,7 @@ val Playground = FC<PlaygroundProps> { props ->
                 println("All tests already finished.")
             }
         }
+        cleanup { job.cancel() }
     }
     div {
         className = ClassName("playground")
