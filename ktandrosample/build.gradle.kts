@@ -1,11 +1,16 @@
+@file:Suppress("DEPRECATION")
+
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.LibraryExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plugAll(plugs.AndroLib, plugs.KotlinAndro)
+    // plugAll(plugs.AndroLib, plugs.KotlinAndro)
+    id("com.android.library") version "8.3.0-alpha14"
+    plug(plugs.KotlinAndro)
 }
 
 defaultBuildTemplateForAndroidLib(
@@ -13,7 +18,7 @@ defaultBuildTemplateForAndroidLib(
     withCompose = true,
     details = langaraLibDetails(
         name = "ktandrosample",
-        version = Ver(0, 0, 7)
+        version = Ver(0, 0, 8)
     )
 )
 
@@ -183,7 +188,6 @@ fun TaskContainer.withPublishingPrintln() = withType<AbstractPublishToMaven>().c
     }
 }
 
-@Suppress("UNUSED_VARIABLE")
 fun Project.defaultBuildTemplateForJvmLib(
     details: LibDetails = rootExtLibDetails,
     withTestJUnit4: Boolean = false,

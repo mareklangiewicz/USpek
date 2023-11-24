@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 pluginManagement {
-    includeBuild("../../DepsKt")
     repositories {
         mavenLocal()
         google()
@@ -11,7 +10,7 @@ pluginManagement {
 }
 
 plugins {
-    id("pl.mareklangiewicz.deps.settings") version "0.2.36"
+    id("pl.mareklangiewicz.deps.settings") version "0.2.60"
 }
 
 rootProject.name = "ktandrosample"

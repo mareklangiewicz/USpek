@@ -13,7 +13,7 @@ external interface PlaygroundProps : Props { var speed: Int }
 
 val Playground = FC<PlaygroundProps> { props ->
 
-    val tree = useUSpekTree {
+    val tree = useUSpekHook {
         clearCanvas()
         paintSomething()
         delay(props.speed.toLong())
@@ -28,7 +28,7 @@ val Playground = FC<PlaygroundProps> { props ->
 }
 
 // let's try custom hook: https://github.com/JetBrains/kotlin-wrappers/blob/master/docs/guide/react.md#custom-hooks
-fun useUSpekTree(code: suspend () -> Unit): USpekTree {
+fun useUSpekHook(code: suspend () -> Unit): USpekTree {
 
     var tree by useState(GlobalUSpekContext.root)
 

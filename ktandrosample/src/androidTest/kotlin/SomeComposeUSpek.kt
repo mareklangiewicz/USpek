@@ -1,10 +1,9 @@
 package pl.mareklangiewicz.uspek.sample.compose
 
 import android.util.*
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
@@ -12,7 +11,6 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.*
 import androidx.compose.ui.unit.*
 import org.junit.*
-import org.junit.Test
 import org.junit.runner.*
 import pl.mareklangiewicz.uspek.*
 import java.lang.Thread.*
@@ -22,6 +20,7 @@ import kotlin.test.*
 // See more info in comments in andro tests in DepsKt/template-andro
 // On the other hand it's very nice that this USpekJUnit4Runner runs every leaf in uspek tree as separate JUnit test.
 // Thanks to that I can have multiple rule.setContent {..} in uspek tree in separate branches.
+@Suppress("DEPRECATION")
 @RunWith(USpekJUnit4Runner::class)
 class SomeComposeUSpek {
     init {
