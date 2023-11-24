@@ -197,7 +197,6 @@ fun TaskContainer.withPublishingPrintln() = withType<AbstractPublishToMaven>().c
     }
 }
 
-@Suppress("UNUSED_VARIABLE")
 fun Project.defaultBuildTemplateForJvmLib(
     details: LibDetails = rootExtLibDetails,
     withTestJUnit4: Boolean = false,
@@ -220,9 +219,9 @@ fun Project.defaultBuildTemplateForJvmLib(
                     if (withTestJUnit4) implementation(JUnit.junit)
                     if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
                     if (withTestUSpekX) {
-                        implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver // FIXME: remove hardcoded ver
-                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
-                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        implementation(Langiewicz.uspekx)
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
                     }
                 }
             }
@@ -288,7 +287,6 @@ fun Project.defaultBuildTemplateForMppLib(
 }
 
 /** Only for very standard small libs. In most cases it's better to not use this function. */
-@Suppress("UNUSED_VARIABLE")
 fun KotlinMultiplatformExtension.allDefault(
     withJvm: Boolean = true,
     withJs: Boolean = true,
@@ -312,7 +310,7 @@ fun KotlinMultiplatformExtension.allDefault(
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                if (withTestUSpekX) implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                if (withTestUSpekX) implementation(Langiewicz.uspekx)
             }
         }
         if (withJvm) {
@@ -321,9 +319,9 @@ fun KotlinMultiplatformExtension.allDefault(
                     if (withTestJUnit4) implementation(JUnit.junit)
                     if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
                     if (withTestUSpekX) {
-                        implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
-                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
-                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5.withVer(Ver(0, 0, 27))) // FIXME: remove hardcoded ver
+                        implementation(Langiewicz.uspekx)
+                        if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
+                        if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
                     }
                 }
             }
@@ -344,14 +342,14 @@ fun KotlinMultiplatformExtension.jsDefault(
 ) {
     js(IR) {
         if (withBrowser) browser {
-            testTask(Action {
+            testTask {
                 useKarma {
                     when (testWithChrome to testHeadless) {
                         true to true -> useChromeHeadless()
                         true to false -> useChrome()
                     }
                 }
-            })
+            }
         }
         if (withNode) nodejs()
     }
