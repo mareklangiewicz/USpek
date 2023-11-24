@@ -13,7 +13,7 @@ defaultBuildTemplateForRootProject(
         name = "USpek",
         description = "Micro tool for testing with syntax similar to Spek, but shorter.",
         githubUrl = "https://github.com/langara/USpek",
-        version = Ver(0, 0, 27),
+        version = Ver(0, 0, 28),
         // https://repo1.maven.org/maven2/pl/mareklangiewicz/uspek/
         // https://github.com/langara/USpek/releases
     ),
