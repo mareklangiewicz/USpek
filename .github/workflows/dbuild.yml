@@ -9,6 +9,7 @@ on:
     - 'master'
     - 'main'
   pull_request: {}
+  workflow_dispatch: {}
 jobs:
   build-for-UbuntuLatest:
     runs-on: 'ubuntu-latest'
@@ -21,12 +22,12 @@ jobs:
       MYKOTLIBS_sonatypeStagingProfileId: '${{ secrets.MYKOTLIBS_sonatypeStagingProfileId }}'
     steps:
     - id: 'step-0'
-      uses: 'actions/checkout@v3'
+      uses: 'actions/checkout@v4'
     - id: 'step-1'
       name: 'Set up JDK'
-      uses: 'actions/setup-java@v3'
+      uses: 'actions/setup-java@v4'
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'zulu'
     - id: 'step-2'
       name: 'Build'

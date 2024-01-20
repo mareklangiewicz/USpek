@@ -54,6 +54,7 @@ data class USpekContext(
     override val key: CoroutineContext.Key<USpekContext> = Key
     companion object Key : CoroutineContext.Key<USpekContext>
 }
+// FIXME NOW: should I use AbstractCoroutineContextElement????
 
 /** Delicate Global Mutable Beast ;) (Have to make sure only one computation uses it) */
 val GlobalUSpekContext = USpekContext()

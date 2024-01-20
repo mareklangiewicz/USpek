@@ -1,35 +1,45 @@
+import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plugAll(plugs.KotlinJvm, plugs.JvmApp)
+    plugAll(plugs.KotlinMulti, plugs.JvmApp)
 }
 
-defaultBuildTemplateForJvmApp(
+val details = langaraLibDetails(
+    name = "USpek Kt JUnit4 Sample",
+    settings = LibSettings(
+        withJs = false,
+        compose = null,
+        withTestJUnit4 = true,
+        withTestJUnit5 = false,
+        withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
+    ),
+)
+
+defaultBuildTemplateForBasicMppApp(
     appMainPackage = "pl.mareklangiewicz.ktsample",
-    withTestJUnit4 = true,
-    withTestJUnit5 = false,
+    details = details,
 ) {
     implementation(project(":uspekx-junit4"))
-    implementation(Langiewicz.kground.withVer(Ver(0, 0, 20)))
+    implementation(Langiewicz.kground.withVer(Ver(0, 0, 35)))
+    // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
 }
+
+// region Multi Jvm App Workaround
+
+// see comment inside: fun Project.defaultBuildTemplateForMppApp (below)
+kotlin { jvm { withJava() } }
+application { mainClass.set("pl.mareklangiewicz.ktsample.MainKt") }
+
+// endregion Multi Jvm App Workaround
+
 
 // region [Kotlin Module Build Template]
 
-fun RepositoryHandler.defaultRepos(
-    withMavenLocal: Boolean = true,
-    withMavenCentral: Boolean = true,
-    withGradle: Boolean = false,
-    withGoogle: Boolean = true,
-    withKotlinx: Boolean = true,
-    withKotlinxHtml: Boolean = false,
-    withComposeJbDev: Boolean = false,
-    withComposeCompilerAndroidxDev: Boolean = false,
-    withKtorEap: Boolean = false,
-    withJitpack: Boolean = false,
-) {
+fun RepositoryHandler.addRepos(settings: LibReposSettings) = with(settings) {
     if (withMavenLocal) mavenLocal()
     if (withMavenCentral) mavenCentral()
     if (withGradle) gradlePluginPortal()
@@ -37,20 +47,24 @@ fun RepositoryHandler.defaultRepos(
     if (withKotlinx) maven(repos.kotlinx)
     if (withKotlinxHtml) maven(repos.kotlinxHtml)
     if (withComposeJbDev) maven(repos.composeJbDev)
-    if (withComposeCompilerAndroidxDev) maven(repos.composeCompilerAndroidxDev)
+    if (withComposeCompilerAxDev) maven(repos.composeCompilerAxDev)
     if (withKtorEap) maven(repos.ktorEap)
     if (withJitpack) maven(repos.jitpack)
 }
 
 fun TaskCollection<Task>.defaultKotlinCompileOptions(
-    jvmTargetVer: String = versNew.JvmDefaultVer,
+    jvmTargetVer: String? = vers.JvmDefaultVer,
     renderInternalDiagnosticNames: Boolean = false,
+    suppressComposeCheckKotlinVer: Ver? = null,
 ) = withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = jvmTargetVer
+        jvmTargetVer?.let { jvmTarget = it }
         if (renderInternalDiagnosticNames) freeCompilerArgs = freeCompilerArgs + "-Xrender-internal-diagnostic-names"
         // useful, for example, to suppress some errors when accessing internal code from some library, like:
         // @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "EXPOSED_PARAMETER_TYPE", "EXPOSED_PROPERTY_TYPE", "CANNOT_OVERRIDE_INVISIBLE_MEMBER")
+        suppressComposeCheckKotlinVer?.ver?.let {
+            freeCompilerArgs = freeCompilerArgs + "-P" + "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=$it"
+        }
     }
 }
 
@@ -102,7 +116,7 @@ fun Project.defaultPublishing(
     lib: LibDetails,
     readmeFile: File = File(rootDir, "README.md"),
     withSignErrorWorkaround: Boolean = true,
-    withPublishingPrintln: Boolean = true,
+    withPublishingPrintln: Boolean = false, // FIXME_later: enabling brakes gradle android publications
 ) {
 
     val readmeJavadocJar by tasks.registering(Jar::class) {
@@ -177,24 +191,94 @@ fun TaskContainer.withPublishingPrintln() = withType<AbstractPublishToMaven>().c
     }
 }
 
-fun Project.defaultBuildTemplateForJvmLib(
-    details: LibDetails = rootExtLibDetails,
-    withTestJUnit4: Boolean = false,
-    withTestJUnit5: Boolean = true,
-    withTestUSpekX: Boolean = true,
-    addMainDependencies: KotlinDependencyHandler.() -> Unit = {},
-) {
-    repositories { defaultRepos() }
-    defaultGroupAndVerAndDescription(details)
+// endregion [Kotlin Module Build Template]
 
-    kotlin {
-        sourceSets {
-            val main by getting {
-                dependencies {
-                    addMainDependencies()
-                }
+// region [MPP Module Build Template]
+
+/**
+ * Only for very standard small libs. In most cases it's better to not use this function.
+ *
+ * These ignoreXXX flags are hacky, but needed. see [allDefault] kdoc for details.
+ */
+fun Project.defaultBuildTemplateForBasicMppLib(
+    details: LibDetails = rootExtLibDetails,
+    ignoreCompose: Boolean = false, // so user have to explicitly say THAT he wants to ignore compose settings here.
+    ignoreAndroTarget: Boolean = false, // so user have to explicitly say IF he wants to ignore it.
+    ignoreAndroConfig: Boolean = false, // so user have to explicitly say THAT he wants to ignore it.
+    ignoreAndroPublish: Boolean = false, // so user have to explicitly say THAT he wants to ignore it.
+    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {},
+) {
+    require(ignoreCompose || details.settings.compose == null) { "defaultBuildTemplateForMppLib can not configure compose stuff" }
+    details.settings.andro?.let {
+        require(ignoreAndroConfig) { "defaultBuildTemplateForBasicMppLib can not configure android stuff (besides just adding target)" }
+        require(ignoreAndroPublish || it.publishNoVariants) { "defaultBuildTemplateForBasicMppLib can not publish android stuff YET" }
+    }
+    repositories { addRepos(details.settings.repos) }
+    defaultGroupAndVerAndDescription(details)
+    extensions.configure<KotlinMultiplatformExtension> {
+        allDefault(
+            settings = details.settings,
+            ignoreCompose = ignoreCompose,
+            ignoreAndroTarget = ignoreAndroTarget,
+            ignoreAndroConfig = ignoreAndroConfig,
+            ignoreAndroPublish = ignoreAndroPublish,
+            addCommonMainDependencies = addCommonMainDependencies,
+        )
+    }
+    configurations.checkVerSync()
+    tasks.defaultKotlinCompileOptions(details.settings.withJvmVer)
+    tasks.defaultTestsOptions(onJvmUseJUnitPlatform = details.settings.withTestJUnit5)
+    if (plugins.hasPlugin("maven-publish")) {
+        defaultPublishing(details)
+        if (plugins.hasPlugin("signing")) defaultSigning()
+        else println("MPP Module ${name}: signing disabled")
+    } else println("MPP Module ${name}: publishing (and signing) disabled")
+}
+
+/**
+ * Only for very standard small libs. In most cases it's better to not use this function.
+ *
+ * These ignoreXXX flags are hacky, but needed because we want to inject this code also to such build files,
+ * where plugins for compose and/or android are not applied at all, so compose/android stuff should be explicitly ignored,
+ * and then configured right after this call, using code from another special region (region using compose and/or andro plugin stuff).
+ * Also kmp andro publishing is in the middle of big changes, so let's not support it yet, and let's wait for more clarity regarding:
+ * https://youtrack.jetbrains.com/issue/KT-61575/Publishing-a-KMP-library-handles-Android-target-inconsistently-requiring-an-explicit-publishLibraryVariants-call-to-publish
+ * https://youtrack.jetbrains.com/issue/KT-60623/Deprecate-publishAllLibraryVariants-in-kotlin-android
+ */
+fun KotlinMultiplatformExtension.allDefault(
+    settings: LibSettings,
+    ignoreCompose: Boolean = false, // so user have to explicitly say THAT he wants to ignore compose settings here.
+    ignoreAndroTarget: Boolean = false, // so user have to explicitly say IF he wants to ignore it.
+    ignoreAndroConfig: Boolean = false, // so user have to explicitly say THAT he wants to ignore it.
+    ignoreAndroPublish: Boolean = false, // so user have to explicitly say THAT he wants to ignore it.
+    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {},
+) = with(settings) {
+    require(ignoreCompose || compose == null) { "allDefault can not configure compose stuff" }
+    andro?.let {
+        require(ignoreAndroConfig) { "allDefault can not configure android stuff (besides just adding target)" }
+        require(ignoreAndroPublish || it.publishNoVariants) { "allDefault can not publish android stuff YET" }
+    }
+    if (withJvm) jvm()
+    if (withJs) jsDefault()
+    if (withNativeLinux64) linuxX64()
+    if (withAndro && !ignoreAndroTarget) androidTarget {
+        // TODO_someday some kmp andro publishing. See kdoc above why not yet.
+    }
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                if (withKotlinxHtml) implementation(KotlinX.html)
+                addCommonMainDependencies()
             }
-            val test by getting {
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                if (withTestUSpekX) implementation(Langiewicz.uspekx)
+            }
+        }
+        if (withJvm) {
+            val jvmTest by getting {
                 dependencies {
                     if (withTestJUnit4) implementation(JUnit.junit)
                     if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
@@ -203,36 +287,85 @@ fun Project.defaultBuildTemplateForJvmLib(
                         if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)
                         if (withTestJUnit5) implementation(Langiewicz.uspekx_junit5)
                     }
+                    if (withTestGoogleTruth) implementation(Com.Google.Truth.truth)
+                    if (withTestMockitoKotlin) implementation(Org.Mockito.Kotlin.mockito_kotlin)
+                }
+            }
+        }
+        if (withNativeLinux64) {
+            val linuxX64Main by getting
+            val linuxX64Test by getting
+        }
+    }
+}
+
+
+fun KotlinMultiplatformExtension.jsDefault(
+    withBrowser: Boolean = true,
+    withNode: Boolean = false,
+    testWithChrome: Boolean = true,
+    testHeadless: Boolean = true,
+) {
+    js(IR) {
+        if (withBrowser) browser {
+            testTask {
+                useKarma {
+                    when (testWithChrome to testHeadless) {
+                        true to true -> useChromeHeadless()
+                        true to false -> useChrome()
+                    }
+                }
+            }
+        }
+        if (withNode) nodejs()
+    }
+}
+
+// endregion [MPP Module Build Template]
+
+// region [MPP App Build Template]
+
+fun Project.defaultBuildTemplateForBasicMppApp(
+    appMainPackage: String,
+    appMainFun: String = "main",
+    details: LibDetails = rootExtLibDetails,
+    ignoreCompose: Boolean = false, // so user have to explicitly say THAT he wants to ignore compose settings here.
+    ignoreAndroTarget: Boolean = false, // so user have to explicitly say IF he wants to ignore it.
+    ignoreAndroConfig: Boolean = false, // so user have to explicitly say THAT he wants to ignore it.
+    addCommonMainDependencies: KotlinDependencyHandler.() -> Unit = {},
+) {
+    defaultBuildTemplateForBasicMppLib(
+        details = details,
+        ignoreCompose = ignoreCompose,
+        ignoreAndroTarget = ignoreAndroTarget,
+        ignoreAndroConfig = ignoreAndroConfig,
+        ignoreAndroPublish = true,
+        addCommonMainDependencies = addCommonMainDependencies
+    )
+    extensions.configure<KotlinMultiplatformExtension> {
+        if (details.settings.withJvm) jvm {
+            println("MPP App ${project.name}: Generating general jvm executables with kotlin multiplatform plugin is not supported (without compose).")
+            // TODO_someday: Will they support multiplatform way of declaring jvm app?
+            // binaries.executable()
+            // UPDATE:TODO_later: analyze experimental: mainRun {  } it doesn't work yet (compilation fails) even though IDE recognizes it
+            // for now workaround is: kotlin { jvm { withJava() } }; application { mainClass.set("...") }
+            // but I don't want to include such old dsl in this default fun.
+            // see also:
+            // https://youtrack.jetbrains.com/issue/KT-45038
+            // https://youtrack.jetbrains.com/issue/KT-31424
+        }
+        if (details.settings.withJs) js(IR) {
+            binaries.executable()
+        }
+        if (details.settings.withNativeLinux64) linuxX64 {
+            binaries {
+                executable {
+                    entryPoint = "$appMainPackage.$appMainFun"
                 }
             }
         }
     }
-
-    configurations.checkVerSync()
-    tasks.defaultKotlinCompileOptions()
-    tasks.defaultTestsOptions(onJvmUseJUnitPlatform = withTestJUnit5)
-    if (plugins.hasPlugin("maven-publish")) {
-        defaultPublishing(details)
-        if (plugins.hasPlugin("signing")) defaultSigning()
-        else println("JVM Module ${name}: signing disabled")
-    } else println("JVM Module ${name}: publishing (and signing) disabled")
 }
 
-// endregion [Kotlin Module Build Template]
+// endregion [MPP App Build Template]
 
-// region [Jvm App Build Template]
-
-fun Project.defaultBuildTemplateForJvmApp(
-    appMainPackage: String,
-    appMainClass: String = "MainKt",
-    details: LibDetails = rootExtLibDetails,
-    withTestJUnit4: Boolean = false,
-    withTestJUnit5: Boolean = true,
-    withTestUSpekX: Boolean = true,
-    addMainDependencies: KotlinDependencyHandler.() -> Unit = {},
-) {
-    defaultBuildTemplateForJvmLib(details, withTestJUnit4, withTestJUnit5, withTestUSpekX, addMainDependencies)
-    application { mainClass put "$appMainPackage.$appMainClass" }
-}
-
-// endregion [Jvm App Build Template]

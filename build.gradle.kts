@@ -8,31 +8,40 @@ plugins {
     plug(plugs.KotlinJvm) apply false
 }
 
+val enableJs = true
+val enableNative = true
+// FIXME_someday: how to support all native platforms? Wait/track JetBrains work on "common modules" / "Universal libraries":
+//   https://youtrack.jetbrains.com/issue/KT-52666/Kotlin-Multiplatform-libraries-without-platform-specific-code-a.k.a.-Pure-Kotlin-libraries-Universal-libraries
+
 defaultBuildTemplateForRootProject(
     langaraLibDetails(
         name = "USpek",
         description = "Micro tool for testing with syntax similar to Spek, but shorter.",
-        githubUrl = "https://github.com/langara/USpek",
-        version = Ver(0, 0, 28),
-        // https://repo1.maven.org/maven2/pl/mareklangiewicz/uspek/
-        // https://github.com/langara/USpek/releases
+        githubUrl = "https://github.com/mareklangiewicz/USpek",
+        version = Ver(0, 0, 30),
+        // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/uspek/
+        // https://github.com/mareklangiewicz/USpek/releases
+        settings = LibSettings(
+            withJs = enableJs,
+            withNativeLinux64 = enableNative,
+            compose = null,
+            withTestJUnit4 = false,
+            withTestJUnit5 = false,
+            withTestUSpekX = false, // Let's NOT try to test uspek with other packaged uspek to avoid confusion.
+            withSonatypeOssPublishing = true,
+        ),
     ),
-    withSonatypeOssPublishing = true,
 )
 
 // region [Root Build Template]
 
 /** Publishing to Sonatype OSSRH has to be explicitly allowed here, by setting withSonatypeOssPublishing to true. */
-fun Project.defaultBuildTemplateForRootProject(
-    libDetails: LibDetails? = null,
-    withSonatypeOssPublishing: Boolean = false
-) {
-    check(libDetails != null || !withSonatypeOssPublishing)
+fun Project.defaultBuildTemplateForRootProject(details: LibDetails? = null) {
     ext.addDefaultStuffFromSystemEnvs()
-    libDetails?.let {
+    details?.let {
         rootExtLibDetails = it
         defaultGroupAndVerAndDescription(it)
-        if (withSonatypeOssPublishing) defaultSonatypeOssNexusPublishing()
+        if (it.settings.withSonatypeOssPublishing) defaultSonatypeOssNexusPublishing()
     }
 
     // kinda workaround for kinda issue with kotlin native
