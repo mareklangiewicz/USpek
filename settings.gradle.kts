@@ -5,7 +5,7 @@ pluginManagement {
         google()
         mavenCentral()
     }
-    includeBuild("../DepsKt")
+    // includeBuild("../DepsKt")
 }
 
 plugins {
