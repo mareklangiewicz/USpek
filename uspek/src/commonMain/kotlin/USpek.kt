@@ -73,7 +73,7 @@ class USpekException(cause: Throwable? = null) : RuntimeException(cause)
 var uspekLog: (USpekTree) -> Unit = { println(it.status) }
 
 val USpekTree.status get() = when {
-    failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n"
+    failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n${end?.cause}\n"
     finished -> "SUCCESS.($location)\n"
     else -> name
 }
