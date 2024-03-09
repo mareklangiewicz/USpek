@@ -31,10 +31,11 @@ private fun USpekTree.dynamicNode(): DynamicNode =
     if (branches.isEmpty()) dynamicTest()
     else DynamicContainer.dynamicContainer(name, branches.values.map { it.dynamicNode() } + dynamicTest())
 
-private fun USpekTree.dynamicTest(): DynamicTest = DynamicTest.dynamicTest(name) {
-    println(status)
-    end?.cause?.let { throw it }
-}
+private fun USpekTree.dynamicTest(): DynamicTest =
+    DynamicTest.dynamicTest(name.takeIf { it.isNotBlank() } ?: "NONAME") {
+        println(status)
+        end?.cause?.let { throw it }
+    }
 
 // TODO: use JUnit5 URIs: https://junit.org/junit5/docs/current/user-guide/#writing-tests-dynamic-tests-uri-test-source
 //   to be able to click (or F4) on the test in the Intellij test tree and to be navigated to exact test line
