@@ -22,7 +22,7 @@ val details = langaraLibDetails(
         compose = LibComposeSettings(
             // withComposeCompiler = ComposeCompilerJb, // can't use Jb because andro plugin doesn't support it.
             withComposeCompiler = ComposeCompilerAx,
-            withComposeCompilerAllowWrongKotlinVer = Ver("2.0.0-Beta3"),
+            // withComposeCompilerAllowWrongKotlinVer = Ver("2.0.0-Beta4"),
             withComposeTestUiJUnit4 = true,
             withComposeTestUiJUnit5 = false,
         ),
