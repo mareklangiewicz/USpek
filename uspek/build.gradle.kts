@@ -5,7 +5,7 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plugAll(plugs.KotlinMulti, plugs.MavenPublish, plugs.Signing)
+  plugAll(plugs.KotlinMulti, plugs.MavenPublish, plugs.Signing)
 }
 
 defaultBuildTemplateForBasicMppLib()

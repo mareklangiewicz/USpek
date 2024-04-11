@@ -5,27 +5,27 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plugAll(plugs.KotlinMulti, plugs.JvmApp)
+  plugAll(plugs.KotlinMulti, plugs.JvmApp)
 }
 
 val details = langaraLibDetails(
-    name = "USpek Kt JUnit5 Sample",
-    settings = LibSettings(
-        withJs = false,
-        compose = null,
-        withTestJUnit4 = false,
-        withTestJUnit5 = true,
-        withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
-    ),
+  name = "USpek Kt JUnit5 Sample",
+  settings = LibSettings(
+    withJs = false,
+    compose = null,
+    withTestJUnit4 = false,
+    withTestJUnit5 = true,
+    withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
+  ),
 )
 
 defaultBuildTemplateForBasicMppApp(
-    appMainPackage = "pl.mareklangiewicz.ktsample",
-    details = details,
+  appMainPackage = "pl.mareklangiewicz.ktsample",
+  details = details,
 ) {
-    implementation(project(":uspekx-junit5"))
-    implementation(Langiewicz.kground.withVer(Ver(0, 0, 35)))
-    // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
+  implementation(project(":uspekx-junit5"))
+  implementation(Langiewicz.kground.withVer(Ver(0, 0, 35)))
+  // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
 }
 
 // region Multi Jvm App Workaround

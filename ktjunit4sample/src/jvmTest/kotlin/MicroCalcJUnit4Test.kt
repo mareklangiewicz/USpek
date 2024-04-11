@@ -6,7 +6,10 @@ import pl.mareklangiewicz.uspek.*
 
 @RunWith(USpekJUnit4Runner::class)
 class MicroCalcJUnit4Test {
-    init { "INIT ${this::class.simpleName}".teePP }
-    @USpekTestTree(18) fun microCalcTest() = testSomeMicroCalc()
-    @USpekTestTree(2) fun loggingTest() = testSomeLogging()
+  init {
+    "INIT ${this::class.simpleName}".teePP
+  }
+
+  @USpekTestTree(18) fun microCalcTest() = testSomeMicroCalc()
+  @USpekTestTree(2) fun loggingTest() = testSomeLogging()
 }

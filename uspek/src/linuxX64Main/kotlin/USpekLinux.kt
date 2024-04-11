@@ -8,9 +8,9 @@ package pl.mareklangiewicz.uspek
 //   https://kotlinlang.org/docs/whatsnew1620.html#better-stack-traces-with-libbacktrace
 //   (and running in debug mode - sth like: gradle runDebugExecutableLinuxX64)
 
-//typealias StackTrace = Array<StackTraceElement>
+// typealias StackTrace = Array<StackTraceElement>
 
-actual val USpekTree?.location:CodeLocation? get() = null // TODO // this?.end?.stackTrace?.userCall?.location
+actual val USpekTree?.location: CodeLocation? get() = null // TODO // this?.end?.stackTrace?.userCall?.location
 
 actual val Throwable.causeLocation: CodeLocation?
     get() = null // TODO
@@ -20,10 +20,10 @@ actual val Throwable.causeLocation: CodeLocation?
 //        return frame?.location
 //    }
 
-//private val StackTraceElement.location get() = fileName?.let { CodeLocation(it, lineNumber) }
+// private val StackTraceElement.location get() = fileName?.let { CodeLocation(it, lineNumber) }
 //
-//private val StackTrace.userCall get() = findUserCall()?.let(::getOrNull)
+// private val StackTrace.userCall get() = findUserCall()?.let(::getOrNull)
 //
-//private fun StackTrace.findUserCall() = (1 until size).find {
+// private fun StackTrace.findUserCall() = (1 until size).find {
 //    this[it - 1].fileName == "USpek.kt" && this[it].fileName != "USpek.kt"
 //}

@@ -8,33 +8,33 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plugAll(plugs.AndroLibEdge, plugs.KotlinAndro)
+  plugAll(plugs.AndroLibEdge, plugs.KotlinAndro)
 }
 
 val details = langaraLibDetails(
-    // name = "USpek Andro Sample",
-    name = "ktsample",
-    githubUrl = "https://github.com/mareklangiewicz/USpek",
-    settings = LibSettings(
-        withTestJUnit4 = true,
-        withTestJUnit5 = false,
-        withTestUSpekX = true,
-        compose = LibComposeSettings(
-            // withComposeCompiler = ComposeCompilerJb, // can't use Jb because andro plugin doesn't support it.
-            withComposeCompiler = ComposeCompilerAx,
-            // withComposeCompilerAllowWrongKotlinVer = Ver("2.0.0-Beta4"),
-            withComposeTestUiJUnit4 = true,
-            withComposeTestUiJUnit5 = false,
-        ),
-        andro = LibAndroSettings()
-    )
+  // name = "USpek Andro Sample",
+  name = "ktsample",
+  githubUrl = "https://github.com/mareklangiewicz/USpek",
+  settings = LibSettings(
+    withTestJUnit4 = true,
+    withTestJUnit5 = false,
+    withTestUSpekX = true,
+    compose = LibComposeSettings(
+      // withComposeCompiler = ComposeCompilerJb, // can't use Jb because andro plugin doesn't support it.
+      withComposeCompiler = ComposeCompilerAx,
+      // withComposeCompilerAllowWrongKotlinVer = Ver("2.0.0-Beta4"),
+      withComposeTestUiJUnit4 = true,
+      withComposeTestUiJUnit5 = false,
+    ),
+    andro = LibAndroSettings(),
+  ),
 )
 
 defaultBuildTemplateForAndroLib(details)
 
 dependencies {
-    defaultAndroTestDeps(details.settings, configuration = "androidTestImplementation")
-    // TODO_someday: investigate why "androidTestImplementation" doesn't inherit from "testImplementation"
+  defaultAndroTestDeps(details.settings, configuration = "androidTestImplementation")
+  // TODO_someday: investigate why "androidTestImplementation" doesn't inherit from "testImplementation"
 }
 
 // region [Kotlin Module Build Template]

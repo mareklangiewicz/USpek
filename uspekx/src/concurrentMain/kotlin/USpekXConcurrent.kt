@@ -1,7 +1,7 @@
 package pl.mareklangiewicz.uspek
 
-import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.*
+import kotlinx.coroutines.runBlocking
 
 /**
  * Runs [suspek] inside a new coroutine and **blocks** the current thread until its completion.
@@ -11,5 +11,5 @@ import kotlin.coroutines.*
  * (global one is delicate - have to make sure no other code is using it)
  */
 fun runBlockingUSpek(context: CoroutineContext = USpekContext(), code: suspend () -> Unit): USpekTree =
-    runBlocking(context) { suspek(code); context.ucontext.root }
+  runBlocking(context) { suspek(code); context.ucontext.root }
 

@@ -5,7 +5,10 @@ import pl.mareklangiewicz.uspek.*
 import kotlin.test.*
 
 class USpekExampleCmnNestedTest {
-    init { "INIT ${this::class.simpleName}".teePP }
-    @Test fun uspekExampleCmnNestedTest() = uspek { testSomeDeepNestedStructure() }
+  init {
+    "INIT ${this::class.simpleName}".teePP
+  }
+
+  @Test fun uspekExampleCmnNestedTest() = uspek { testSomeDeepNestedStructure() }
 }
 

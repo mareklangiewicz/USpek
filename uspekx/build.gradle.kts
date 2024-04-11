@@ -5,33 +5,33 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plugAll(plugs.KotlinMulti, plugs.MavenPublish, plugs.Signing)
+  plugAll(plugs.KotlinMulti, plugs.MavenPublish, plugs.Signing)
 }
 
 defaultBuildTemplateForBasicMppLib {
-    api(project(":uspek"))
-    api(KotlinX.coroutines_core)
-    api(KotlinX.coroutines_test)
+  api(project(":uspek"))
+  api(KotlinX.coroutines_core)
+  api(KotlinX.coroutines_test)
 }
 
 kotlin {
 
-    // TODO_later: add concurrentMain and concurrentTest to default templates under flags.
-    //    but first check it all here if it actually work mpp
-    applyDefaultHierarchyTemplate()
-        // see: https://kotlinlang.org/docs/multiplatform-hierarchy.html#creating-additional-source-sets
+  // TODO_later: add concurrentMain and concurrentTest to default templates under flags.
+  //    but first check it all here if it actually work mpp
+  applyDefaultHierarchyTemplate()
+  // see: https://kotlinlang.org/docs/multiplatform-hierarchy.html#creating-additional-source-sets
 
-    sourceSets {
-        val concurrentMain by creating {
-            dependsOn(commonMain.get())
-        }
-        val jvmMain by getting {
-            dependsOn(concurrentMain)
-        }
-        val nativeMain by getting {
-            dependsOn(concurrentMain)
-        }
+  sourceSets {
+    val concurrentMain by creating {
+      dependsOn(commonMain.get())
     }
+    val jvmMain by getting {
+      dependsOn(concurrentMain)
+    }
+    val nativeMain by getting {
+      dependsOn(concurrentMain)
+    }
+  }
 }
 
 // region [Kotlin Module Build Template]

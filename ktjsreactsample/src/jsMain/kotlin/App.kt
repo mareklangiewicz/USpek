@@ -9,10 +9,10 @@ import web.cssom.ClassName
 
 val App = FC<Props> {
 
-        div {
-            className = ClassName("App-header")
-            h2 { +"Welcome to μSpek Playground (KtJsReactSample)" }
-        }
-        Playground { speed = 600 }
+  div {
+    className = ClassName("App-header")
+    h2 { +"Welcome to μSpek Playground (KtJsReactSample)" }
+  }
+  Playground { speed = 600 }
 }
 

@@ -1,11 +1,11 @@
-//import java.util.Locale
-//import java.util.UUID.randomUUID
+// import java.util.Locale
+// import java.util.UUID.randomUUID
 //
 ///**
 // * This runner always runs all tests methods from given testClass
 // * // FIXME: will I need sth like this?? for android testing??
 // */
-//class USpekRunner(testClass: Class<*>) : Runner() {
+// class USpekRunner(testClass: Class<*>) : Runner() {
 //
 //    private val context = GlobalUSpekContext
 //
@@ -22,7 +22,7 @@
 //    override fun run(notifier: RunNotifier) = context.root.run(context.root.name, notifier)
 //}
 //
-//private fun USpekTree.description(suite: String): Description {
+// private fun USpekTree.description(suite: String): Description {
 //    val description =
 //        if (branches.isEmpty()) createTestDescription(suite, name)
 //        else createSuiteDescription(name, randomUUID())
@@ -31,7 +31,7 @@
 //    return description
 //}
 //
-//private fun USpekTree.run(name: String, notifier: RunNotifier) {
+// private fun USpekTree.run(name: String, notifier: RunNotifier) {
 //    if (branches.isEmpty()) {
 //        val description = data as? Description
 //        notifier.fireTestStarted(description)

@@ -5,48 +5,48 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plug(plugs.KotlinMulti)
+  plug(plugs.KotlinMulti)
 }
 
 val details = langaraLibDetails(
-    name = "USpek JS React Sample",
-    settings = LibSettings(
-        withJvm = false,
-        compose = null,
-        withTestJUnit4 = false,
-        withTestJUnit5 = false,
-        withTestUSpekX = false, // Adding it below manually in non-default way
-    ),
+  name = "USpek JS React Sample",
+  settings = LibSettings(
+    withJvm = false,
+    compose = null,
+    withTestJUnit4 = false,
+    withTestJUnit5 = false,
+    withTestUSpekX = false, // Adding it below manually in non-default way
+  ),
 )
 
 defaultBuildTemplateForBasicMppApp(
-    appMainPackage = "pl.mareklangiewicz.ktsample",
-    details = details,
+  appMainPackage = "pl.mareklangiewicz.ktsample",
+  details = details,
 )
 
 val withLocalUSpekX = true // normally it should be false
 
 kotlin {
-    sourceSets {
-        val jsMain by getting {
-            dependencies {
+  sourceSets {
+    val jsMain by getting {
+      dependencies {
 
-                // I use USpekX in jsMain source here (and not just jsTest) on purpose.
-                // To experiment with react based reporting in browser.
-                if (withLocalUSpekX)
-                    implementation(project(":uspekx")) //
-                else
-                    implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 30))) // FIXME: remove hardcoded ver
+        // I use USpekX in jsMain source here (and not just jsTest) on purpose.
+        // To experiment with react based reporting in browser.
+        if (withLocalUSpekX)
+          implementation(project(":uspekx")) //
+        else
+          implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 30))) // FIXME: remove hardcoded ver
 
-                implementation(KotlinX.coroutines_core)
-                
-                implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
-                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react.withNoVer())
-                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react_dom.withNoVer())
-                implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_styled.withNoVer())
-            }
-        }
+        implementation(KotlinX.coroutines_core)
+
+        implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
+        implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react.withNoVer())
+        implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react_dom.withNoVer())
+        implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_styled.withNoVer())
+      }
     }
+  }
 }
 
 // region [Kotlin Module Build Template]

@@ -8,9 +8,9 @@ import web.window.window
 // https://github.com/JetBrains/kotlin-wrappers/blob/master/docs/guide/react.md
 
 fun main() {
-    window.onload = {
-        val id = "rootOfKtJsReactSample"
-        val container = document.getElementById(id) ?: error("Not found: $id")
-        createRoot(container).render(App.create())
-    }
+  window.onload = {
+    val id = "rootOfKtJsReactSample"
+    val container = document.getElementById(id) ?: error("Not found: $id")
+    createRoot(container).render(App.create())
+  }
 }

@@ -3,9 +3,9 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plug(plugs.NexusPublish)
-    plug(plugs.KotlinMulti) apply false
-    plug(plugs.KotlinJvm) apply false
+  plug(plugs.NexusPublish)
+  plug(plugs.KotlinMulti) apply false
+  plug(plugs.KotlinJvm) apply false
 }
 
 val enableJs = true
@@ -14,23 +14,23 @@ val enableNative = true
 //   https://youtrack.jetbrains.com/issue/KT-52666/Kotlin-Multiplatform-libraries-without-platform-specific-code-a.k.a.-Pure-Kotlin-libraries-Universal-libraries
 
 defaultBuildTemplateForRootProject(
-    langaraLibDetails(
-        name = "USpek",
-        description = "Micro tool for testing with syntax similar to Spek, but shorter.",
-        githubUrl = "https://github.com/mareklangiewicz/USpek",
-        version = Ver(0, 0, 33),
-        // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/uspek/
-        // https://github.com/mareklangiewicz/USpek/releases
-        settings = LibSettings(
-            withJs = enableJs,
-            withNativeLinux64 = enableNative,
-            compose = null,
-            withTestJUnit4 = false,
-            withTestJUnit5 = false,
-            withTestUSpekX = false, // Let's NOT try to test uspek with other packaged uspek to avoid confusion.
-            withSonatypeOssPublishing = true,
-        ),
+  langaraLibDetails(
+    name = "USpek",
+    description = "Micro tool for testing with syntax similar to Spek, but shorter.",
+    githubUrl = "https://github.com/mareklangiewicz/USpek",
+    version = Ver(0, 0, 33),
+    // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/uspek/
+    // https://github.com/mareklangiewicz/USpek/releases
+    settings = LibSettings(
+      withJs = enableJs,
+      withNativeLinux64 = enableNative,
+      compose = null,
+      withTestJUnit4 = false,
+      withTestJUnit5 = false,
+      withTestUSpekX = false, // Let's NOT try to test uspek with other packaged uspek to avoid confusion.
+      withSonatypeOssPublishing = true,
     ),
+  ),
 )
 
 // region [Root Build Template]

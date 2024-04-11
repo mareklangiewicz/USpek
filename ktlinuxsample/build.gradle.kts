@@ -5,30 +5,30 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plug(plugs.KotlinMulti)
+  plug(plugs.KotlinMulti)
 }
 
 
 val details = langaraLibDetails(
-    name = "USpek Kt Linux Sample",
-    settings = LibSettings(
-        withJvm = false,
-        withJs = false,
-        withNativeLinux64 = true,
-        compose = null,
-        withTestJUnit4 = false,
-        withTestJUnit5 = false,
-        withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
-    ),
+  name = "USpek Kt Linux Sample",
+  settings = LibSettings(
+    withJvm = false,
+    withJs = false,
+    withNativeLinux64 = true,
+    compose = null,
+    withTestJUnit4 = false,
+    withTestJUnit5 = false,
+    withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
+  ),
 )
 
 defaultBuildTemplateForBasicMppApp(
-    appMainPackage = "pl.mareklangiewicz.ktsample",
-    details = details,
+  appMainPackage = "pl.mareklangiewicz.ktsample",
+  details = details,
 ) {
-    implementation(project(":uspekx"))
-    implementation(Langiewicz.kground.withVer(Ver(0, 0, 35)))
-    // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
+  implementation(project(":uspekx"))
+  implementation(Langiewicz.kground.withVer(Ver(0, 0, 35)))
+  // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
 }
 
 // region [Kotlin Module Build Template]

@@ -6,26 +6,26 @@ import pl.mareklangiewicz.utils.*
 
 
 plugins {
-    plugAll(plugs.KotlinMulti, plugs.JvmApp)
+  plugAll(plugs.KotlinMulti, plugs.JvmApp)
 }
 
 val details = langaraLibDetails(
-    name = "USpek Kt Multi Platform Sample",
-    settings = LibSettings(
-        withNativeLinux64 = true,
-        compose = null,
-        withTestJUnit4 = false, // Cannot configure both 4 and 5 (5 does "useJUnitPlatform()")
-        withTestJUnit5 = true, // it also invokes "useJUnitPlatform()"
-        withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
-    ),
+  name = "USpek Kt Multi Platform Sample",
+  settings = LibSettings(
+    withNativeLinux64 = true,
+    compose = null,
+    withTestJUnit4 = false, // Cannot configure both 4 and 5 (5 does "useJUnitPlatform()")
+    withTestJUnit5 = true, // it also invokes "useJUnitPlatform()"
+    withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
+  ),
 )
 
 defaultBuildTemplateForBasicMppApp(
-    appMainPackage = "pl.mareklangiewicz.ktsample",
-    details = details,
+  appMainPackage = "pl.mareklangiewicz.ktsample",
+  details = details,
 ) {
-    implementation(Langiewicz.kground.withVer(Ver(0, 0, 35)))
-    // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
+  implementation(Langiewicz.kground.withVer(Ver(0, 0, 35)))
+  // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
 }
 
 // region Multi Jvm App Workaround
@@ -38,19 +38,19 @@ application { mainClass.set("pl.mareklangiewicz.ktsample.MainKt") }
 
 
 kotlin {
-    sourceSets {
-        val commonTest by getting {
-            dependencies {
-                implementation(project(":uspek"))
-                implementation(project(":uspekx"))
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                implementation(project(":uspekx-junit5"))
-            }
-        }
+  sourceSets {
+    val commonTest by getting {
+      dependencies {
+        implementation(project(":uspek"))
+        implementation(project(":uspekx"))
+      }
     }
+    val jvmTest by getting {
+      dependencies {
+        implementation(project(":uspekx-junit5"))
+      }
+    }
+  }
 }
 
 // region [Kotlin Module Build Template]

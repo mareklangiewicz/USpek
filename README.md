@@ -1,13 +1,15 @@
 # μSpek
+
 Micro tool for testing with syntax similar to Spek, but shorter.
 Test different nested scenarios without **any** boilerplate code.
 
 ### Example
+
 ```kotlin
 
     @Test
     fun uspekTest() {
-    
+
         uspek {
 
             "create some mutable list" o {
@@ -60,11 +62,12 @@ USpekX also contains less essential stuff like fun for test factories for JUnit5
 Use USpekX when in doubt. Both flavors are multiplatform.
 
 ### Building with Gradle
+
 ```gradle
     repositories {
         mavenCentral()
     }
-   
+
     dependencies {
         // either:
         testImplementation 'pl.mareklangiewicz:uspekx:A.B.C'

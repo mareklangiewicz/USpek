@@ -37,8 +37,11 @@ private inline fun USpekContext.o(name: String, code: () -> Unit) {
     subbranch.end == null || return // already tested so skip this whole subbranch
     branch = subbranch // step through the tree into the subbranch
     uspekLog(subbranch)
-    throw try { code(); USpekException() }
-    catch (e: Throwable) { e as? CancellationException ?: e as? USpekException ?: USpekException(e) }
+    throw try {
+        code(); USpekException()
+    } catch (e: Throwable) {
+        e as? CancellationException ?: e as? USpekException ?: USpekException(e)
+    }
 }
 
 @Deprecated("Enable this test code", ReplaceWith("o(code)"))
@@ -49,9 +52,10 @@ infix fun String.sox(code: suspend () -> Unit) = Unit
 
 data class USpekContext(
     val root: USpekTree = USpekTree("uspek"),
-    var branch: USpekTree = root
+    var branch: USpekTree = root,
 ) : CoroutineContext.Element {
     override val key: CoroutineContext.Key<USpekContext> = Key
+
     companion object Key : CoroutineContext.Key<USpekContext>
 }
 // FIXME NOW: should I use AbstractCoroutineContextElement????
@@ -65,18 +69,19 @@ data class USpekTree(
     val name: String,
     val branches: MutableMap<String, USpekTree> = mutableMapOf(),
     var end: USpekException? = null,
-    var data: Any? = null
+    var data: Any? = null,
 )
 
 class USpekException(cause: Throwable? = null) : RuntimeException(cause)
 
 var uspekLog: (USpekTree) -> Unit = { println(it.status) }
 
-val USpekTree.status get() = when {
-    failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n${end?.cause}\n"
-    finished -> "SUCCESS.($location)\n"
-    else -> name
-}
+val USpekTree.status
+    get() = when {
+        failed -> "FAILURE.($location)\nBECAUSE.($causeLocation)\n${end?.cause}\n"
+        finished -> "SUCCESS.($location)\n"
+        else -> name
+    }
 
 val USpekTree.finished get() = end !== null
 

@@ -5,12 +5,12 @@ import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-    plugAll(plugs.KotlinMulti, plugs.MavenPublish, plugs.Signing)
+  plugAll(plugs.KotlinMulti, plugs.MavenPublish, plugs.Signing)
 }
 
 val settings = rootExtLibDetails.settings.copy(
-    withJs = false,
-    withNativeLinux64 = false,
+  withJs = false,
+  withNativeLinux64 = false,
 )
 
 val details = rootExtLibDetails.copy(settings = settings)
@@ -18,19 +18,19 @@ val details = rootExtLibDetails.copy(settings = settings)
 defaultBuildTemplateForBasicMppLib(details)
 
 kotlin {
-    @Suppress("UNUSED_VARIABLE")
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(project(":uspekx"))
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
-            }
-        }
+  @Suppress("UNUSED_VARIABLE")
+  sourceSets {
+    val commonMain by getting {
+      dependencies {
+        api(project(":uspekx"))
+      }
     }
+    val jvmMain by getting {
+      dependencies {
+        implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
+      }
+    }
+  }
 }
 
 // region [Kotlin Module Build Template]

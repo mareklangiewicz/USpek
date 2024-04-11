@@ -5,7 +5,10 @@ import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.uspekTestFactory
 
 class USpekJUnitFactoryNestedTest {
-    init { "INIT ${this::class.simpleName}".teePP }
-    @TestFactory fun uspekExampleTestFactory() = uspekTestFactory { testSomeDeepNestedStructure() }
+  init {
+    "INIT ${this::class.simpleName}".teePP
+  }
+
+  @TestFactory fun uspekExampleTestFactory() = uspekTestFactory { testSomeDeepNestedStructure() }
 }
 

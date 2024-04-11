@@ -15,9 +15,11 @@ import kotlin.test.*
 // https://blog.jetbrains.com/idea/2023/11/intellij-idea-2023-3-beta-2/#new-functionality-for-testing-javascript
 
 class UnnecessaryMicroCalcJsTest {
-    init { "INIT ${this::class.simpleName}".teePP }
-    // to check in logs in which scenarios, this example test is executed.
-    @Test fun unnecessaryJsExampleTest() = uspek { "example test" o { 2 + 3 eq 5; "2 + 3 = 5".tee } }
-    @Test fun unnecessarilyRepeatedMicroCalcCmnTest() = uspek { testSomeMicroCalc() }
-    @Test fun unnecessarilyRepeatedLoggingCmnTest() = uspek { testSomeLogging() }
+  init {
+    "INIT ${this::class.simpleName}".teePP
+  }
+  // to check in logs in which scenarios, this example test is executed.
+  @Test fun unnecessaryJsExampleTest() = uspek { "example test" o { 2 + 3 eq 5; "2 + 3 = 5".tee } }
+  @Test fun unnecessarilyRepeatedMicroCalcCmnTest() = uspek { testSomeMicroCalc() }
+  @Test fun unnecessarilyRepeatedLoggingCmnTest() = uspek { testSomeLogging() }
 }

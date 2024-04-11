@@ -1,10 +1,10 @@
 package pl.mareklangiewicz.uspek
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.*
 import kotlin.coroutines.*
 import kotlin.time.*
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.*
 
 /**
  * Runs [suspek] inside [runTest] from kotlinx-coroutines-test API. See [runTest] for details.
@@ -17,9 +17,9 @@ import kotlin.time.Duration.Companion.seconds
  * See [TestResult] kdoc for details.
  */
 fun runTestUSpek(
-    context: CoroutineContext = USpekContext(),
-    timeout: Duration = 10.seconds,
-    code: suspend TestScope.() -> Unit,
+  context: CoroutineContext = USpekContext(),
+  timeout: Duration = 10.seconds,
+  code: suspend TestScope.() -> Unit,
 ) = runTest(context, timeout) { suspek { code() } }
 
 /**
@@ -29,7 +29,7 @@ fun runTestUSpek(
  * (global one is delicate - have to make sure no other code is using it)
  */
 fun CoroutineScope.launchUSpek(context: CoroutineContext = USpekContext(), code: suspend () -> Unit): Job =
-    launch(context) { suspek(code) }
+  launch(context) { suspek(code) }
 
 /**
  * Creates a coroutine running [suspek] in the background and returns its future result [USpekTree] as [Deferred].
@@ -37,5 +37,8 @@ fun CoroutineScope.launchUSpek(context: CoroutineContext = USpekContext(), code:
  * @param context (or [this]) should contain USpekContext (so default is fine), or else it will REUSE [GlobalUSpekContext]!
  * (global one is delicate - have to make sure no other code is using it)
  */
-fun CoroutineScope.asyncUSpek(context: CoroutineContext = USpekContext(), code: suspend () -> Unit): Deferred<USpekTree> =
-    async(context) { suspek(code); context.ucontext.root }
+fun CoroutineScope.asyncUSpek(
+  context: CoroutineContext = USpekContext(),
+  code: suspend () -> Unit,
+): Deferred<USpekTree> =
+  async(context) { suspek(code); context.ucontext.root }
