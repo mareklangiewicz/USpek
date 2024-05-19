@@ -14,11 +14,11 @@ val enableNative = true
 //   https://youtrack.jetbrains.com/issue/KT-52666/Kotlin-Multiplatform-libraries-without-platform-specific-code-a.k.a.-Pure-Kotlin-libraries-Universal-libraries
 
 defaultBuildTemplateForRootProject(
-  langaraLibDetails(
+  myLibDetails(
     name = "USpek",
     description = "Micro tool for testing with syntax similar to Spek, but shorter.",
     githubUrl = "https://github.com/mareklangiewicz/USpek",
-    version = Ver(0, 0, 33),
+    version = Ver(0, 0, 34),
     // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/uspek/
     // https://github.com/mareklangiewicz/USpek/releases
     settings = LibSettings(
@@ -33,7 +33,7 @@ defaultBuildTemplateForRootProject(
   ),
 )
 
-// region [Root Build Template]
+// region [[Root Build Template]]
 
 /** Publishing to Sonatype OSSRH has to be explicitly allowed here, by setting withSonatypeOssPublishing to true. */
 fun Project.defaultBuildTemplateForRootProject(details: LibDetails? = null) {
@@ -81,4 +81,4 @@ fun Project.defaultSonatypeOssNexusPublishing(
   }
 }
 
-// endregion [Root Build Template]
+// endregion [[Root Build Template]]
