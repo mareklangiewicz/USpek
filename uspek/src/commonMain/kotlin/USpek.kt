@@ -93,8 +93,7 @@ expect val Throwable.causeLocation: CodeLocation?
 
 val USpekTree?.causeLocation get() = this?.end?.causeLocation
 
-@Deprecated("Use standard assert or custom lib like KGround: chkEq, reqEq, etc.")
-infix fun <T> T.eq(expected: T) = check(this == expected) { "$this != $expected" }
+internal infix fun <T> T.chkEq(expected: T) = check(this == expected) { "$this != $expected" }
 
 
 data class CodeLocation(val fileName: String, val lineNumber: Int) {
