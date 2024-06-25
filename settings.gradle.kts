@@ -17,6 +17,7 @@ pluginManagement {
     gradlePluginPortal()
     google()
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
   }
 
   val depsDir = File(rootDir, "../DepsKt").normalize()
@@ -30,8 +31,8 @@ pluginManagement {
 }
 
 plugins {
-  id("pl.mareklangiewicz.deps.settings") version "0.3.16" // https://plugins.gradle.org/search?term=mareklangiewicz
-  id("com.gradle.develocity") version "3.17.4" // https://docs.gradle.com/develocity/gradle-plugin/
+  id("pl.mareklangiewicz.deps.settings") version "0.3.26" // https://plugins.gradle.org/search?term=mareklangiewicz
+  id("com.gradle.develocity") version "3.17.5" // https://docs.gradle.com/develocity/gradle-plugin/
 }
 
 develocity {

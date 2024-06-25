@@ -28,11 +28,11 @@ jobs:
         distribution: 'zulu'
     - id: 'step-2'
       name: 'Build'
-      uses: 'gradle/gradle-build-action@v3'
+      uses: 'gradle/actions/setup-gradle@v3'
       with:
         arguments: 'build'
     - id: 'step-3'
       name: 'Publish to Sonatype'
-      uses: 'gradle/gradle-build-action@v3'
+      uses: 'gradle/actions/setup-gradle@v3'
       with:
         arguments: 'publishToSonatype closeAndReleaseSonatypeStagingRepository'
