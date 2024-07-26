@@ -24,7 +24,7 @@ jobs:
       name: 'Set up JDK'
       uses: 'actions/setup-java@v4'
       with:
-        java-version: '21'
+        java-version: '22'
         distribution: 'zulu'
     - id: 'step-2'
       name: 'Build'
@@ -33,6 +33,4 @@ jobs:
         arguments: 'build'
     - id: 'step-3'
       name: 'Publish to Sonatype'
-      uses: 'gradle/actions/setup-gradle@v3'
-      with:
-        arguments: 'publishToSonatype closeAndReleaseSonatypeStagingRepository'
+      run: './gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --no-configuration-cache --no-parallel'

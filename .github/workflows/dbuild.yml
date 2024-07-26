@@ -27,7 +27,7 @@ jobs:
       name: 'Set up JDK'
       uses: 'actions/setup-java@v4'
       with:
-        java-version: '21'
+        java-version: '22'
         distribution: 'zulu'
     - id: 'step-2'
       name: 'Build'
