@@ -56,7 +56,7 @@ include(
 
   // FIXME NOW: Package 'pl.mareklangiewicz.kground' is compiled by a pre-release version of Kotlin and cannot be loaded by this version of the compiler
   // ":ktjunit4sample",
-  // ":ktjunit5sample",
+  ":ktjunit5sample",
   // ":ktmultisample",
   // ":ktlinuxsample",
 

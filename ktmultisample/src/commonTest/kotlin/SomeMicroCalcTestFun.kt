@@ -1,5 +1,6 @@
 package pl.mareklangiewicz.ktsample
 
+import pl.mareklangiewicz.bad.chkEq
 import pl.mareklangiewicz.uspek.*
 
 fun testSomeMicroCalc() {
@@ -9,9 +10,9 @@ fun testSomeMicroCalc() {
 
     "check add" o {
       sut.add(5)
-      sut.result eq 15
+      sut.result chkEq 15
       sut.add(100)
-      sut.result eq 115
+      sut.result chkEq 115
     }
 
     "mutate SUT" o {
@@ -20,15 +21,15 @@ fun testSomeMicroCalc() {
       @Suppress("Deprecation")
       "incorrectly check add - this should fail" ox {
         sut.add(5)
-        sut.result eq 15
+        sut.result chkEq 15
       }
     }
 
     "check add again" o {
       sut.add(5)
-      sut.result eq 15
+      sut.result chkEq 15
       sut.add(100)
-      sut.result eq 115
+      sut.result chkEq 115
     }
 
     testSomeAdding(sut)
@@ -37,15 +38,15 @@ fun testSomeMicroCalc() {
       sut.result = 3
 
       sut.multiplyBy(3)
-      sut.result eq 9
+      sut.result chkEq 9
       sut.multiplyBy(4)
-      sut.result eq 36
+      sut.result chkEq 36
 
       testSomeAdding(sut)
     }
 
     "assure that SUT is intact by any of sub tests above" o {
-      sut.result eq 10
+      sut.result chkEq 10
     }
   }
 }
@@ -53,9 +54,9 @@ fun testSomeMicroCalc() {
 fun testSomeLogging() {
   val sut = MicroCalc(10)
   "blaaaaa" o {
-    sut.result eq 10
+    sut.result chkEq 10
     "blee" o {
-      sut.result eq 10
+      sut.result chkEq 10
     }
   }
 }
@@ -66,19 +67,19 @@ fun testSomeAdding(calc: MicroCalc) {
   "add 5 to $start" o {
     calc.add(5)
     val afterAdd5 = start + 5
-    "result should be $afterAdd5" o { calc.result eq afterAdd5 }
+    "result should be $afterAdd5" o { calc.result chkEq afterAdd5 }
 
     "add 7 more" o {
       calc.add(7)
       val afterAdd5Add7 = afterAdd5 + 7
-      "result should be $afterAdd5Add7" o { calc.result eq afterAdd5Add7 }
+      "result should be $afterAdd5Add7" o { calc.result chkEq afterAdd5Add7 }
     }
   }
 
   "subtract 3" o {
     calc.add(-3)
     val afterSub3 = start - 3
-    "result should be $afterSub3" o { calc.result eq afterSub3 }
+    "result should be $afterSub3" o { calc.result chkEq afterSub3 }
   }
 }
 

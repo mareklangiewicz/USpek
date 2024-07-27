@@ -1,12 +1,17 @@
+
+// region [[Basic Root Build Imports and Plugs]]
+
 import pl.mareklangiewicz.defaults.*
-import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
+import pl.mareklangiewicz.deps.*
 
 plugins {
-  plug(plugs.NexusPublish)
   plug(plugs.KotlinMulti) apply false
   plug(plugs.KotlinJvm) apply false
+  plug(plugs.NexusPublish)
 }
+
+// endregion [[Basic Root Build Imports and Plugs]]
 
 val enableJs = true
 val enableNative = true
@@ -18,7 +23,7 @@ defaultBuildTemplateForRootProject(
     name = "USpek",
     description = "Micro tool for testing with syntax similar to Spek, but shorter.",
     githubUrl = "https://github.com/mareklangiewicz/USpek",
-    version = Ver(0, 0, 36),
+    version = Ver(0, 0, 37),
     // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/uspek/
     // https://github.com/mareklangiewicz/USpek/releases
     settings = LibSettings(

@@ -19,7 +19,7 @@ class UnnecessaryMicroCalcJsTest {
     "INIT ${this::class.simpleName}".teePP
   }
   // to check in logs in which scenarios, this example test is executed.
-  @Test fun unnecessaryJsExampleTest() = uspek { "example test" o { 2 + 3 eq 5; "2 + 3 = 5".tee } }
+  @Test fun unnecessaryJsExampleTest() = uspek { "example test" o { 2 + 3 chkEq 5; "2 + 3 = 5".tee } }
   @Test fun unnecessarilyRepeatedMicroCalcCmnTest() = uspek { testSomeMicroCalc() }
   @Test fun unnecessarilyRepeatedLoggingCmnTest() = uspek { testSomeLogging() }
 }

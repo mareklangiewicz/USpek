@@ -5,6 +5,8 @@ import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
 import kotlin.time.*
 import kotlin.time.Duration.Companion.minutes
+import pl.mareklangiewicz.bad.chkEq
+import pl.mareklangiewicz.udata.unt
 
 suspend fun checkSequentialSlowly(max: Int = 900) = coroutineScope {
   uspekLog = { }
@@ -13,7 +15,7 @@ suspend fun checkSequentialSlowly(max: Int = 900) = coroutineScope {
     val d1 = asyncUSpek { checkAddSlowly(1, 1, max); "in1".tee }; "out1".tee; d1.await(); "after1".tee
     val d2 = asyncUSpek { checkAddSlowly(2, 1, max); "in2".tee }; "out2".tee; d2.await(); "after2".tee
   }
-  "end (measured: $time)".tee.unit
+  "end (measured: $time)".tee.unt
 }
 
 suspend fun checkConcurrentSlowly(max: Int = 900) = coroutineScope {
@@ -25,7 +27,7 @@ suspend fun checkConcurrentSlowly(max: Int = 900) = coroutineScope {
     d1.await(); "after1".tee
     d2.await(); "after2".tee
   }
-  "end (measured: $time)".tee.unit // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
+  "end (measured: $time)".tee.unt // measured: around 160ms for maxLoopShort == 900; around 4.6s for 9000
 }
 
 
@@ -39,7 +41,7 @@ fun checkSimpleMassively(max: Int = 500_000) {
       checkAddFaster(400, 499, 1, max); "4".tee
     }
   }
-  "end (measured: $time)".tee.unit
+  "end (measured: $time)".tee.unt
 }
 
 
@@ -51,7 +53,7 @@ suspend fun checkSequentialMassively(max: Int = 500_000) = coroutineScope {
     val d3 = asyncUSpek { checkAddFaster(300, 399, 1, max); "in3".tee }; "out3".tee; d3.await(); "after3".tee
     val d4 = asyncUSpek { checkAddFaster(400, 499, 1, max); "in4".tee }; "out4".tee; d4.await(); "after4".tee
   }
-  "end (measured: $time)".tee.unit
+  "end (measured: $time)".tee.unt
 }
 
 
@@ -67,7 +69,7 @@ suspend fun checkConcurrentMassively(max: Int = 500_000) = coroutineScope {
     d3.await(); "after3".tee
     d4.await(); "after4".tee
   }
-  "end (measured: $time)".tee.unit
+  "end (measured: $time)".tee.unt
 }
 
 
@@ -89,7 +91,7 @@ suspend fun checkAddSlowly(addArg: Int, resultFrom: Int, resultTo: Int) {
         "check add $addArg to $i" so {
           sut.result = i
           sut.add(addArg)
-          sut.result eq i + addArg
+          sut.result chkEq i + addArg
 //                        require(i < resultTo - 3) // this should fail three times
         }
       }
@@ -105,7 +107,7 @@ suspend fun checkAddFaster(addArgFrom: Int, addArgTo: Int, resultFrom: Int, resu
       for (i in resultFrom..resultTo) {
         sut.result = i
         sut.add(addArg)
-        sut.result eq i + addArg
+        sut.result chkEq i + addArg
       }
 //            require(false) // enable to test failing
   }

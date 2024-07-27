@@ -77,7 +77,7 @@ class JsExampleUSpeks {
       for (i in 10..50 step 10) "When current result is $i".oAfterEach(
         codeAfter = {
           println("after - calc.result:${calc.result}")
-//                    calc.result eq 1 // intentional fail
+//                    calc.result chkEq 1 // intentional fail
         },
       ) {
         calc.result = i

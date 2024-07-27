@@ -382,15 +382,17 @@ fun Project.defaultBuildTemplateForBasicMppApp(
   )
   extensions.configure<KotlinMultiplatformExtension> {
     if (details.settings.withJvm) jvm {
-      println("MPP App ${project.name}: Generating general jvm executables with kotlin multiplatform plugin is not supported (without compose).")
-      // TODO_someday: Will they support multiplatform way of declaring jvm app?
-      // binaries.executable()
-      // UPDATE:TODO_later: analyze experimental: mainRun {  } it doesn't work yet (compilation fails) even though IDE recognizes it
-      // for now workaround is: kotlin { jvm { withJava() } }; application { mainClass.set("...") }
-      // but I don't want to include such old dsl in this default fun.
-      // see also:
-      // https://youtrack.jetbrains.com/issue/KT-45038
-      // https://youtrack.jetbrains.com/issue/KT-31424
+      mainRun {
+        mainClass = details.run { "$appMainPackage.$appMainClass" }
+        logger.info("MPP App ${project.name}: MPP plugin (without compose) just adds jvmRun task (experimental). No executable.")
+        // Workaround to generate jvm binary: Separate jvm module with plugAll(plugs.KotlinJvm, plugs.JvmApp)
+        // As Gradle/KMP warning says (when trying to combine KotlinMulti with JvmApp):
+        // w: 'application' (also applies 'java' plugin) Gradle plugin is not compatible with 'org.jetbrains.kotlin.multiplatform' plugin.
+        // Consider adding a new subproject with 'application' plugin where the KMP project is added as a dependency.
+        // see also:
+        // https://youtrack.jetbrains.com/issue/KT-45038
+        // https://youtrack.jetbrains.com/issue/KT-31424
+      }
     }
     if (details.settings.withJs) js(IR) {
       binaries.executable()
@@ -398,7 +400,7 @@ fun Project.defaultBuildTemplateForBasicMppApp(
     if (details.settings.withNativeLinux64) linuxX64 {
       binaries {
         executable {
-          entryPoint = "${details.appMainPackage}.${details.appMainFun}"
+          entryPoint = details.run { "$appMainPackage.$appMainFun" }
         }
       }
     }
