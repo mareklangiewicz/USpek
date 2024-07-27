@@ -1,16 +1,22 @@
-import org.jetbrains.kotlin.gradle.plugin.*
+
+// region [[Basic MPP App Build Imports and Plugs]]
+
 import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.plugin.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-  plug(plugs.KotlinMulti)
+  plugAll(
+    plugs.KotlinMulti,
+  )
 }
 
+// endregion [[Basic MPP App Build Imports and Plugs]]
 
-val details = langaraLibDetails(
-  name = "USpek Kt Linux Sample",
+val details = myLibDetails(
+  name = "ktsample",
   settings = LibSettings(
     withJvm = false,
     withJs = false,
@@ -22,10 +28,7 @@ val details = langaraLibDetails(
   ),
 )
 
-defaultBuildTemplateForBasicMppApp(
-  appMainPackage = "pl.mareklangiewicz.ktsample",
-  details = details,
-) {
+defaultBuildTemplateForBasicMppApp(details) {
   implementation(project(":uspekx"))
   implementation(Langiewicz.kground)
   // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
