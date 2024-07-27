@@ -34,7 +34,7 @@ fun useUSpekHook(code: suspend () -> Unit): USpekTree {
 
   var tree by useState(GlobalUSpekContext.root)
 
-  useEffectOnce {
+  useEffectOnceWithCleanup {
     val job = MainScope().launch {
       suspek {
         // we don't need any setState here because tree is useState hook delegate property
@@ -42,7 +42,7 @@ fun useUSpekHook(code: suspend () -> Unit): USpekTree {
         code()
       }
     }
-    cleanup { job.cancel() }
+    onCleanup { job.cancel() }
   }
   return tree
 }

@@ -51,8 +51,7 @@ include(
   ":uspekx-junit4",
   ":uspekx-junit5",
 
-  // FIXME NOW:Could not find org.jetbrains.kotlin-wrappers:kotlin-styled:.
-  // ":ktjsreactsample",
+  ":ktjsreactsample",
 
   ":ktjunit4sample",
   ":ktjunit5sample",

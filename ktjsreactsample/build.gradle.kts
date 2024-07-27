@@ -1,15 +1,22 @@
-import org.jetbrains.kotlin.gradle.plugin.*
+
+// region [[Basic MPP App Build Imports and Plugs]]
+
 import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.plugin.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-  plug(plugs.KotlinMulti)
+  plugAll(
+    plugs.KotlinMulti,
+  )
 }
 
-val details = langaraLibDetails(
-  name = "USpek JS React Sample",
+// endregion [[Basic MPP App Build Imports and Plugs]]
+
+val details = myLibDetails(
+  name = "ktsample",
   settings = LibSettings(
     withJvm = false,
     compose = null,
@@ -19,10 +26,10 @@ val details = langaraLibDetails(
   ),
 )
 
-defaultBuildTemplateForBasicMppApp(
-  appMainPackage = "pl.mareklangiewicz.ktsample",
-  details = details,
-)
+defaultBuildTemplateForBasicMppApp(details) {
+  implementation(Langiewicz.kground)
+  // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
+}
 
 val withLocalUSpekX = true // normally it should be false
 
@@ -44,7 +51,7 @@ kotlin {
         implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
         implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react.withNoVer())
         implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_react_dom.withNoVer())
-        implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_styled.withNoVer())
+        implementation(Org.JetBrains.Kotlin_Wrappers.kotlin_styled_next.withNoVer())
       }
     }
   }
