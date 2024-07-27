@@ -3,6 +3,7 @@ package pl.mareklangiewicz.ktsample
 import kotlinx.coroutines.*
 import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
+import pl.mareklangiewicz.udata.unt
 import kotlin.test.*
 
 private const val maxLoopShort = 900
@@ -42,6 +43,6 @@ class ConcurrentLinuxTest {
     "start".teePP
     checkAddSlowly(666, 10, 20)
     checkAddSlowly(999, 50, 60)
-    "end".tee.unit
+    "end".tee.unt
   }
 }

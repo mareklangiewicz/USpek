@@ -1,16 +1,22 @@
+
+// region [[Basic MPP App Build Imports and Plugs]]
+
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
-
 plugins {
-  plugAll(plugs.KotlinMulti, plugs.JvmApp)
+  plugAll(
+    plugs.KotlinMulti,
+  )
 }
 
-val details = langaraLibDetails(
-  name = "USpek Kt Multi Platform Sample",
+// endregion [[Basic MPP App Build Imports and Plugs]]
+
+val details = myLibDetails(
+  name = "ktsample",
   settings = LibSettings(
     withNativeLinux64 = true,
     compose = null,
@@ -18,23 +24,12 @@ val details = langaraLibDetails(
     withTestJUnit5 = true, // it also invokes "useJUnitPlatform()"
     withTestUSpekX = false, // FIXME: temporarily defined by hand below (to :project directly)
   ),
-)
+).copy(appMainClass = "MainKt")
 
-defaultBuildTemplateForBasicMppApp(
-  appMainPackage = "pl.mareklangiewicz.ktsample",
-  details = details,
-) {
+defaultBuildTemplateForBasicMppApp(details) {
   implementation(Langiewicz.kground)
   // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/kground/
 }
-
-// region Multi Jvm App Workaround
-
-// see comment inside: fun Project.defaultBuildTemplateForMppApp (below)
-kotlin { jvm { withJava() } }
-application { mainClass.set("pl.mareklangiewicz.ktsample.MainKt") }
-
-// endregion Multi Jvm App Workaround
 
 
 kotlin {
