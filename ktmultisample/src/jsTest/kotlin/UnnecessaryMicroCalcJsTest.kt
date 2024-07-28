@@ -2,6 +2,7 @@ package pl.mareklangiewicz.ktsample
 
 import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
+import pl.mareklangiewicz.bad.chkEq
 import kotlin.test.*
 
 // This file here is temporary. Mostly to monitor how new IntelliJ versions deal with js tests.
