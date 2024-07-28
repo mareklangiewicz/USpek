@@ -45,6 +45,8 @@ develocity {
 
 // endregion [[My Settings Stuff]]
 
+// Note: it may be good idea to comment out / disable some subprojects (like ktandrosample) to save memory/build time
+
 include(
   ":uspek",
   ":uspekx",
@@ -57,7 +59,5 @@ include(
   ":ktjunit5sample",
   ":ktmultisample",
   ":ktlinuxsample",
-
-  // ktandrosample is a separate project with own settings (should be opened in Android Studio separately)
-  //   it's this way because issues with opening andro projects in Intellij (IDE andro plugin incompatible with new gradle andro plugin)
+  ":ktandrosample",
 )

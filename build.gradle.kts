@@ -1,5 +1,5 @@
 
-// region [[Basic Root Build Imports and Plugs]]
+// region [[Full Root Build Imports and Plugs]]
 
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.utils.*
@@ -8,10 +8,14 @@ import pl.mareklangiewicz.deps.*
 plugins {
   plug(plugs.KotlinMulti) apply false
   plug(plugs.KotlinJvm) apply false
+  plug(plugs.KotlinMultiCompose) apply false
+  plug(plugs.ComposeJb) apply false
+  plug(plugs.AndroLib) apply false
+  plug(plugs.AndroApp) apply false
   plug(plugs.NexusPublish)
 }
 
-// endregion [[Basic Root Build Imports and Plugs]]
+// endregion [[Full Root Build Imports and Plugs]]
 
 val enableJs = true
 val enableNative = true

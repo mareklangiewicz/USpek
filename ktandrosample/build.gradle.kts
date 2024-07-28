@@ -1,4 +1,5 @@
-// region [Custom Andro Lib Build Imports and Plugs]
+
+// region [[Andro Lib Build Imports and Plugs]]
 
 import com.android.build.api.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.*
@@ -11,12 +12,14 @@ plugins {
   plugAll(
     plugs.KotlinMulti,
     plugs.KotlinMultiCompose,
-    plugs.ComposeJb,
-    plugs.AndroLib,
+    plugs.ComposeJbNoVer,
+    plugs.AndroLibNoVer,
+    plugs.MavenPublish,
+    plugs.Signing
   )
 }
 
-// endregion [Custom Andro Lib Build Imports and Plugs]
+// endregion [[Andro Lib Build Imports and Plugs]]
 
 val details = myLibDetails(
   name = "ktsample",
@@ -29,7 +32,7 @@ val details = myLibDetails(
     withTestUSpekX = true, // We explicitly pull published version of USpekX (not local :project..)
     andro = LibAndroSettings(
       sdkCompilePreview = Vers.AndroSdkPreview,
-      // publishVariant = "debug",
+      publishVariant = "debug",
     ),
   ),
 )
