@@ -3,6 +3,7 @@ package playground
 import kotlinx.coroutines.*
 import pl.mareklangiewicz.ktsample.*
 import pl.mareklangiewicz.uspek.*
+import pl.mareklangiewicz.bad.chkEq
 import kotlin.test.*
 
 class ExampleTest {
