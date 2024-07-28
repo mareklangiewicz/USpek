@@ -59,5 +59,22 @@ include(
   ":ktjunit5sample",
   ":ktmultisample",
   ":ktlinuxsample",
-  ":ktandrosample",
+  // ":ktandrosample",
 )
+
+
+/*
+
+FIXME_later: Releasing USpek with :ktandrosample enabled failed.
+Looks like bug with tasks dependencies related to resources.
+Don't know if't on android side or compose mpp side
+(compose mpp is changing resource management recently)
+Unfortunately the bug did not reproduce on my machine,
+and generally looks like an issue which can happen very randomly
+(race conditions between tasks?)
+
+report from github:
+https://github.com/mareklangiewicz/USpek/actions/runs/10130733354/job/28012490261
+https://scans.gradle.com/s/qtvw3gn3xdqt2
+
+*/
