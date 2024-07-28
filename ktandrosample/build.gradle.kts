@@ -1,32 +1,36 @@
-@file:Suppress("DEPRECATION")
+// region [Custom Andro Lib Build Imports and Plugs]
 
-import com.android.build.api.dsl.CommonExtension
-import com.android.build.api.dsl.LibraryExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import com.android.build.api.dsl.*
+import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.plugin.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-  plugAll(plugs.AndroLibEdge, plugs.KotlinAndro)
+  plugAll(
+    plugs.KotlinMulti,
+    plugs.KotlinMultiCompose,
+    plugs.ComposeJb,
+    plugs.AndroLib,
+  )
 }
 
-val details = langaraLibDetails(
-  // name = "USpek Andro Sample",
+// endregion [Custom Andro Lib Build Imports and Plugs]
+
+val details = myLibDetails(
   name = "ktsample",
+  description = "USpek Andro Lib Sample.",
   githubUrl = "https://github.com/mareklangiewicz/USpek",
   settings = LibSettings(
+    withJs = false,
     withTestJUnit4 = true,
     withTestJUnit5 = false,
-    withTestUSpekX = true,
-    compose = LibComposeSettings(
-      // withComposeCompiler = ComposeCompilerJb, // can't use Jb because andro plugin doesn't support it.
-      withComposeCompiler = ComposeCompilerAx,
-      // withComposeCompilerAllowWrongKotlinVer = Ver("2.0.0-Beta4"),
-      withComposeTestUiJUnit4 = true,
-      withComposeTestUiJUnit5 = false,
+    withTestUSpekX = true, // We explicitly pull published version of USpekX (not local :project..)
+    andro = LibAndroSettings(
+      sdkCompilePreview = Vers.AndroSdkPreview,
+      // publishVariant = "debug",
     ),
-    andro = LibAndroSettings(),
   ),
 )
 
