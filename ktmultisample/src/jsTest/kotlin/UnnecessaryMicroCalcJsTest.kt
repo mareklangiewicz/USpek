@@ -4,6 +4,8 @@ import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
 import pl.mareklangiewicz.bad.chkEq
 import kotlin.test.*
+import pl.mareklangiewicz.kground.tee.tee
+import pl.mareklangiewicz.kground.tee.teePP
 
 // This file here is temporary. Mostly to monitor how new IntelliJ versions deal with js tests.
 // Looks like IntelliJ have problem adding a play button to js tests (but they are working on better support)

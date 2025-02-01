@@ -71,6 +71,7 @@ fun Project.setMyWeirdSubstitutions(
 }
 
 fun RepositoryHandler.addRepos(settings: LibReposSettings) = with(settings) {
+  @Suppress("DEPRECATION")
   if (withMavenLocal) mavenLocal()
   if (withMavenCentral) mavenCentral()
   if (withGradle) gradlePluginPortal()
@@ -86,11 +87,12 @@ fun RepositoryHandler.addRepos(settings: LibReposSettings) = with(settings) {
 //   But it's only for jvm+andro, so probably this is better:
 //   https://kotlinlang.org/docs/gradle-compiler-options.html#for-all-kotlin-compilation-tasks
 fun TaskCollection<Task>.defaultKotlinCompileOptions(
+  apiVer: KotlinVersion = KotlinVersion.KOTLIN_2_1,
   jvmTargetVer: String? = null, // it's better to use jvmToolchain (normally done in fun allDefault)
   renderInternalDiagnosticNames: Boolean = false,
 ) = withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   compilerOptions {
-    apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0) // FIXME_later: add param.
+    apiVersion.set(apiVer)
     jvmTargetVer?.let { jvmTarget = JvmTarget.fromTarget(it) }
     if (renderInternalDiagnosticNames) freeCompilerArgs.add("-Xrender-internal-diagnostic-names")
     // useful, for example, to suppress some errors when accessing internal code from some library, like:
@@ -372,8 +374,6 @@ fun Project.defaultBuildTemplateForAndroLib(
   }
   extensions.configure<LibraryExtension> {
     defaultAndroLib(details)
-    if (andro.publishAllVariants) defaultAndroLibPublishAllVariants()
-    if (andro.publishOneVariant) defaultAndroLibPublishVariant(andro.publishVariant)
   }
   dependencies {
     defaultAndroDeps(details.settings)
@@ -394,6 +394,7 @@ fun Project.defaultBuildTemplateForAndroLib(
 fun LibraryExtension.defaultAndroLib(
   details: LibDetails = rootExtLibDetails,
   ignoreCompose: Boolean = false,
+  ignoreAndroPublish: Boolean = false, // so user have to explicitly say IF he wants to ignore it.
 ) {
   val andro = details.settings.andro ?: error("No andro settings.")
   andro.sdkCompilePreview?.let { compileSdkPreview = it } ?: run { compileSdk = andro.sdkCompile }
@@ -402,6 +403,8 @@ fun LibraryExtension.defaultAndroLib(
   defaultBuildTypes()
   details.settings.compose?.takeIf { !ignoreCompose }?.let { defaultComposeStuff() }
   defaultPackagingOptions()
+  if (!ignoreAndroPublish && andro.publishAllVariants) defaultAndroLibPublishAllVariants()
+  if (!ignoreAndroPublish && andro.publishOneVariant) defaultAndroLibPublishVariant(andro.publishVariant)
 }
 
 fun LibraryExtension.defaultDefaultConfig(details: LibDetails) = defaultConfig {

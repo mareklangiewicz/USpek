@@ -2,6 +2,7 @@ package pl.mareklangiewicz.ktsample
 
 import org.junit.jupiter.api.TestFactory
 import pl.mareklangiewicz.kground.*
+import pl.mareklangiewicz.kground.tee.teePP
 import pl.mareklangiewicz.uspek.uspekTestFactory
 
 class USpekJUnitFactoryNestedTest {

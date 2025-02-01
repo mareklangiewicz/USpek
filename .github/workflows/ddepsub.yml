@@ -2,13 +2,12 @@
 # If you want to modify the workflow, please change the Kotlin source and regenerate this YAML file.
 # Generated with https://github.com/typesafegithub/github-workflows-kt
 
-name: 'dbuild'
+name: 'ddepsub'
 on:
   push:
     branches:
     - 'master'
     - 'main'
-  pull_request: {}
   workflow_dispatch: {}
 env:
   MYKOTLIBS_signing_keyId: '${{ secrets.MYKOTLIBS_signing_keyId }}'
@@ -18,8 +17,10 @@ env:
   MYKOTLIBS_ossrhPassword: '${{ secrets.MYKOTLIBS_ossrhPassword }}'
   MYKOTLIBS_sonatypeStagingProfileId: '${{ secrets.MYKOTLIBS_sonatypeStagingProfileId }}'
 jobs:
-  build-for-UbuntuLatest:
+  dependency-submission-on-UbuntuLatest:
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'write'
     steps:
     - id: 'step-0'
       uses: 'actions/checkout@v4'
@@ -30,7 +31,4 @@ jobs:
         java-version: '23'
         distribution: 'zulu'
     - id: 'step-2'
-      uses: 'gradle/actions/setup-gradle@v4'
-    - id: 'step-3'
-      name: 'build'
-      run: './gradlew build --no-configuration-cache --no-parallel'
+      uses: 'gradle/actions/dependency-submission@v4'

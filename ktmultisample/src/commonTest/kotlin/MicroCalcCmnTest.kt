@@ -3,6 +3,7 @@ package pl.mareklangiewicz.ktsample
 import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
 import kotlin.test.*
+import pl.mareklangiewicz.kground.tee.teePP
 
 // Note: no runTest or runTestUSpek here, because these tests are not suspendable, but plain synchronous.
 // Note: IntelliJ have play buttons allowing to run it only on JVM and Native, but not JS.

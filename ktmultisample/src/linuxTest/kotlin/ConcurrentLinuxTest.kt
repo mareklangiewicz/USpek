@@ -1,10 +1,11 @@
 package pl.mareklangiewicz.ktsample
 
 import kotlinx.coroutines.*
-import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
 import pl.mareklangiewicz.udata.unt
 import kotlin.test.*
+import pl.mareklangiewicz.kground.tee.tee
+import pl.mareklangiewicz.kground.tee.teePP
 
 private const val maxLoopShort = 900
 // private const val maxLoopShort = 9000 // WARNING: this can take long time - kotlin/native is sloooow.

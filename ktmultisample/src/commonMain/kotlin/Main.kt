@@ -1,6 +1,6 @@
 package pl.mareklangiewicz.ktsample
 
-import pl.mareklangiewicz.kground.*
+import pl.mareklangiewicz.kground.tee.*
 
 fun main() {
   "Main START".teePP

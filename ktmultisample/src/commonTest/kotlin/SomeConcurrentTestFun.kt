@@ -1,11 +1,11 @@
 package pl.mareklangiewicz.ktsample
 
 import kotlinx.coroutines.*
-import pl.mareklangiewicz.kground.*
 import pl.mareklangiewicz.uspek.*
 import kotlin.time.*
 import kotlin.time.Duration.Companion.minutes
 import pl.mareklangiewicz.bad.chkEq
+import pl.mareklangiewicz.kground.tee.*
 import pl.mareklangiewicz.udata.unt
 
 suspend fun checkSequentialSlowly(max: Int = 900) = coroutineScope {

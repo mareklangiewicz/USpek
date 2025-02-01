@@ -7,16 +7,16 @@ on:
   push:
     tags:
     - 'v*.*.*'
+env:
+  MYKOTLIBS_signing_keyId: '${{ secrets.MYKOTLIBS_signing_keyId }}'
+  MYKOTLIBS_signing_password: '${{ secrets.MYKOTLIBS_signing_password }}'
+  MYKOTLIBS_signing_key: '${{ secrets.MYKOTLIBS_signing_key }}'
+  MYKOTLIBS_ossrhUsername: '${{ secrets.MYKOTLIBS_ossrhUsername }}'
+  MYKOTLIBS_ossrhPassword: '${{ secrets.MYKOTLIBS_ossrhPassword }}'
+  MYKOTLIBS_sonatypeStagingProfileId: '${{ secrets.MYKOTLIBS_sonatypeStagingProfileId }}'
 jobs:
   release:
     runs-on: 'ubuntu-latest'
-    env:
-      MYKOTLIBS_signing_keyId: '${{ secrets.MYKOTLIBS_signing_keyId }}'
-      MYKOTLIBS_signing_password: '${{ secrets.MYKOTLIBS_signing_password }}'
-      MYKOTLIBS_signing_key: '${{ secrets.MYKOTLIBS_signing_key }}'
-      MYKOTLIBS_ossrhUsername: '${{ secrets.MYKOTLIBS_ossrhUsername }}'
-      MYKOTLIBS_ossrhPassword: '${{ secrets.MYKOTLIBS_ossrhPassword }}'
-      MYKOTLIBS_sonatypeStagingProfileId: '${{ secrets.MYKOTLIBS_sonatypeStagingProfileId }}'
     steps:
     - id: 'step-0'
       uses: 'actions/checkout@v4'
@@ -24,13 +24,13 @@ jobs:
       name: 'Set up JDK'
       uses: 'actions/setup-java@v4'
       with:
-        java-version: '22'
+        java-version: '23'
         distribution: 'zulu'
     - id: 'step-2'
-      name: 'Build'
-      uses: 'gradle/actions/setup-gradle@v3'
-      with:
-        arguments: 'build'
+      uses: 'gradle/actions/setup-gradle@v4'
     - id: 'step-3'
-      name: 'Publish to Sonatype'
+      name: 'build'
+      run: './gradlew build --no-configuration-cache --no-parallel'
+    - id: 'step-4'
+      name: 'publishToSonatype closeAndReleaseSonatypeStagingRepository'
       run: './gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --no-configuration-cache --no-parallel'
