@@ -2,6 +2,7 @@ package pl.mareklangiewicz.ktsample
 
 import org.junit.runner.*
 import pl.mareklangiewicz.kground.*
+import pl.mareklangiewicz.kground.tee.teePP
 import pl.mareklangiewicz.uspek.*
 
 @RunWith(USpekJUnit4Runner::class)
