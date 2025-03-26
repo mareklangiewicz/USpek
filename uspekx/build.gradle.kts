@@ -103,7 +103,7 @@ fun TaskCollection<Task>.defaultTestsOptions(
 }
 
 // Provide artifacts information requited by Maven Central
-fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
+fun MavenPom.defaultPOM(lib: LibDetails) {
   name put lib.name
   description put lib.description
   url put lib.githubUrl
@@ -124,93 +124,14 @@ fun MavenPublication.defaultPOM(lib: LibDetails) = pom {
   scm { url put lib.githubUrl }
 }
 
-/** See also: root project template-full: addDefaultStuffFromSystemEnvs */
-fun Project.defaultSigning(
-  keyId: String = rootExtString["signing.keyId"],
-  key: String = rootExtReadFileUtf8TryOrNull("signing.keyFile") ?: rootExtString["signing.key"],
-  password: String = rootExtString["signing.password"],
-) = extensions.configure<SigningExtension> {
-  useInMemoryPgpKeys(keyId, key, password)
-  sign(extensions.getByType<PublishingExtension>().publications)
-}
-
-fun Project.defaultPublishing(
-  lib: LibDetails,
-  readmeFile: File = File(rootDir, "README.md"),
-  withSignErrorWorkaround: Boolean = true,
-  withPublishingPrintln: Boolean = false, // FIXME_later: enabling brakes gradle android publications
-) {
-
-  val readmeJavadocJar by tasks.registering(Jar::class) {
-    from(readmeFile) // TODO_maybe: use dokka to create real docs? (but it's not even java..)
-    archiveClassifier put "javadoc"
-  }
-
-  extensions.configure<PublishingExtension> {
-
-    // We have at least two cases:
-    // 1. With plug.KotlinMulti it creates publications automatically (so no need to create here)
-    // 2. With plug.KotlinJvm it does not create publications (so we have to create it manually)
-    if (plugins.hasPlugin("org.jetbrains.kotlin.jvm")) {
-      publications.create<MavenPublication>("jvm") {
-        from(components["kotlin"])
-      }
-    }
-
-    publications.withType<MavenPublication> {
-      artifact(readmeJavadocJar)
-      // Adding javadoc artifact generates warnings like:
-      // Execution optimizations have been disabled for task ':uspek:signJvmPublication'
-      // (UPDATE: now it's errors - see workaround below)
-      // It looks like a bug in kotlin multiplatform plugin:
-      // https://youtrack.jetbrains.com/issue/KT-46466
-      // FIXME_someday: Watch the issue.
-      // If it's a bug in kotlin multiplatform then remove this comment when it's fixed.
-      // Some related bug reports:
-      // https://youtrack.jetbrains.com/issue/KT-47936
-      // https://github.com/gradle/gradle/issues/17043
-
-      defaultPOM(lib)
-    }
-  }
-  if (withSignErrorWorkaround) tasks.withSignErrorWorkaround() // very much related to comments above too
-  if (withPublishingPrintln) tasks.withPublishingPrintln()
-}
-
-/*
-Hacky workaround for gradle error with signing+publishing on gradle 8.1-rc-1:
-
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-A problem was found with the configuration of task ':template-full-lib:signJvmPublication' (type 'Sign').
-  - Gradle detected a problem with the following location: '/home/marek/code/kotlin/KGround/template-full/template-full-lib/build/libs/template-full-lib-0.0.02-javadoc.jar.asc'.
-
-    Reason: Task ':template-full-lib:publishJsPublicationToMavenLocal' uses this output of task ':template-full-lib:signJvmPublication' without declaring an explicit or implicit dependency. This can lead to incorrect results being produced, depending on what order the tasks are executed.
-
-    Possible solutions:
-      1. Declare task ':template-full-lib:signJvmPublication' as an input of ':template-full-lib:publishJsPublicationToMavenLocal'.
-      2. Declare an explicit dependency on ':template-full-lib:signJvmPublication' from ':template-full-lib:publishJsPublicationToMavenLocal' using Task#dependsOn.
-      3. Declare an explicit dependency on ':template-full-lib:signJvmPublication' from ':template-full-lib:publishJsPublicationToMavenLocal' using Task#mustRunAfter.
-
-    Please refer to https://docs.gradle.org/8.1-rc-1/userguide/validation_problems.html#implicit_dependency for more details about this problem.
-
- */
-fun TaskContainer.withSignErrorWorkaround() =
-  withType<AbstractPublishToMaven>().configureEach { dependsOn(withType<Sign>()) }
-
-fun TaskContainer.withPublishingPrintln() = withType<AbstractPublishToMaven>().configureEach {
-  val coordinates = publication.run { "$groupId:$artifactId:$version" }
-  when (this) {
-    is PublishToMavenRepository -> doFirst {
-      println("Publishing $coordinates to ${repository.url}")
-    }
-    is PublishToMavenLocal -> doFirst {
-      val localRepo = System.getenv("HOME")!! + "/.m2/repository"
-      val localPath = localRepo + publication.run { "/$groupId/$artifactId".replace('.', '/') }
-      println("Publishing $coordinates to $localPath")
-    }
-  }
+fun Project.defaultPublishing(lib: LibDetails) = extensions.configure<MavenPublishBaseExtension> {
+  propertiesTryOverride("signingInMemoryKey", "signingInMemoryKeyPassword", "mavenCentralPassword")
+  if (lib.settings.withSonatypeOssPublishing)
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
+  signAllPublications()
+  // Note: artifactId is not lib.name but current project.name (module name)
+  coordinates(groupId = lib.group, artifactId = name, version = lib.version.str)
+  pom { defaultPOM(lib) }
 }
 
 // endregion [[Kotlin Module Build Template]]
@@ -250,11 +171,8 @@ fun Project.defaultBuildTemplateForBasicMppLib(
   configurations.checkVerSync(warnOnly = true)
   tasks.defaultKotlinCompileOptions(jvmTargetVer = null) // jvmVer is set in fun allDefault using jvmToolchain
   tasks.defaultTestsOptions(onJvmUseJUnitPlatform = details.settings.withTestJUnit5)
-  if (plugins.hasPlugin("maven-publish")) {
-    defaultPublishing(details)
-    if (plugins.hasPlugin("signing")) defaultSigning()
-    else println("MPP Module ${name}: signing disabled")
-  } else println("MPP Module ${name}: publishing (and signing) disabled")
+  if (plugins.hasPlugin("com.vanniktech.maven.publish")) defaultPublishing(details)
+  else println("MPP Module ${name}: publishing (and signing) disabled")
 }
 
 /**
@@ -304,7 +222,10 @@ fun KotlinMultiplatformExtension.allDefault(
       val jvmTest by getting {
         dependencies {
           if (withTestJUnit4) implementation(JUnit.junit)
-          if (withTestJUnit5) implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
+          if (withTestJUnit5) {
+            implementation(Org.JUnit.Jupiter.junit_jupiter_engine)
+            runtimeOnly(Org.JUnit.Platform.junit_platform_launcher)
+          }
           if (withTestUSpekX) {
             implementation(Langiewicz.uspekx)
             if (withTestJUnit4) implementation(Langiewicz.uspekx_junit4)

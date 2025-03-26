@@ -8,12 +8,11 @@ on:
     tags:
     - 'v*.*.*'
 env:
-  MYKOTLIBS_signing_keyId: '${{ secrets.MYKOTLIBS_signing_keyId }}'
-  MYKOTLIBS_signing_password: '${{ secrets.MYKOTLIBS_signing_password }}'
-  MYKOTLIBS_signing_key: '${{ secrets.MYKOTLIBS_signing_key }}'
-  MYKOTLIBS_ossrhUsername: '${{ secrets.MYKOTLIBS_ossrhUsername }}'
-  MYKOTLIBS_ossrhPassword: '${{ secrets.MYKOTLIBS_ossrhPassword }}'
-  MYKOTLIBS_sonatypeStagingProfileId: '${{ secrets.MYKOTLIBS_sonatypeStagingProfileId }}'
+  ORG_GRADLE_PROJECT_signingInMemoryKey: '${{ secrets.KL_SIGNINGINMEMORYKEY }}'
+  ORG_GRADLE_PROJECT_signingInMemoryKeyId: '${{ secrets.KL_SIGNINGINMEMORYKEYID }}'
+  ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: '${{ secrets.KL_SIGNINGINMEMORYKEYPASSWORD }}'
+  ORG_GRADLE_PROJECT_mavenCentralUsername: '${{ secrets.KL_MAVENCENTRALUSERNAME }}'
+  ORG_GRADLE_PROJECT_mavenCentralPassword: '${{ secrets.KL_MAVENCENTRALPASSWORD }}'
 jobs:
   release:
     runs-on: 'ubuntu-latest'
@@ -32,5 +31,5 @@ jobs:
       name: 'build'
       run: './gradlew build --no-configuration-cache --no-parallel'
     - id: 'step-4'
-      name: 'publishToSonatype closeAndReleaseSonatypeStagingRepository'
-      run: './gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --no-configuration-cache --no-parallel'
+      name: 'publishAndReleaseToMavenCentral'
+      run: './gradlew publishAndReleaseToMavenCentral --no-configuration-cache --no-parallel'
