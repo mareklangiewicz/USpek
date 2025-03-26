@@ -1,12 +1,18 @@
+
+// region [[Basic MPP Lib Build Imports and Plugs]]
+
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
+import com.vanniktech.maven.publish.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
 plugins {
-  plugAll(plugs.KotlinMulti, plugs.MavenPublish, plugs.Signing)
+  plugAll(plugs.KotlinMulti, plugs.VannikPublish)
 }
+
+// endregion [[Basic MPP Lib Build Imports and Plugs]]
 
 val settings = rootExtLibDetails.settings.copy(
   withJs = false,
