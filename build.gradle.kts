@@ -36,7 +36,7 @@ defaultBuildTemplateForRootProject(
       withTestJUnit4 = false,
       withTestJUnit5 = false,
       withTestUSpekX = false, // Let's NOT try to test uspek with other packaged uspek to avoid confusion.
-      withSonatypeOssPublishing = true,
+      withCentralPublish = true,
     ),
   ),
 )

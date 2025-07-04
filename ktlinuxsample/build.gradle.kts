@@ -125,9 +125,9 @@ fun MavenPom.defaultPOM(lib: LibDetails) {
 
 fun Project.defaultPublishing(lib: LibDetails) = extensions.configure<MavenPublishBaseExtension> {
   propertiesTryOverride("signingInMemoryKey", "signingInMemoryKeyPassword", "mavenCentralPassword")
-  if (lib.settings.withSonatypeOssPublishing)
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
+  if (lib.settings.withCentralPublish) publishToMavenCentral(automaticRelease = false)
   signAllPublications()
+  signAllPublicationsFixSignatoryIfFound()
   // Note: artifactId is not lib.name but current project.name (module name)
   coordinates(groupId = lib.group, artifactId = name, version = lib.version.str)
   pom { defaultPOM(lib) }

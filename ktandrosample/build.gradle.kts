@@ -4,6 +4,7 @@
 import com.android.build.api.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
+import com.vanniktech.maven.publish.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
@@ -14,8 +15,7 @@ plugins {
     plugs.KotlinMultiCompose,
     plugs.ComposeJbNoVer,
     plugs.AndroLibNoVer,
-    // plugs.MavenPublish,
-    // plugs.Signing
+    plugs.VannikPublish,
   )
 }
 
@@ -136,9 +136,9 @@ fun MavenPom.defaultPOM(lib: LibDetails) {
 
 fun Project.defaultPublishing(lib: LibDetails) = extensions.configure<MavenPublishBaseExtension> {
   propertiesTryOverride("signingInMemoryKey", "signingInMemoryKeyPassword", "mavenCentralPassword")
-  if (lib.settings.withSonatypeOssPublishing)
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
+  if (lib.settings.withCentralPublish) publishToMavenCentral(automaticRelease = false)
   signAllPublications()
+  signAllPublicationsFixSignatoryIfFound()
   // Note: artifactId is not lib.name but current project.name (module name)
   coordinates(groupId = lib.group, artifactId = name, version = lib.version.str)
   pom { defaultPOM(lib) }
@@ -267,7 +267,7 @@ fun Project.defaultPublishingOfAndroLib(
     extensions.configure<PublishingExtension> {
       publications.register<MavenPublication>(componentName) {
         from(components[componentName])
-        defaultPOM(lib)
+        pom { defaultPOM(lib) }
       }
     }
   }
