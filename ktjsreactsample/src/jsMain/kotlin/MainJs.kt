@@ -2,6 +2,7 @@ package pl.mareklangiewicz.ktsample
 
 import react.create
 import react.dom.client.createRoot
+import web.dom.ElementId
 import web.dom.document
 import web.events.EventHandler
 import web.window.window
@@ -10,7 +11,7 @@ import web.window.window
 
 fun main() {
   window.onload = EventHandler {
-    val id = "rootOfKtJsReactSample"
+    val id = ElementId("rootOfKtJsReactSample")
     val container = document.getElementById(id) ?: error("Not found: $id")
     createRoot(container).render(App.create())
   }

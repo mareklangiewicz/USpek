@@ -26,7 +26,7 @@ defaultBuildTemplateForRootProject(
     name = "USpek",
     description = "Micro tool for testing with syntax similar to Spek, but shorter.",
     githubUrl = "https://github.com/mareklangiewicz/USpek",
-    version = Ver(0, 0, 41),
+    version = Ver(0, 0, 42),
     // https://central.sonatype.com/artifact/pl.mareklangiewicz/uspek/versions
     // https://github.com/mareklangiewicz/USpek/releases
     settings = LibSettings(
