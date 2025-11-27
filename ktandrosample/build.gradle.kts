@@ -309,7 +309,6 @@ fun Project.defaultBuildTemplateForAndroLib(
   defaultGroupAndVerAndDescription(details)
   if (andro.publishAllVariants) defaultPublishingOfAndroLib(details, "default")
   if (andro.publishOneVariant) defaultPublishingOfAndroLib(details, andro.publishVariant)
-  if (!andro.publishNoVariants) defaultSigning()
 }
 
 fun LibraryExtension.defaultAndroLib(

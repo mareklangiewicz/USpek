@@ -10,8 +10,9 @@ plugins {
   plug(plugs.KotlinJvm) apply false
   plug(plugs.KotlinMultiCompose) apply false
   plug(plugs.ComposeJb) apply false // ComposeJb(Edge) is very slow to sync, clean, build (jb dev repo issue)
-  plug(plugs.AndroLib) apply false
+  plug(plugs.AndroKmp) apply false
   plug(plugs.AndroApp) apply false
+  plug(plugs.VannikPublish) apply false
 }
 
 // endregion [[Full Root Build Imports and Plugs]]
@@ -26,12 +27,12 @@ defaultBuildTemplateForRootProject(
     name = "USpek",
     description = "Micro tool for testing with syntax similar to Spek, but shorter.",
     githubUrl = "https://github.com/mareklangiewicz/USpek",
-    version = Ver(0, 0, 42),
+    version = Ver(0, 0, 43),
     // https://central.sonatype.com/artifact/pl.mareklangiewicz/uspek/versions
     // https://github.com/mareklangiewicz/USpek/releases
     settings = LibSettings(
       withJs = enableJs,
-      withNativeLinux64 = enableNative,
+      withLinuxX64 = enableNative,
       compose = null,
       withTestJUnit4 = false,
       withTestJUnit5 = false,

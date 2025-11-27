@@ -19,7 +19,7 @@ val details = myLibDetails(
   settings = LibSettings(
     withJvm = false,
     withJs = false,
-    withNativeLinux64 = true,
+    withLinuxX64 = true,
     compose = null,
     withTestJUnit4 = false,
     withTestJUnit5 = false,
@@ -199,7 +199,7 @@ fun KotlinMultiplatformExtension.allDefault(
   }
   if (withJvm) jvm()
   if (withJs) jsDefault()
-  if (withNativeLinux64) linuxX64()
+  if (withLinuxX64) linuxX64()
   if (withAndro && !ignoreAndroTarget) androidTarget {
     // TODO_someday some kmp andro publishing. See kdoc above why not yet.
   }
@@ -235,7 +235,7 @@ fun KotlinMultiplatformExtension.allDefault(
         }
       }
     }
-    if (withNativeLinux64) {
+    if (withLinuxX64) {
       val linuxX64Main by getting
       val linuxX64Test by getting
     }
@@ -300,7 +300,7 @@ fun Project.defaultBuildTemplateForBasicMppApp(
     if (details.settings.withJs) js(IR) {
       binaries.executable()
     }
-    if (details.settings.withNativeLinux64) linuxX64 {
+    if (details.settings.withLinuxX64) linuxX64 {
       binaries {
         executable {
           entryPoint = details.run { "$appMainPackage.$appMainFun" }
