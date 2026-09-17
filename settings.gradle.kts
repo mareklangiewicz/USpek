@@ -1,3 +1,8 @@
+@file:Suppress("UnstableApiUsage")
+
+import pl.mareklangiewicz.deps.*
+import pl.mareklangiewicz.utils.extLib
+
 rootProject.name = "USpek"
 
 
@@ -31,7 +36,7 @@ pluginManagement {
 }
 
 plugins {
-  id("pl.mareklangiewicz.deps.settings") version "0.3.99" // https://plugins.gradle.org/search?term=mareklangiewicz
+  id("pl.mareklangiewicz.deps.settings") version "0.4.62" // https://plugins.gradle.org/search?term=mareklangiewicz
   id("com.gradle.develocity") version "4.2.2" // https://docs.gradle.com/develocity/gradle-plugin/
 }
 
@@ -44,6 +49,32 @@ develocity {
 }
 
 // endregion [[My Settings Stuff]]
+
+val enableJs = true
+val enableNative = true
+// FIXME_someday: how to support all native platforms? Wait/track JetBrains work on "common modules" / "Universal libraries":
+//   https://youtrack.jetbrains.com/issue/KT-52666/Kotlin-Multiplatform-libraries-without-platform-specific-code-a.k.a.-Pure-Kotlin-libraries-Universal-libraries
+
+gradle.extLib = lib(
+  info = myLibInfo(
+    name = "USpek",
+    description = "Micro tool for testing with syntax similar to Spek, but shorter.",
+    githubUrl = "https://github.com/mareklangiewicz/USpek",
+    version = Ver(0, 0, 43),
+    // https://central.sonatype.com/artifact/pl.mareklangiewicz/uspek/versions
+    // https://github.com/mareklangiewicz/USpek/releases
+  ),
+  flags = LibFlags(
+    withJs = enableJs,
+    withLinuxX64 = enableNative,
+    withTestJUnit4 = false,
+    withTestJUnit5 = false,
+    withTestUSpekX = false, // Let's NOT try to test uspek with other packaged uspek to avoid confusion.
+    withCentralPublish = true,
+  ),
+  withCompose = false, // was: compose = null
+  // andro is absent by default
+)
 
 // Note: it may be good idea to comment out / disable some subprojects (like ktandrosample) to save memory/build time
 

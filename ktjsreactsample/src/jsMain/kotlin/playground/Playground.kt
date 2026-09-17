@@ -34,15 +34,16 @@ fun useUSpekHook(code: suspend () -> Unit): USpekTree {
 
   var tree by useState(GlobalUSpekContext.root)
 
-  useEffectOnceWithCleanup {
-    val job = MainScope().launch {
-      suspek {
-        // we don't need any setState here because tree is useState hook delegate property
-        tree = GlobalUSpekContext.root.copy() // FIXME: is copy needed? check (and debug!) how react compares states
-        code()
-      }
+  // useEffectOnceWithCleanup/onCleanup were removed from kotlin-react (gone in 2026.9.2-19.3.0,
+  // still present in 2025.11.12-19.2.0). The replacement is the suspend CoroutineScope overload of
+  // useEffectOnce, which cancels its scope on cleanup -- so the hand-rolled MainScope().launch plus
+  // onCleanup { job.cancel() } is now just the body.
+  useEffectOnce {
+    suspek {
+      // we don't need any setState here because tree is useState hook delegate property
+      tree = GlobalUSpekContext.root.copy() // FIXME: is copy needed? check (and debug!) how react compares states
+      code()
     }
-    onCleanup { job.cancel() }
   }
   return tree
 }
