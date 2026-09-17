@@ -90,21 +90,29 @@ include(
   ":ktjunit5sample",
   ":ktmultisample",
   ":ktlinuxsample",
-  // ":ktandrosample",
+  ":ktandrosample",
 )
 
 
 /*
 
-FIXME_later: Releasing USpek with :ktandrosample enabled failed.
-Looks like bug with tasks dependencies related to resources.
-Don't know if't on android side or compose mpp side
-(compose mpp is changing resource management recently)
-Unfortunately the bug did not reproduce on my machine,
-and generally looks like an issue which can happen very randomly
-(race conditions between tasks?)
+:ktandrosample was disabled here for a long time, because releasing USpek with it enabled failed:
+looked like a bug in task dependencies around resources, never reproduced locally, suspected to be
+a race between tasks. Re-enabled on the templatefun migration (deps.settings 0.4.62).
 
-report from github:
+What was actually checked before re-enabling it, on this machine:
+- :ktandrosample:build green;
+- :ktandrosample:compileAndroidDeviceTest green -- and proved real by planting a type error in
+  SomeComposeUSpek.kt and watching that exact task fail, since `build` alone never reaches the
+  device-test compilation;
+- :ktandrosample:publishToMavenLocal green, signing included, which is the publication assembly the
+  old release died in. Residue removed from ~/.m2 afterwards.
+
+So the failure does not reproduce here -- but it never did, which is the whole problem. It failed in
+CI, on the release workflow, not locally. If drelease goes red again on this module, THIS is the
+history, and disabling the include below is the known way back.
+
+original report from github:
 https://github.com/mareklangiewicz/USpek/actions/runs/10130733354/job/28012490261
 https://scans.gradle.com/s/qtvw3gn3xdqt2
 
