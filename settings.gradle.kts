@@ -108,6 +108,10 @@ What was actually checked before re-enabling it, on this machine:
 - :ktandrosample:publishToMavenLocal green, signing included, which is the publication assembly the
   old release died in. Residue removed from ~/.m2 afterwards.
 
+That last check is now HISTORY, not something to re-run: the sample modules no longer apply
+plugs.VannikPublish, so :ktandrosample has no publication and no publishToMavenLocal work at all.
+See the sibling note below about why they had one in the first place.
+
 So the failure does not reproduce here -- but it never did, which is the whole problem. It failed in
 CI, on the release workflow, not locally. If drelease goes red again on this module, THIS is the
 history, and disabling the include below is the known way back.
@@ -115,5 +119,32 @@ history, and disabling the include below is the known way back.
 original report from github:
 https://github.com/mareklangiewicz/USpek/actions/runs/10130733354/job/28012490261
 https://scans.gradle.com/s/qtvw3gn3xdqt2
+
+*/
+
+/*
+
+Why no kt*sample module applies plugs.VannikPublish:
+
+They are sample APPS, not libraries, but each one used to apply the publish plugin and so got a
+full signed maven publication. Two things followed, measured on 2026-09-18:
+
+- `./gradlew publishToMavenLocal` failed in :ktjsreactsample, because its jsMain carries
+  enforcedPlatform(kotlin-wrappers-bom) and Gradle refuses to write an enforced platform into
+  published module metadata. NOT a migration regression: the same task fails identically on
+  8a75b28, pre-templatefun. It stayed hidden because drelease only runs publishAndReleaseToMavenCentral.
+
+- Worse, and this one WAS a migration regression: in the nested model each sample built a fresh
+  LibSettings, so withCentralPublish fell to its default false. In the sibling model each sample
+  does gradle.extLib.copy(flags = flags.copy(..)) and inherits the root's `true`. :ktlinuxsample
+  went from 0 to 8 mavenCentral tasks. The next v* tag would have pushed six sample artifacts to
+  Maven Central under pl.mareklangiewicz, permanently.
+
+Dropping the plugin removes the publications, so both go away. If a sample ever SHOULD be published
+(a @sample sources artifact is the plausible case), fix the enforcedPlatform first -- as a published
+dependency it forces versions on every consumer -- and pick the artifactId deliberately, since all
+six currently default to their directory name with a POM <name> of "ktsample".
+
+Design note for the durable fix, in DepsKt: docs/design/publish-intent-per-module.md
 
 */
