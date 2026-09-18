@@ -16,7 +16,7 @@ plugins {
 
 // endregion [[Basic MPP Lib Build Imports and Plugs]]
 
-defaultBuildTemplateForBasicMppLib {
+defaultBuildTemplateForBasicMppLib(publish = LibPublish(toCentral = true)) {
   api(project(":uspek"))
   api(KotlinX.coroutines_core)
   api(KotlinX.coroutines_test)

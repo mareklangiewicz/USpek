@@ -47,7 +47,11 @@ defaultBuildTemplateForAndroLib(
     // Derived from THIS module's flags, so compose's ui-test-junit4 follows withTestJUnit4 -- which
     // is what createComposeRule() in the device test needs.
     compose = defaultLibCompose(androFlags),
-    andro = LibAndro(publishVariant = "debug"),
+    // publishVariant is gone from LibAndro as of DepsKt 0.4.63 -- it was a publishing decision
+    // living on a per-repo settings object. It is LibPublish(androVariant = ..) now, and this
+    // module passes no LibPublish at all, because a SAMPLE app is not published. Nothing is lost:
+    // the variant only ever mattered for registering a publishable android component.
+    andro = LibAndro(),
   ),
 )
 

@@ -36,7 +36,7 @@ pluginManagement {
 }
 
 plugins {
-  id("pl.mareklangiewicz.deps.settings") version "0.4.62" // https://plugins.gradle.org/search?term=mareklangiewicz
+  id("pl.mareklangiewicz.deps.settings") version "0.4.63" // https://plugins.gradle.org/search?term=mareklangiewicz
   id("com.gradle.develocity") version "4.2.2" // https://docs.gradle.com/develocity/gradle-plugin/
 }
 
@@ -70,7 +70,13 @@ gradle.extLib = lib(
     withTestJUnit4 = false,
     withTestJUnit5 = false,
     withTestUSpekX = false, // Let's NOT try to test uspek with other packaged uspek to avoid confusion.
-    withCentralPublish = true,
+    // withCentralPublish is GONE from LibFlags as of DepsKt 0.4.63 -- and THIS repo is why. It was a
+    // per-REPO flag on the object every module clones for platform reasons, so each kt*sample's
+    // gradle.extLib.copy(flags = ..) inherited it: six sample apps with 8 mavenCentral tasks each,
+    // which the v0.0.44 release would have made permanent. Each of the four LIBS now opts in at its
+    // own defaultBuildTemplateForBasicMppLib call with publish = LibPublish(toCentral = true), and
+    // the samples say nothing, which is how they stay unpublished.
+    // See DepsKt/docs/design/publish-intent-per-module.md.
   ),
   withCompose = false, // was: compose = null
   // andro is absent by default

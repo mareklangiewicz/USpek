@@ -20,6 +20,7 @@ plugins {
 // has. Was: rootExtLibDetails.settings.copy(withJs = false, withLinuxX64 = false).
 defaultBuildTemplateForBasicMppLib(
   lib = gradle.extLib.run { copy(flags = flags.copy(withJs = false, withLinuxX64 = false)) },
+  publish = LibPublish(toCentral = true),
 ) {
   api(project(":uspekx"))
 }
