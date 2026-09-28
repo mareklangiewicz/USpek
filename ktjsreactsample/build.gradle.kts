@@ -54,7 +54,7 @@ kotlin {
         if (withLocalUSpekX)
           implementation(project(":uspekx")) //
         else
-          implementation(Langiewicz.uspekx.withVer(Ver(0, 0, 36))) // FIXME: remove hardcoded ver
+          implementation(Langiewicz.uspekx) // version from DepsKt
           // https://s01.oss.sonatype.org/content/repositories/releases/pl/mareklangiewicz/uspek/
         implementation(KotlinX.coroutines_core)
         implementation(project.dependencies.enforcedPlatform(Org.JetBrains.Kotlin_Wrappers.bom))
