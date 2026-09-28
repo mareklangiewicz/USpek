@@ -11,14 +11,14 @@ plugins {
   plug(plugs.KotlinMulti) apply false
   plug(plugs.KotlinJvm) apply false
   plug(plugs.KotlinMultiCompose) apply false
-  plug(plugs.ComposeJb) apply false // ComposeJb(Edge) is very slow to sync, clean, build (jb dev repo issue)
+
+  plug(plugs.ComposeJbStable) apply false // ComposeJbEdge can be very slow to sync, clean, build (jb dev repo issue)
+  // id("org.jetbrains.compose") version "1.10.0-beta02" apply false
+  // TODO_later: Check again after compose update, because now default version fails with:
+  // Cannot determine the version of Skiko for Compose '1.10.0-rc01'
+
   plug(plugs.AndroKmp) apply false
   plug(plugs.AndroApp) apply false
-
-  // Resolve the publish plugin ONCE here, with its version. Without this the only source of
-  // it is the templatefun plugin's own classpath (templatefun depends on it), which Gradle sees as
-  // "unknown version" -- and then a versioned request in a subproject cannot be checked
-  // against it.
   plug(plugs.VannikPublish) apply false
 }
 

@@ -3,16 +3,18 @@
 
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
+import com.vanniktech.maven.publish.*
 import pl.mareklangiewicz.defaults.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 import pl.mareklangiewicz.templatefun.*
 
 plugins {
-  id("pl.mareklangiewicz.templatefun")
   plugAll(
+    plugs.TemplateFunNoVer, // version comes from the root: a versioned request here fails in composite builds
     plugs.KotlinJvm,
     plugs.JvmApp,
+    plugs.VannikPublish,
   )
 }
 
